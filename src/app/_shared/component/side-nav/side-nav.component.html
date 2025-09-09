@@ -1,0 +1,41 @@
+<section
+  class="fixed top-0 left-0 z-40 bg-gray-500/50 w-screen h-screen"
+  (click)="closeNavbar()"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="fixed top-0 left-0 w-64 h-screen p-4 overflow-y-auto transition-transform bg-gray-800"
+  >
+    <div class="flex items-center justify-between h-16 bg-gray-800 text-white">
+      <p class="text-xl font-bold">Fairmount</p>
+      <button
+        (click)="closeNavbar()"
+        aria-label="Close"
+        class="text-white text-2xl font-bold focus:outline-none"
+      >
+        &times;
+      </button>
+    </div>
+    <nav class="mt-4">
+      <ul class="space-y-2">
+        <li>
+          <div
+            class="block px-4 py-2 text-white hover:bg-gray-700"
+            (click)="navigateTo('')"
+          >
+            Home
+          </div>
+        </li>
+      
+        <li>
+          <div
+            class="block px-4 py-2 text-white hover:bg-gray-700"
+            (click)="logOut()"
+          >
+            Logout
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</section>
