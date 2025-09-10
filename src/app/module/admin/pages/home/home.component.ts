@@ -1,33 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { AddPoComponent } from '../../component/add-po/add-po.component';
+import { PoModelComponent } from '../../component/po-model/po-model.component';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { PoService } from '../../../../_core/http/api/po.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { SelectionModel } from '@angular/cdk/collections';
+
 @Component({
-  selector: 'app-create-po',
+  selector: 'app-home',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatTableModule,
     MatSortModule,
-    MatCheckboxModule,
+    PoModelComponent,
+    AddPoComponent,
+    MatPaginatorModule,
   ],
-  templateUrl: './create-po.component.html',
+  templateUrl: './home.component.html',
 })
-export class CreatePoComponent {
+export class HomeComponent {
   constructor(
     private readonly poService: PoService // private readonly report: ReportsApiService
   ) {}
+  public showModel = false;
+  public showAddPo = false;
+  public isLoading = true;
+  public customers = [];
+  public po: any;
+
   @ViewChild('empTbSort') empTbSort = new MatSort();
   @ViewChild('paginator') paginator!: MatPaginator;
 
@@ -35,9 +37,7 @@ export class CreatePoComponent {
 
   public sortedData = new MatTableDataSource<Request>();
 
-  // For the first table
-  displayedColumnsFirst: string[] = [
-    'select',
+  displayedColumns: string[] = [
     'poNumber',
     'customerName',
     'orderDate',
@@ -47,53 +47,28 @@ export class CreatePoComponent {
     'description',
     'createdBy',
   ];
-
-  // For the second table
-  displayedColumnsSecond: string[] = [
-    'poNumber',
-    'customerName',
-    'orderDate',
-    'modeOfShipment',
-    'totalCost',
-    'totalAmount',
-    'description',
-    'createdBy',
-    'actions',
-  ];
-  public formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  }
-  public date = new Date();
-  public poForm: FormGroup = new FormGroup({
-    customerId: new FormControl(null, Validators.required),
-    poNumber: new FormControl('', Validators.required),
-    orderDate: new FormControl(this.formatDate(this.date), Validators.required),
-    createdBy: new FormControl('1', Validators.required),
-    modeOfShipment: new FormControl('', Validators.required),
-    totalAmount: new FormControl(null, Validators.required),
-    totalCost: new FormControl(null, Validators.required),
-    description: new FormControl('', Validators.required),
-    active: new FormControl(1, Validators.required),
-  });
-  public customers: any = [];
 
   ngOnInit() {
-    this.getActivePO();
-    this.getCustomer();
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = '/login';
+    } else {
+      this.getActivePO();
+      this.getCustomer();
+    }
   }
+
   public getActivePO() {
+    this.isLoading = true;
     this.poService.getActivePO().subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         this.sortedData.data = response;
         this.purchaseOrders.data = response; // if needed
         this.sortedData.paginator = this.paginator; // Make sure this is set
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.isLoading = false;
+      },
     });
   }
   public getCustomer() {
@@ -105,17 +80,7 @@ export class CreatePoComponent {
     });
   }
 
-  selection = new SelectionModel<any>(true, []); // multiple = true
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.sortedData.data.length;
-    return numSelected === numRows;
-  }
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.sortedData.data.forEach((row) => this.selection.select(row));
-  }
+  //   sort table by header
   sortData(sort: Sort) {
     const data = this.purchaseOrders.data.slice();
     if (!sort.active || sort.direction === '') {
@@ -154,5 +119,21 @@ export class CreatePoComponent {
       b = b.toLowerCase();
     }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  public openPOModel(po: any) {
+    this.showModel = true;
+    this.po = po;
+  }
+
+  public openAddPo() {
+    this.showAddPo = true;
+  }
+  public closeAddPo() {
+    this.showAddPo = false;
+    this.getActivePO();
+  }
+  ngAfterViewInit() {
+    this.sortedData.paginator = this.paginator;
   }
 }

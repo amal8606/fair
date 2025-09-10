@@ -5,16 +5,13 @@ import { CreatePoComponent } from './module/admin/pages/create-po/create-po.comp
 
 export const routes: Routes = [
   {
-    path: '',
-    loadComponent: () =>
-      import('./module/admin/pages/admin.component').then(
-        (c) => c.AdminComponent
-      ),
-    canActivate: [authGuard],
+    path: 'admin',
+    loadChildren: () =>
+      import('./module/admin/admin.module').then((m) => m.AdminModule),
+    // canActivate: [authGuard], // enable if you want auth
   },
-  { path: 'create-po', component: CreatePoComponent },
   {
-    path: 'login',
+    path: '',
     loadChildren: () =>
       import('./module/login/login.module').then((m) => m.LoginModule),
   },

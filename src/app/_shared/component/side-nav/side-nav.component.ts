@@ -16,9 +16,8 @@ export class SideNavComponent {
   }
 
   public navigateTo(path: string) {
-    console.log('Navigating to:', path);
-    // this.route.navigate(['admin', path]);
-    this.route.navigate([path]);
+    const routePath = path === '' ? ['admin'] : ['admin', path];
+    this.route.navigate(routePath);
 
     this.onClick.emit();
   }

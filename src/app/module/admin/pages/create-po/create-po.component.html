@@ -1,22 +1,33 @@
 <div class="overflow-x-auto m-5 border border-gray-300 p-3 rounded-lg">
   <div>
     <p class="text-4xl font-bold mb-4 text-gray-400">Create Purchase Order</p>
-    <form>
+    <form [formGroup]="poForm">
       <div class="grid grid-cols-2 md:grid-cols-2 gap-6">
         <div>
           <label class="block text-gray-700">Customer Name</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter customer name"
-          />
+          <select
+            id="customerName"
+            name="customerName"
+            formControlName="customerId"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="null" disabled selected>Select customer</option>
+            <option
+              *ngFor="let customer of customers"
+              [value]="customer.customerId"
+            >
+              {{ customer.customerName }}
+            </option>
+          </select>
         </div>
         <div>
           <label class="block text-gray-700">Order Date</label>
           <input
             type="date"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Select order date"
+            id="orderDate"
+            name="orderDate"
+            formControlName="orderDate"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
         <div>
@@ -57,7 +68,7 @@
       </div>
 
       <div
-        class="max-w-full overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
       >
         <table
           mat-table
@@ -67,184 +78,138 @@
           matSort
           #empTbSort="matSort"
         >
+          <!-- Select Checkbox Column -->
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>Select Item</th>
-            <td mat-cell *matCellDef="let element">
-              <select
-                class="px-2 py-1 border rounded"
-                name="selectedItem-{{ element.po }}"
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
               >
-                <option value="" disabled selected>Select Item</option>
-                <option *ngFor="let item of element.items" [value]="item">
-                  {{ item }}
-                </option>
-              </select>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="po">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="po">PO</th>
-            <td mat-cell *matCellDef="let element">{{ element.po }}</td>
-          </ng-container>
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="date">
-              DATE
+              </mat-checkbox>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.date | date }}
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
             </td>
           </ng-container>
-          <ng-container matColumnDef="lin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lin">LIN</th>
-            <td mat-cell *matCellDef="let element">{{ element.lin }}</td>
+
+          <!-- Other columns -->
+          <ng-container matColumnDef="poNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
+              #PO
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
           </ng-container>
-          <ng-container matColumnDef="ref">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ref">Ref</th>
-            <td mat-cell *matCellDef="let element">{{ element.ref }}</td>
-          </ng-container>
-          <ng-container matColumnDef="qunty">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="225">225</th>
-            <td mat-cell *matCellDef="let element">{{ element.qunty }}</td>
-          </ng-container>
-          <ng-container matColumnDef="sh">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="sh">SH</th>
-            <td mat-cell *matCellDef="let element">{{ element.sh }}</td>
-          </ng-container>
-          <ng-container matColumnDef="bo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="bo">BO</th>
-            <td mat-cell *matCellDef="let element">{{ element.bo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="ui">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ui">UI</th>
-            <td mat-cell *matCellDef="let element">{{ element.ui }}</td>
-          </ng-container>
-          <ng-container matColumnDef="manufacturer">
+
+          <ng-container matColumnDef="customerName">
             <th
               mat-header-cell
               *matHeaderCellDef
-              mat-sort-header="manufacturer"
+              mat-sort-header="customerName"
             >
-              Manufacturer
+              Customer Name
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.manufacturer }}
+              {{ element.customer.customerName }}
             </td>
           </ng-container>
-          <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
-              PART #
+
+          <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
+              Order Date
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.partNumber }}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.orderDate | date }}
+            </td>
           </ng-container>
+
+          <ng-container matColumnDef="modeOfShipment">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="modeOfShipment"
+            >
+              Mode of Shipment
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.modeOfShipment }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalCost">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
+              Total Cost
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalCost | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
+              Total Amount
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalAmount | currency : "USD" }}
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-              DESCRIPTION
+              Description
             </th>
             <td mat-cell *matCellDef="let element">
               {{ element.description }}
             </td>
           </ng-container>
-          <ng-container matColumnDef="quoteNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quoteNumber">
-              QUOTE #
+
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
+              Created By
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.quoteNumber }}
+              {{ element.user.fullName }}
             </td>
-          </ng-container>
-          <ng-container matColumnDef="vendorPo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="vendorPo">
-              VENDOR /PO#
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.vendorPo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="comment">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="comment">
-              COMMENT
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.comment }}</td>
-          </ng-container>
-          <ng-container matColumnDef="remarks">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="remarks">
-              REMARKS
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.remarks }}</td>
-          </ng-container>
-          <ng-container matColumnDef="shippingRef">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="shippingRef">
-              SHIPPING REF:
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.shippingRef }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="coo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="coo">COO</th>
-            <td mat-cell *matCellDef="let element">{{ element.coo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="hsCord">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="hsCord">
-              HS CORD
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.hsCord }}</td>
-          </ng-container>
-          <ng-container matColumnDef="poValue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poValue">
-              PO VALUE
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.poValue | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="epoValue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="epoValue">
-              E-PO VALUE
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.epoValue | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="cost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="cost">
-              COST
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.cost | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="ecost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ecost">
-              E-Cost
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.ecost | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="wr">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="wr">WR</th>
-            <td mat-cell *matCellDef="let element">{{ element.wr }}</td>
-          </ng-container>
-          <ng-container matColumnDef="tracking">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="tracking">
-              TRACKING
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.tracking }}</td>
-          </ng-container>
-          <ng-container matColumnDef="shipToLoc">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="shipToLoc">
-              SHIP TO LOC
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.shipToLoc }}</td>
-          </ng-container>
-          <ng-container matColumnDef="ci">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ci">CI</th>
-            <td mat-cell *matCellDef="let element">{{ element.ci }}</td>
-          </ng-container>
-          <ng-container matColumnDef="awb">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="awb">AWB</th>
-            <td mat-cell *matCellDef="let element">{{ element.awb }}</td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                (click)="$event.stopPropagation()"
+                type="button"
+                class="bg-transparent"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Header row -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsFirst"></tr>
+
+          <!-- Data rows -->
+          <tr
+            mat-row
+            *matRowDef="let element; columns: displayedColumnsFirst"
+            class="example-element-row"
+          ></tr>
         </table>
       </div>
       <div class="mt-6 flex justify-end">
@@ -258,7 +223,7 @@
         <p class="text-xl">New PO Item</p>
       </div>
       <div
-        class="max-w-full overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
       >
         <table
           mat-table
@@ -268,184 +233,138 @@
           matSort
           #empTbSort="matSort"
         >
+          <!-- Select Checkbox Column -->
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>Select Item</th>
-            <td mat-cell *matCellDef="let element">
-              <select
-                class="px-2 py-1 border rounded"
-                name="selectedItem-{{ element.po }}"
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
               >
-                <option value="" disabled selected>Select Item</option>
-                <option *ngFor="let item of element.items" [value]="item">
-                  {{ item }}
-                </option>
-              </select>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="po">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="po">PO</th>
-            <td mat-cell *matCellDef="let element">{{ element.po }}</td>
-          </ng-container>
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="date">
-              DATE
+              </mat-checkbox>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.date | date }}
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
             </td>
           </ng-container>
-          <ng-container matColumnDef="lin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lin">LIN</th>
-            <td mat-cell *matCellDef="let element">{{ element.lin }}</td>
+
+          <!-- Other columns -->
+          <ng-container matColumnDef="poNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
+              #PO
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
           </ng-container>
-          <ng-container matColumnDef="ref">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ref">Ref</th>
-            <td mat-cell *matCellDef="let element">{{ element.ref }}</td>
-          </ng-container>
-          <ng-container matColumnDef="qunty">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="225">225</th>
-            <td mat-cell *matCellDef="let element">{{ element.qunty }}</td>
-          </ng-container>
-          <ng-container matColumnDef="sh">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="sh">SH</th>
-            <td mat-cell *matCellDef="let element">{{ element.sh }}</td>
-          </ng-container>
-          <ng-container matColumnDef="bo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="bo">BO</th>
-            <td mat-cell *matCellDef="let element">{{ element.bo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="ui">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ui">UI</th>
-            <td mat-cell *matCellDef="let element">{{ element.ui }}</td>
-          </ng-container>
-          <ng-container matColumnDef="manufacturer">
+
+          <ng-container matColumnDef="customerName">
             <th
               mat-header-cell
               *matHeaderCellDef
-              mat-sort-header="manufacturer"
+              mat-sort-header="customerName"
             >
-              Manufacturer
+              Customer Name
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.manufacturer }}
+              {{ element.customer.customerName }}
             </td>
           </ng-container>
-          <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
-              PART #
+
+          <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
+              Order Date
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.partNumber }}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.orderDate | date }}
+            </td>
           </ng-container>
+
+          <ng-container matColumnDef="modeOfShipment">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="modeOfShipment"
+            >
+              Mode of Shipment
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.modeOfShipment }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalCost">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
+              Total Cost
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalCost | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
+              Total Amount
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalAmount | currency : "USD" }}
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-              DESCRIPTION
+              Description
             </th>
             <td mat-cell *matCellDef="let element">
               {{ element.description }}
             </td>
           </ng-container>
-          <ng-container matColumnDef="quoteNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quoteNumber">
-              QUOTE #
+
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
+              Created By
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.quoteNumber }}
+              {{ element.user.fullName }}
             </td>
-          </ng-container>
-          <ng-container matColumnDef="vendorPo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="vendorPo">
-              VENDOR /PO#
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.vendorPo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="comment">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="comment">
-              COMMENT
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.comment }}</td>
-          </ng-container>
-          <ng-container matColumnDef="remarks">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="remarks">
-              REMARKS
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.remarks }}</td>
-          </ng-container>
-          <ng-container matColumnDef="shippingRef">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="shippingRef">
-              SHIPPING REF:
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.shippingRef }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="coo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="coo">COO</th>
-            <td mat-cell *matCellDef="let element">{{ element.coo }}</td>
-          </ng-container>
-          <ng-container matColumnDef="hsCord">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="hsCord">
-              HS CORD
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.hsCord }}</td>
-          </ng-container>
-          <ng-container matColumnDef="poValue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poValue">
-              PO VALUE
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.poValue | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="epoValue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="epoValue">
-              E-PO VALUE
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.epoValue | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="cost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="cost">
-              COST
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.cost | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="ecost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ecost">
-              E-Cost
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.ecost | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="wr">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="wr">WR</th>
-            <td mat-cell *matCellDef="let element">{{ element.wr }}</td>
-          </ng-container>
-          <ng-container matColumnDef="tracking">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="tracking">
-              TRACKING
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.tracking }}</td>
-          </ng-container>
-          <ng-container matColumnDef="shipToLoc">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="shipToLoc">
-              SHIP TO LOC
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.shipToLoc }}</td>
-          </ng-container>
-          <ng-container matColumnDef="ci">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="ci">CI</th>
-            <td mat-cell *matCellDef="let element">{{ element.ci }}</td>
-          </ng-container>
-          <ng-container matColumnDef="awb">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="awb">AWB</th>
-            <td mat-cell *matCellDef="let element">{{ element.awb }}</td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                (click)="$event.stopPropagation()"
+                type="button"
+                class="bg-transparent"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Header row -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsSecond"></tr>
+
+          <!-- Data rows -->
+          <tr
+            mat-row
+            *matRowDef="let element; columns: displayedColumnsSecond"
+            class="example-element-row"
+          ></tr>
         </table>
       </div>
       <div class="flex gap-3">
