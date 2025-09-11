@@ -19,618 +19,711 @@
               {{ customer.customerName }}
             </option>
           </select>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-         <div>
-          <label class="block text-gray-700">Purchase Order #</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
-          />
-        </div>
-         <div>
-          <label class="block text-gray-700">Supplier/Quote Ref #</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700">Customer Name</label>
-          <select
-            id="customerName"
-            name="customerName"
-            formControlName="customerId"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="null" disabled selected>Select customer</option>
-            <option
-              *ngFor="let customer of customers"
-              [value]="customer.customerId"
-            >
-              {{ customer.customerName }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-gray-700">Order Date</label>
-          <input
-            type="date"
-            id="orderDate"
-            name="orderDate"
-            formControlName="orderDate"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700">PO Amount</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700">PO Cost</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
-          />
-        </div><div>
-          <label class="block text-gray-700">Description</label>
-          <textarea
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po Description"
-          ></textarea>
-        </div>
-        <div>
-          <label class="block text-gray-700">Destination</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter Destination"
-          /> 
-        </div><div>
-          <label class="block text-gray-700">Payment Terms</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter terms"
-          /> 
-        </div><div>
-          <label class="block text-gray-700">Delivery Terms</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter delivery terms"
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700">Mode of Shipment</label>
-          <select class="w-full px-3 py-2 border rounded">
-            <option value="" disabled selected>Select mode of shipment</option>
-            <option value="Air">Air</option>
-            <option value="Sea">Sea</option>
-            <option value="Land">Land</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-gray-700">Freight /Shipping charges</label>
-          <input
-            type="number"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter charges"
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700">Discount</label>
-          <input
-            type="number"
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter discount"
-          />
-        </div>
-      </div>
-      <div class="mt-6 flex justify-end">
-        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add PO Items</button>
-      </div>
-       <div
-        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
-      >
-        <table
-          mat-table
-          class="mat-elevation-z8"
-          [dataSource]="sortedData2"
-          (matSortChange)="sortData($event)"
-          matSort
-          #empTbSort="matSort"
-        >
-          <!-- Select Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-              >
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <!-- Other columns -->
-          <ng-container matColumnDef="poNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
-              #PO
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="customerName">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="customerName"
-            >
-              Customer Name
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.customer.customerName }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="orderDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
-              Order Date
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.orderDate | date }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="modeOfShipment">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="modeOfShipment"
-            >
-              Mode of Shipment
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.modeOfShipment }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="totalCost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
-              Total Cost
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.totalCost | currency : "USD" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="totalAmount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
-              Total Amount
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.totalAmount | currency : "USD" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-              Description
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.description }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="createdBy">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
-              Created By
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.user.fullName }}
-            </td>
-          </ng-container>
-
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let element">
-              <button
-                (click)="$event.stopPropagation()"
-                type="button"
-                class="bg-transparent"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  class="w-6 h-6 fill-red-400 hover:fill-red-600"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </td>
-          </ng-container>
-
-          <!-- Header row -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsSecond"></tr>
-
-          <!-- Data rows -->
-          <tr
-            mat-row
-            *matRowDef="let element; columns: displayedColumnsSecond"
-            class="example-element-row"
-          ></tr>
-        </table>
-      </div>
-      <div class="mt-6 flex justify-center gap-3">
-        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
-        <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Clear</button>
-      </div>
-      <section class="fixed flex items-center justify-center bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto sm:inset-0 h-[calc(100%-1rem)] md:h-full scrollbar-hide">
-        <div class="w-[80%] h-[70%] overflow-auto bg-white rounded-lg shadow relative p-6">
-              <div class="flex gap-2 mb-4">
-              <button
-                
-                class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-              >
-                Add New Item
-              </button>
-               <button
-                
-                class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-              >
-                Add From Existing PO
-              </button>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-gray-700">Purchase Order #</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter po number"
+              />
             </div>
+            <div>
+              <label class="block text-gray-700">Supplier/Quote Ref #</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter po number"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Customer Name</label>
+              <select
+                id="customerName"
+                name="customerName"
+                formControlName="customerId"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="null" disabled selected>Select customer</option>
+                <option
+                  *ngFor="let customer of customers"
+                  [value]="customer.customerId"
+                >
+                  {{ customer.customerName }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700">Order Date</label>
+              <input
+                type="date"
+                id="orderDate"
+                name="orderDate"
+                formControlName="orderDate"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">PO Amount</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter po number"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">PO Cost</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter po number"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Description</label>
+              <textarea
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter po Description"
+              ></textarea>
+            </div>
+            <div>
+              <label class="block text-gray-700">Destination</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter Destination"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Payment Terms</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter terms"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Delivery Terms</label>
+              <input
+                type="text"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter delivery terms"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Mode of Shipment</label>
+              <select class="w-full px-3 py-2 border rounded">
+                <option value="" disabled selected>
+                  Select mode of shipment
+                </option>
+                <option value="Air">Air</option>
+                <option value="Sea">Sea</option>
+                <option value="Land">Land</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700"
+                >Freight /Shipping charges</label
+              >
+              <input
+                type="number"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter charges"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700">Discount</label>
+              <input
+                type="number"
+                class="w-full px-3 py-2 border rounded"
+                placeholder="Enter discount"
+              />
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end">
+            <button
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Add PO Items
+            </button>
+          </div>
+          <div
+            class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+          >
+            <table
+              mat-table
+              class="mat-elevation-z8"
+              [dataSource]="sortedData2"
+              (matSortChange)="sortData($event)"
+              matSort
+              #empTbSort="matSort"
+            >
+              <!-- Select Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
 
-            <!-- ADD ITEMS SECTION -->
-            <form >
-              <div >
-                <div class="grid grid-cols-4 gap-4 mb-4">
-                  <div class="flex flex-col">
-                    <label for="">quantity</label>
-                    <input
-                      formControlName="quantity"
-                      type="number"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">Unit</label>
-                    <input
-                      formControlName="unit"
-                      type="text"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">description</label>
-                    <input
-                      formControlName="description"
-                      type="text"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">Unit Price</label>
-                    <input
-                      formControlName="unitPrice"
-                      type="number"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">Actual Cost Per Unit</label>
-                    <input
-                      formControlName="ActualCostPerUnit"
-                      type="number"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">Part #</label>
-                    <input
-                      formControlName="partNumber"
-                      type="text"
-                      class="border rounded px-2 py-2"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label for="">Trace</label>
-                    <select
-                      formControlName="traceabilityRequirement"
-                      class="px-2 py-2 border-2 rounded-sm"
-                      name="trace"
-                      id=""
+              <!-- Other columns -->
+              <ng-container matColumnDef="poNumber">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="poNumber"
+                >
+                  #PO
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.poNumber }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="customerName">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="customerName"
+                >
+                  Customer Name
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.customer.customerName }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="orderDate">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="orderDate"
+                >
+                  Order Date
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.orderDate | date }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="modeOfShipment">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="modeOfShipment"
+                >
+                  Mode of Shipment
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.modeOfShipment }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalCost">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="totalCost"
+                >
+                  Total Cost
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.totalCost | currency : "USD" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalAmount">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="totalAmount"
+                >
+                  Total Amount
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.totalAmount | currency : "USD" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="description"
+                >
+                  Description
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.description }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdBy">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="createdBy"
+                >
+                  Created By
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.user.fullName }}
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    (click)="$event.stopPropagation()"
+                    type="button"
+                    class="bg-transparent"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      class="w-6 h-6 fill-red-400 hover:fill-red-600"
                     >
-                      <option value="" disabled selected>Select trace</option>
-                      <option [value]="1">yes</option>
-                      <option [value]="0">no</option>
-                    </select>
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- Header row -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsSecond"></tr>
+
+              <!-- Data rows -->
+              <tr
+                mat-row
+                *matRowDef="let element; columns: displayedColumnsSecond"
+                class="example-element-row"
+              ></tr>
+            </table>
+          </div>
+          <div class="mt-6 flex justify-center gap-3">
+            <button
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Submit
+            </button>
+            <button
+              class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+              Clear
+            </button>
+          </div>
+          <section
+            class="fixed flex items-center justify-center bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto sm:inset-0 h-[calc(100%-1rem)] md:h-full scrollbar-hide"
+          >
+            <div
+              class="w-[80%] h-[70%] overflow-auto bg-white rounded-lg shadow relative p-6"
+            >
+              <div class="flex gap-2 mb-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded mb-4">
+                  Add New Item
+                </button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded mb-4">
+                  Add From Existing PO
+                </button>
+              </div>
+
+              <!-- ADD ITEMS SECTION -->
+              <form>
+                <div>
+                  <div class="grid grid-cols-4 gap-4 mb-4">
+                    <div class="flex flex-col">
+                      <label for="">quantity</label>
+                      <input
+                        formControlName="quantity"
+                        type="number"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Unit</label>
+                      <input
+                        formControlName="unit"
+                        type="text"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">description</label>
+                      <input
+                        formControlName="description"
+                        type="text"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Unit Price</label>
+                      <input
+                        formControlName="unitPrice"
+                        type="number"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Actual Cost Per Unit</label>
+                      <input
+                        formControlName="ActualCostPerUnit"
+                        type="number"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Part #</label>
+                      <input
+                        formControlName="partNumber"
+                        type="text"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Trace</label>
+                      <select
+                        formControlName="traceabilityRequirement"
+                        class="px-2 py-2 border-2 rounded-sm"
+                        name="trace"
+                        id=""
+                      >
+                        <option value="" disabled selected>Select trace</option>
+                        <option [value]="1">yes</option>
+                        <option [value]="0">no</option>
+                      </select>
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="">Manufacturer/Model</label>
+                      <input
+                        formControlName="ManufacturerModel"
+                        type="text"
+                        class="border rounded px-2 py-2"
+                      />
+                    </div>
                   </div>
-                  <div class="flex flex-col">
-                    <label for="">Manufacturer/Model</label>
-                    <input
-                      formControlName="ManufacturerModel"
-                      type="text"
-                      class="border rounded px-2 py-2"
-                    />
+                  <div class="w-[20%] flex gap-2 items-end">
+                    <button
+                      class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                    >
+                      Add Item
+                    </button>
+                    <button
+                      class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                    >
+                      cancel
+                    </button>
                   </div>
                 </div>
-                <div class="w-[20%] flex gap-2 items-end">
-                  <button
-                 
-                    class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+              </form>
+              <div class="flex justify-center items-center">
+                <div class="w-2/3">
+                  <label class="block text-gray-700">Select Po</label>
+                  <select
+                    class="w-full px-3 py-2 border rounded"
+                    formControlName="poId"
                   >
-                    Add Item
-                  </button>
+                    <option value="null" disabled selected>Select PO</option>
+
+                    <option *ngFor="let po of poList" [value]="po.id">
+                      {{ po.poNumber }}
+                    </option>
+                  </select>
+                </div>
+                <div>
                   <button
-                    
-                    class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    (click)="getPO()"
                   >
-                    cancel
+                    Get Po
                   </button>
                 </div>
               </div>
-            </form>
-      <div class="flex justify-center items-center">
-        <div class="w-2/3">
-          <label class="block text-gray-700">Select Po</label>
-          <select
-            class="w-full px-3 py-2 border rounded"
-            formControlName="poId"
-          >
-            <option value="null" disabled selected>Select PO</option>
 
-            <option *ngFor="let po of poList" [value]="po.id">
-              {{ po.poNumber }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <button
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            (click)="getPO()"
-          >
-            Get Po
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
-      >
-        <table
-          mat-table
-          class="mat-elevation-z8"
-          [dataSource]="sortedData1"
-          (matSortChange)="sortData($event)"
-          matSort
-          #empTbSort="matSort"
-        >
-          <!-- Select Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              <div
+                class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
               >
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-              >
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <!-- Other columns -->
-          <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId">
-              Item ID
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element.itemId }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId">
-              PO Id
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.poId }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber">
-              Line Number
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.lineNumber }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="manufacturerModel">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="manufacturerModel"
-            >
-              Manufacturer Model
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.manufacturerModel }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
-              Part Number
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.partNumber }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">
-              Quantity
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.quantity }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actualCostPerUnit">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="actualCostPerUnit"
-            >
-              Description
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice">
-              Unit Price
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice">
-              Total Price
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
->>>>>>> 2ef63ebbe6d9a9e3b6d90d1d3afa1ab9ad97198a
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="modeOfShipment">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="modeOfShipment"
-            >
-              Mode of Shipment
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.modeOfShipment }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="totalCost">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
-              Total Cost
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.totalCost | currency : "USD" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="totalAmount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
-              Total Amount
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.totalAmount | currency : "USD" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-              Description
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.description }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit">
-              Unit
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.unit }}
-            </td>
-          </ng-container>
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let element">
-              <button
-                (click)="$event.stopPropagation()"
-                type="button"
-                class="bg-transparent"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                <table
+                  mat-table
+                  class="mat-elevation-z8"
+                  [dataSource]="sortedData1"
+                  (matSortChange)="sortData($event)"
+                  matSort
+                  #empTbSort="matSort"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </td>
-          </ng-container>
+                  <!-- Select Checkbox Column -->
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox
+                        (change)="$event ? masterToggle() : null"
+                        [checked]="isAllSelected()"
+                        [indeterminate]="
+                          selection.hasValue() && !isAllSelected()
+                        "
+                      >
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox
+                        (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                      >
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
 
-          <!-- Header row -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsFirst"></tr>
+                  <!-- Other columns -->
+                  <ng-container matColumnDef="itemId">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="itemId"
+                    >
+                      Item ID
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.itemId }}
+                    </td>
+                  </ng-container>
 
-          <!-- Data rows -->
-          <tr
-            mat-row
-            *matRowDef="let element; columns: displayedColumnsFirst"
-            class="example-element-row"
-          ></tr>
-        </table>
-      </div>
-      <div class="mt-6 flex justify-end">
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Add Selected Item to New Po
-        </button>
-      </div>
-      <div>
-        <p class="text-xl">New PO Item</p>
-      </div>
+                  <ng-container matColumnDef="poId">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="poId"
+                    >
+                      PO Id
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.poId }}
+                    </td>
+                  </ng-container>
 
+                  <ng-container matColumnDef="lineNumber">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="lineNumber"
+                    >
+                      Line Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.lineNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="manufacturerModel">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="manufacturerModel"
+                    >
+                      Manufacturer Model
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.manufacturerModel }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="partNumber">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="partNumber"
+                    >
+                      Part Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.partNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="quantity">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="quantity"
+                    >
+                      Quantity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.quantity }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actualCostPerUnit">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="actualCostPerUnit"
+                    >
+                      Description
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.actualCostPerUnit | currency : "USD" }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="unitPrice">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="unitPrice"
+                    >
+                      Unit Price
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.unitPrice | currency : "USD" }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="totalPrice">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="totalPrice"
+                    >
+                      Total Price
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.totalPrice | currency : "USD" }}
+                      >>>>>>> 2ef63ebbe6d9a9e3b6d90d1d3afa1ab9ad97198a
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="modeOfShipment">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="modeOfShipment"
+                    >
+                      Mode of Shipment
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.modeOfShipment }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalCost">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="totalCost"
+                    >
+                      Total Cost
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.totalCost | currency : "USD" }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalAmount">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="totalAmount"
+                    >
+                      Total Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.totalAmount | currency : "USD" }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="description"
+                    >
+                      Description
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.description }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="unit">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      mat-sort-header="unit"
+                    >
+                      Unit
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.unit }}
+                    </td>
+                  </ng-container>
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        (click)="$event.stopPropagation()"
+                        type="button"
+                        class="bg-transparent"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!-- Header row -->
+                  <tr
+                    mat-header-row
+                    *matHeaderRowDef="displayedColumnsFirst"
+                  ></tr>
+
+                  <!-- Data rows -->
+                  <tr
+                    mat-row
+                    *matRowDef="let element; columns: displayedColumnsFirst"
+                    class="example-element-row"
+                  ></tr>
+                </table>
+              </div>
+              <div class="mt-6 flex justify-end">
+                <button
+                  class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Add Selected Item to New Po
+                </button>
+              </div>
+              <div>
+                <p class="text-xl">New PO Item</p>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
-      </section>
     </form>
-</div>
+  </div>
 </div>
