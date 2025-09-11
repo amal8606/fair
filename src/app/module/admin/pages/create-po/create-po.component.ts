@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+
+import { AfterViewInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { PoService } from '../../../../_core/http/api/po.service';
@@ -29,23 +31,27 @@ export class CreatePoComponent {
     private readonly poService: PoService // private readonly report: ReportsApiService
   ) {}
   @ViewChild('empTbSort') empTbSort = new MatSort();
-  @ViewChild('paginator') paginator!: MatPaginator;
 
-  public purchaseOrders = new MatTableDataSource<Request>();
+  public purchaseOrdersList = new MatTableDataSource<Request>();
+  public selecterPOList = new MatTableDataSource<Request>();
 
-  public sortedData = new MatTableDataSource<Request>();
+  public sortedData1 = new MatTableDataSource<Request>();
+  public sortedData2 = new MatTableDataSource<Request>();
 
   // For the first table
   displayedColumnsFirst: string[] = [
     'select',
-    'poNumber',
-    'customerName',
-    'orderDate',
-    'modeOfShipment',
-    'totalCost',
-    'totalAmount',
+    'itemId',
+    'poId',
+    'lineNumber',
+    'manufacturerModel',
+    'partNumber',
+    'quantity',
+    'actualCostPerUnit',
+    'unitPrice',
+    'totalPrice',
     'description',
-    'createdBy',
+    'unit',
   ];
 
   // For the second table
@@ -72,6 +78,8 @@ export class CreatePoComponent {
   public poForm: FormGroup = new FormGroup({
     customerId: new FormControl(null, Validators.required),
     poNumber: new FormControl('', Validators.required),
+
+    poId: new FormControl(null),
     orderDate: new FormControl(this.formatDate(this.date), Validators.required),
     createdBy: new FormControl('1', Validators.required),
     modeOfShipment: new FormControl('', Validators.required),
@@ -86,14 +94,41 @@ export class CreatePoComponent {
     this.getActivePO();
     this.getCustomer();
   }
+  public poList: any;
   public getActivePO() {
     this.poService.getActivePO().subscribe({
       next: (response: any) => {
-        this.sortedData.data = response;
-        this.purchaseOrders.data = response; // if needed
-        this.sortedData.paginator = this.paginator; // Make sure this is set
+        this.poList = response;
+        console.log(response);
       },
       error: (error: any) => {},
+    });
+  }
+
+  public productItems: any;
+  public subTotal: any;
+  public total: any;
+  public loading = false;
+  public getPO() {
+    const poId = this.poForm.get('poId')?.value;
+    this.poService.getPO(poId).subscribe({
+      next: (response) => {
+        this.productItems = response;
+        this.sortedData1.data = response;
+        this.purchaseOrdersList.data = response;
+        // this.subTotal = this.productItems.reduce(
+        //   (acc: number, item: any) => acc + item.totalPrice,
+        //   0
+        // );
+        // this.total = this.subTotal;
+        console.log(this.productItems);
+      },
+      error: (error) => {
+        console.log(error);
+        if (error.status === 404) {
+          this.productItems = [];
+        }
+      },
     });
   }
   public getCustomer() {
@@ -108,21 +143,22 @@ export class CreatePoComponent {
   selection = new SelectionModel<any>(true, []); // multiple = true
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.sortedData.data.length;
+
+    const numRows = this.sortedData1.data.length;
     return numSelected === numRows;
   }
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.sortedData.data.forEach((row) => this.selection.select(row));
+      : this.sortedData1.data.forEach((row) => this.selection.select(row));
   }
   sortData(sort: Sort) {
-    const data = this.purchaseOrders.data.slice();
+    const data = this.purchaseOrdersList.data.slice();
     if (!sort.active || sort.direction === '') {
-      this.sortedData.data = data;
+      this.sortedData1.data = data;
       return;
     }
-    this.sortedData.data = data.sort((a: any, b: any) => {
+    this.sortedData1.data = data.sort((a: any, b: any) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'poNumber':
@@ -145,7 +181,6 @@ export class CreatePoComponent {
           return 0;
       }
     });
-    this.sortedData.paginator = this.paginator;
   }
   public compare(a: number | string, b: number | string, isAsc: boolean) {
     if (typeof a === 'string' && typeof b === 'string') {

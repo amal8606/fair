@@ -27,6 +27,19 @@ export class PoService {
       po
     );
   }
+  // po items
+  public createPOItem(po: any) {
+    return this.http.post<any>(
+      `${environment.api}/OrderManagement/AddPOItem`,
+      po
+    );
+  }
+  public updatePOItem(po: any) {
+    return this.http.put<any>(
+      `${environment.api}/OrderManagement/UpdatePOItem`,    
+      po
+    );
+  }
 
   public getCustomer(): Observable<any> {
     return this.http.get<any>(

@@ -9,10 +9,12 @@
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow mt-50">
       <!-- Modal header -->
-      <div class="flex justify-between p-6 border-b rounded-t">
-        <h3 class="text-xl flex mb-0 items-center font-semibold text-gray-900">
-          Detailed PO
-        </h3>
+      <div class="flex justify-between p-6 border-b rounded-t bg-blue-200">
+        <p
+          class="text-[1rem] flex mb-0 items-center font-semibold text-gray-900"
+        >
+          fairmount LLC
+        </p>
         <button
           type="button"
           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
@@ -35,23 +37,23 @@
         </button>
       </div>
       <!-- Modal body -->
-      <div *ngIf="!loading" class="px-6 mt-4">
+      <div class="px-6 mt-4">
         <div class="space-y-4 text-sm text-gray-700">
-          <div class="flex flex-row justify-between gap-8">
-            <div>
+          <div class="flex flex-col justify-between gap-8">
+            <!-- <div>
               <strong>REF: {{ po.poNumber }}</strong>
               <div class="w-1/3">
                 The P.O. number must appear on all related correspondence,
                 shipping papers, and invoices:
               </div>
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
               <strong>SUPPLIER REF:</strong>
             </div>
-          </div>
+          </div> -->
 
-          <div><strong>SHIP VIA:</strong> THROUGH SHIPPING AGENT</div>
-          <div class="flex justify-between flex-wrap gap-8">
+            <!-- <div><strong>SHIP VIA:</strong> THROUGH SHIPPING AGENT</div> -->
+            <!-- <div class="flex justify-between flex-wrap gap-8">
             <div>
               <strong>TO:</strong><br />
               {{ po.customer.customerName }}<br />
@@ -60,73 +62,305 @@
               Phone:{{ po.customer.phone }}<br />
             </div>
             <div><strong>SHIP TO:</strong><br /></div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="min-w-full border text-xs mb-4">
-              <thead class="bg-gray-100">
+          </div> -->
+            <div>
+              <button
+                (click)="addItemModel = !addItemModel"
+                class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+              >
+                Add New Item
+              </button>
+            </div>
+
+            <!-- ADD ITEMS SECTION -->
+            <form [formGroup]="addPOItemForm">
+              <div *ngIf="addItemModel">
+                <div class="grid grid-cols-4 gap-4 mb-4">
+                  <div class="flex flex-col">
+                    <label for="">quantity</label>
+                    <input
+                      formControlName="quantity"
+                      type="number"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Unit</label>
+                    <input
+                      formControlName="unit"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">description</label>
+                    <input
+                      formControlName="description"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Unit Price</label>
+                    <input
+                      formControlName="unitPrice"
+                      type="number"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Actual Cost Per Unit</label>
+                    <input
+                      formControlName="ActualCostPerUnit"
+                      type="number"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Part #</label>
+                    <input
+                      formControlName="partNumber"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Trace</label>
+                    <select
+                      formControlName="traceabilityRequirement"
+                      class="px-2 py-2 border-2 rounded-sm"
+                      name="trace"
+                      id=""
+                    >
+                      <option value="" disabled selected>Select trace</option>
+                      <option [value]="1">yes</option>
+                      <option [value]="0">no</option>
+                    </select>
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Manufacturer/Model</label>
+                    <input
+                      formControlName="ManufacturerModel"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                </div>
+                <div class="w-[20%] flex gap-2 items-end">
+                  <button
+                  [disabled]="addPOItemForm.invalid"
+                    (click)="onSubmit()"
+                    class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  >
+                    Add Item
+                  </button>
+                  <button
+                    (click)="addItemModel = !addItemModel"
+                    class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  >
+                    cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full border text-xs mb-4">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">ORDER DATE</th>
+                    <th class="border px-2 py-1">MODE OF SHIPMENT</th>
+                    <th class="border px-2 py-1">DELIVERY SCHEDULE</th>
+                    <th class="border px-2 py-1">TERMS</th>
+                    <!-- <th class="border px-2 py-1">ACTIONS</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-2 py-1">
+                      {{ po.orderDate | date : "dd/MM/yyyy" }}
+                      <!-- <input type="date" [(ngModel)]="po.orderDate" class="border rounded px-2 py-1 w-32" /> -->
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.modeOfShipment }}
+                      <!-- <input [(ngModel)]="po.modeOfShipment" class="border rounded px-2 py-1 w-32" /> -->
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.deliverySchedule }}
+                      <!-- <input [(ngModel)]="po.deliverySchedule" class="border rounded px-2 py-1 w-32" /> -->
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.terms }}
+                      <!-- <input [(ngModel)]="po.terms" class="border rounded px-2 py-1 w-32" /> -->
+                    </td>
+                    <!-- <td class="border px-2 py-1">
+                      <button (click)="savePoDetails(po)" class="bg-green-500 text-white px-2 py-1 rounded mr-2">Save</button>
+                    </td> -->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full border text-xs">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">LN#</th>
+                    <th class="border px-2 py-1">QTY</th>
+                    <th class="border px-2 py-1">UNIT</th>
+                    <th class="border px-2 py-1">DESCRIPTION</th>
+                    <th class="border px-2 py-1">MFR/MODEL</th>
+                    <th class="border px-2 py-1">PART #</th>
+                    <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
+                    <th class="border px-2 py-1">UNIT PRICE ($)</th>
+                    <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
+                    <th class="border px-2 py-1">TOTAL ($)</th>
+                    <th class="border px-3 py-2">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="!loading">
+                  <tr *ngFor="let item of productItems; let i = index">
+                    <td class="border px-2 py-1">
+                      {{ i + 1 }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readQty">
+                        <input
+                          type="number"
+                          [(ngModel)]="item.quantity"
+                          class="border rounded px-2 py-1 w-16"
+                        />
+                      </ng-container>
+                      <ng-template #readQty>{{ item.quantity }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readUnit">
+                        <input
+                          [(ngModel)]="item.unit"
+                          class="border rounded px-2 py-1 w-16"
+                        />
+                      </ng-container>
+                      <ng-template #readUnit>{{ item.unit }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readDesc">
+                        <input
+                          [(ngModel)]="item.description"
+                          class="border rounded px-2 py-1 w-32"
+                        />
+                      </ng-container>
+                      <ng-template #readDesc>{{
+                        item.description
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readModel">
+                        <input
+                          [(ngModel)]="item.manufacturerModel"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readModel>{{
+                        item.manufacturerModel
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readPart">
+                        <input
+                          [(ngModel)]="item.partNumber"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readPart>{{ item.partNumber }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readTrace">
+                        <input
+                          [(ngModel)]="item.traceabilityRequired"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readTrace>{{
+                        item.traceabilityRequired
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container
+                        *ngIf="editingIndex === i; else readUnitPrice"
+                      >
+                        <input
+                          type="number"
+                          [(ngModel)]="item.unitPrice"
+                          class="border rounded px-2 py-1 w-20"
+                        />
+                      </ng-container>
+                      <ng-template #readUnitPrice>{{
+                        item.unitPrice
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container
+                        *ngIf="editingIndex === i; else actualUnitCost"
+                      >
+                        <input
+                          type="number"
+                          [(ngModel)]="item.unitPrice"
+                          class="border rounded px-2 py-1 w-20"
+                        />
+                      </ng-container>
+                      <ng-template #actualUnitCost>{{
+                        item.actualCostPerUnit
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ item.totalPrice }}
+                    </td>
+                    <td class="border px-3 py-2">
+                      <div class="flex items-center space-x-2">
+                        <ng-container
+                          *ngIf="editingIndex === i; else actionBtns"
+                        >
+                          <button
+                            (click)="saveItem(item); cancelEdit()"
+                            class="bg-green-500 text-white px-2 py-1 rounded"
+                          >
+                            Save
+                          </button>
+                          <button
+                            (click)="cancelEdit()"
+                            class="bg-gray-500 text-white px-2 py-1 rounded"
+                          >
+                            Cancel
+                          </button>
+                        </ng-container>
+                        <ng-template #actionBtns>
+                          <button
+                            (click)="editItem(i)"
+                            class="bg-blue-500 text-white px-2 py-1 rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            (click)="deleteItem(item)"
+                            class="bg-red-500 text-white px-2 py-1 rounded"
+                          >
+                            Delete
+                          </button>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="productItems?.length === 0">
+                    <td
+                      colspan="10"
+                      class="border px-2 py-1 text-center text-gray-500"
+                    >
+                      No items found
+                    </td>
+                  </tr>
+                </tbody>
                 <tr>
-                  <th class="border px-2 py-1">ORDER DATE</th>
-                  <th class="border px-2 py-1">MODE OF SHIPMENT</th>
-                  <th class="border px-2 py-1">DELIVERY SCHEDULE</th>
-                  <th class="border px-2 py-1">TERMS</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="border px-2 py-1">{{ po.orderDate | date }}</td>
-                  <td class="border px-2 py-1">{{ po.modeOfShipment }}</td>
-                  <td class="border px-2 py-1">{{ po.deliverySchedule }}</td>
-                  <td class="border px-2 py-1">{{ po.terms }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="min-w-full border text-xs">
-              <thead class="bg-gray-100">
-                <tr>
-                  <th class="border px-2 py-1">LN#</th>
-                  <th class="border px-2 py-1">QTY</th>
-                  <th class="border px-2 py-1">UNIT</th>
-                  <th class="border px-2 py-1">DESCRIPTION</th>
-                  <th class="border px-2 py-1">MFR/MODEL</th>
-                  <th class="border px-2 py-1">PART #</th>
-                  <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
-                  <th class="border px-2 py-1">UNIT PRICE ($)</th>
-                  <th class="border px-2 py-1">TOTAL ($)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of productItems">
-                  <td class="border px-2 py-1">{{ item.lineNumber }}</td>
-                  <td class="border px-2 py-1">{{ item.quantity }}</td>
-                  <td class="border px-2 py-1">{{ item.unit }}</td>
-                  <td class="border px-2 py-1">{{ item.description }}</td>
-                  <td class="border px-2 py-1">{{ item.manufacturerModel }}</td>
-                  <td class="border px-2 py-1">{{ item.partNumber }}</td>
-                  <td class="border px-2 py-1">
-                    {{ item.traceabilityRequired }}
-                  </td>
-                  <td class="border px-2 py-1">
-                    ${{ item.unitPrice.toFixed(2) }}
-                  </td>
-                  <td class="border px-2 py-1">
-                    ${{ item.totalPrice.toFixed(2) }}
-                  </td>
-                </tr>
-                <tr *ngIf="productItems?.length === 0">
                   <td
                     colspan="9"
-                    class="border px-2 py-1 text-center text-gray-500"
-                  >
-                    No items found
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td
-                    colspan="7"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     SUB TOTAL
@@ -137,7 +371,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="7"
+                    colspan="9"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     DISCOUNT
@@ -146,7 +380,25 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="7"
+                    colspan="9"
+                    class="border px-2 py-1 text-right font-semibold"
+                  >
+                    FREIGHT /SHIPPING
+                  </td>
+                  <td class="border px-2 py-1">$-</td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="9"
+                    class="border px-2 py-1 text-right font-semibold"
+                  >
+                    CUSTOM FEE /TAX
+                  </td>
+                  <td class="border px-2 py-1">$-</td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="9"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     TOTAL AMOUNT
@@ -155,26 +407,23 @@
                     {{ total | currency : "USD" }}
                   </td>
                 </tr>
-              </tfoot>
-            </table>
-          </div>
-          <div>
-            <strong>EMAIL:{{ po.user.email }}</strong> <br />
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-      <div *ngIf="loading">
-        <p class="px-2 py-1 text-center text-gray-500">Loading items...</p>
-      </div>
-      <!-- Modal footer -->
-      <div class="flex items-center p-6 space-x-2 rounded-b">
-        <button
-          type="button"
-          class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
-          (click)="closeModel()"
-        >
-          Close
-        </button>
+        <div *ngIf="loading">
+          <p class="px-2 py-1 text-center text-gray-500">Loading items...</p>
+        </div>
+        <!-- Modal footer -->
+        <div class="flex items-center p-6 space-x-2 rounded-b">
+          <button
+            type="button"
+            class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+            (click)="closeModel()"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   </div>
