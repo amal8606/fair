@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-
 import { AfterViewInit } from '@angular/core';
 import {
   FormControl,
@@ -8,12 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { PoService } from '../../../../_core/http/api/po.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
+import { A11yModule } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-create-po',
   standalone: true,
@@ -23,6 +22,7 @@ import { SelectionModel } from '@angular/cdk/collections';
     MatTableModule,
     MatSortModule,
     MatCheckboxModule,
+    A11yModule,
   ],
   templateUrl: './create-po.component.html',
 })
@@ -78,7 +78,6 @@ export class CreatePoComponent {
   public poForm: FormGroup = new FormGroup({
     customerId: new FormControl(null, Validators.required),
     poNumber: new FormControl('', Validators.required),
-
     poId: new FormControl(null),
     orderDate: new FormControl(this.formatDate(this.date), Validators.required),
     createdBy: new FormControl('1', Validators.required),
@@ -89,6 +88,9 @@ export class CreatePoComponent {
     active: new FormControl(1, Validators.required),
   });
   public customers: any = [];
+  public showAddItem: boolean = false;
+  public addNewItem: boolean = true;
+  public addExisting: boolean = false;
 
   ngOnInit() {
     this.getActivePO();
@@ -143,7 +145,6 @@ export class CreatePoComponent {
   selection = new SelectionModel<any>(true, []); // multiple = true
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-
     const numRows = this.sortedData1.data.length;
     return numSelected === numRows;
   }
