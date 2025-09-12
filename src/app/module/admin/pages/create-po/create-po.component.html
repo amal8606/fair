@@ -1,5 +1,5 @@
 <div class="overflow-x-auto m-5 border border-gray-300 p-3 rounded-lg">
-  <div (click)="showAddItem = false">
+  <div (click)="closeModel()" class="cursor-pointer">
     <p class="text-4xl font-bold mb-4 text-gray-400">Create Purchase Order</p>
     <form [formGroup]="poForm">
       <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -9,6 +9,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter po number"
+            formControlName="poNumber"
           />
         </div>
         <div>
@@ -17,6 +18,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter po number"
+            formControlName="supplier"
           />
         </div>
         <div>
@@ -52,6 +54,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter po number"
+            formControlName="totalAmount"
           />
         </div>
         <div>
@@ -60,6 +63,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter po number"
+            formControlName="totalCost"
           />
         </div>
         <div>
@@ -68,6 +72,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter po Description"
+            formControlName="description"
           ></textarea>
         </div>
         <div>
@@ -76,6 +81,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter Destination"
+            formControlName="destination"
           />
         </div>
         <div>
@@ -84,6 +90,7 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter terms"
+            formControlName="paymentTerms"
           />
         </div>
         <div>
@@ -92,11 +99,15 @@
             type="text"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter delivery terms"
+            formControlName="deliveryTerms"
           />
         </div>
         <div>
           <label class="block text-gray-700">Mode of Shipment</label>
-          <select class="w-full px-3 py-2 border rounded">
+          <select
+            class="w-full px-3 py-2 border rounded"
+            formControlName="modeOfShipment"
+          >
             <option value="" disabled selected>Select mode of shipment</option>
             <option value="Air">Air</option>
             <option value="Sea">Sea</option>
@@ -109,6 +120,7 @@
             type="number"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter charges"
+            formControlName="shippingCharges"
           />
         </div>
         <div>
@@ -117,6 +129,7 @@
             type="number"
             class="w-full px-3 py-2 border rounded"
             placeholder="Enter discount"
+            formControlName="discount"
           />
         </div>
       </div>
@@ -276,6 +289,7 @@
       <div class="mt-6 flex justify-center gap-3">
         <button
           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          (click)="createPO()"
         >
           Submit
         </button>
@@ -313,7 +327,7 @@
             <div *ngIf="addNewItem">
               <div class="grid grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col">
-                  <label for="">quantity</label>
+                  <label for="">Quantity</label>
                   <input
                     formControlName="quantity"
                     type="number"
@@ -329,7 +343,7 @@
                   />
                 </div>
                 <div class="flex flex-col">
-                  <label for="">description</label>
+                  <label for="">Description</label>
                   <input
                     formControlName="description"
                     type="text"
@@ -395,24 +409,27 @@
             </div>
           </form>
           <div *ngIf="addExisting">
-            <div class="flex justify-center items-center">
+            <div class="flex justify-center items-end gap-3">
               <div class="w-2/3">
-                <label class="block text-gray-700">Select Po</label>
-                <select
-                  class="w-full px-3 py-2 border rounded"
-                  formControlName="poId"
-                >
-                  <option value="null" disabled selected>Select PO</option>
+                <form [formGroup]="poId">
+                  <label class="block text-gray-700">Select Po</label>
+                  <select
+                    class="w-full px-3 py-2 border rounded"
+                    formControlName="poId"
+                  >
+                    <option value="null" disabled selected>Select PO</option>
 
-                  <option *ngFor="let po of poList" [value]="po.id">
-                    {{ po.poNumber }}
-                  </option>
-                </select>
+                    <option *ngFor="let po of poList" [value]="po.id">
+                      {{ po.poNumber }}
+                    </option>
+                  </select>
+                </form>
               </div>
               <div>
                 <button
-                  class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
                   (click)="getPO()"
+                  [disabled]="poId.invalid"
                 >
                   Get Po
                 </button>
@@ -619,9 +636,21 @@
                   class="example-element-row"
                 ></tr>
               </table>
+              <div>
+                <p
+                  *ngIf="sortedData1.data.length === null"
+                  class="text-center mt-4"
+                >
+                  No items found for the selected PO.
+                </p>
+              </div>
+              <div *ngIf="loading" class="text-center mt-4">
+                <p>Loading...</p>
+              </div>
             </div>
             <div class="mt-6 flex justify-end">
               <button
+                (click)="closeModel()"
                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
               >
                 Add Selected Item to New Po

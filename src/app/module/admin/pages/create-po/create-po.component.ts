@@ -76,16 +76,25 @@ export class CreatePoComponent {
   }
   public date = new Date();
   public poForm: FormGroup = new FormGroup({
-    customerId: new FormControl(null, Validators.required),
     poNumber: new FormControl('', Validators.required),
-    poId: new FormControl(null),
+    supplier: new FormControl('', Validators.required),
+    customerId: new FormControl(null, Validators.required),
     orderDate: new FormControl(this.formatDate(this.date), Validators.required),
-    createdBy: new FormControl('1', Validators.required),
+    description: new FormControl('', Validators.required),
+    destination: new FormControl('', Validators.required),
+    paymentTerms: new FormControl('', Validators.required),
+    deliveryTerms: new FormControl('', Validators.required),
     modeOfShipment: new FormControl('', Validators.required),
+    shippingCharges: new FormControl(null, Validators.required),
+    discount: new FormControl(null),
     totalAmount: new FormControl(null, Validators.required),
     totalCost: new FormControl(null, Validators.required),
-    description: new FormControl('', Validators.required),
+    createdBy: new FormControl('1', Validators.required),
     active: new FormControl(1, Validators.required),
+  });
+
+  public poId: FormGroup = new FormGroup({
+    poId: new FormControl('', Validators.required),
   });
   public customers: any = [];
   public showAddItem: boolean = false;
@@ -101,34 +110,27 @@ export class CreatePoComponent {
     this.poService.getActivePO().subscribe({
       next: (response: any) => {
         this.poList = response;
-        console.log(response);
       },
       error: (error: any) => {},
     });
   }
 
-  public productItems: any;
-  public subTotal: any;
-  public total: any;
   public loading = false;
+
   public getPO() {
-    const poId = this.poForm.get('poId')?.value;
+    this.sortedData1.data = [];
+    this.purchaseOrdersList.data = [];
+    this.loading = true;
+    const poId = this.poId.get('poId')?.value;
     this.poService.getPO(poId).subscribe({
       next: (response) => {
-        this.productItems = response;
+        this.loading = false;
         this.sortedData1.data = response;
         this.purchaseOrdersList.data = response;
-        // this.subTotal = this.productItems.reduce(
-        //   (acc: number, item: any) => acc + item.totalPrice,
-        //   0
-        // );
-        // this.total = this.subTotal;
-        console.log(this.productItems);
       },
       error: (error) => {
-        console.log(error);
         if (error.status === 404) {
-          this.productItems = [];
+          this.loading = false;
         }
       },
     });
@@ -140,6 +142,45 @@ export class CreatePoComponent {
       },
       error: (error: any) => {},
     });
+  }
+
+  public closeModel() {
+    this.showAddItem = false;
+    this.sortedData1.data = [];
+    this.purchaseOrdersList.data = [];
+    this.poId.reset();
+  }
+
+  public newPoId: any = 25;
+  public createPO() {
+    if (this.poForm.valid) {
+      this.poService.createPO(this.poForm.value).subscribe({
+        next: (response) => {
+          this.newPoId = response;
+          this.getActivePO();
+          this.createBulkPoItem();
+        },
+        error: (error) => {
+          console.error('Error creating PO:', error);
+        },
+      });
+    }
+    this.createBulkPoItem();
+  }
+  public createBulkPoItem() {
+    if (this.newPoId && this.selection.selected.length > 0) {
+      this.selection.selected.forEach((item) => {
+        item.poId = this.newPoId;
+      });
+    }
+
+    this.poService
+      .createBulkPoItem(this.newPoId, this.selection.selected)
+      .subscribe({
+        next: (response) => {
+          console.log('PO Items added successfully:');
+        },
+      });
   }
 
   selection = new SelectionModel<any>(true, []); // multiple = true
