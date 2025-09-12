@@ -13,6 +13,8 @@ import { PoService } from '../../../../_core/http/api/po.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { A11yModule } from '@angular/cdk/a11y';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-create-po',
   standalone: true,
@@ -28,7 +30,8 @@ import { A11yModule } from '@angular/cdk/a11y';
 })
 export class CreatePoComponent {
   constructor(
-    private readonly poService: PoService // private readonly report: ReportsApiService
+    private readonly poService: PoService,
+    private readonly toaster: ToastrService
   ) {}
   @ViewChild('empTbSort') empTbSort = new MatSort();
 
@@ -56,14 +59,17 @@ export class CreatePoComponent {
 
   // For the second table
   displayedColumnsSecond: string[] = [
-    'poNumber',
-    'customerName',
-    'orderDate',
-    'modeOfShipment',
-    'totalCost',
-    'totalAmount',
+    'itemId',
+    'poId',
+    'lineNumber',
+    'manufacturerModel',
+    'partNumber',
+    'quantity',
+    'actualCostPerUnit',
+    'unitPrice',
+    'totalPrice',
     'description',
-    'createdBy',
+    'unit',
     'actions',
   ];
   public formatDate(date: Date): string {
@@ -96,10 +102,25 @@ export class CreatePoComponent {
   public poId: FormGroup = new FormGroup({
     poId: new FormControl('', Validators.required),
   });
+  public newPoItem: FormGroup = new FormGroup({
+    poId: new FormControl(''),
+    actualCostPerUnit: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    itemId: new FormControl(0),
+    manufacturerModel: new FormControl('', Validators.required),
+    partNumber: new FormControl('', Validators.required),
+    quantity: new FormControl('', Validators.required),
+    totalPrice: new FormControl('', Validators.required),
+    traceabilityRequired: new FormControl('', Validators.required),
+    unit: new FormControl('', Validators.required),
+    unitPrice: new FormControl('', Validators.required),
+  });
+
   public customers: any = [];
   public showAddItem: boolean = false;
   public addNewItem: boolean = true;
   public addExisting: boolean = false;
+  public isLoading: boolean = false;
 
   ngOnInit() {
     this.getActivePO();
@@ -149,9 +170,23 @@ export class CreatePoComponent {
     this.sortedData1.data = [];
     this.purchaseOrdersList.data = [];
     this.poId.reset();
+    this.newPoItem.reset();
+    this.sortedData2.data = this.selection.selected;
+  }
+  public addItem() {
+    this.selection.select(this.newPoItem.value);
+    this.sortedData2.data = this.selection.selected;
+    this.newPoItem.reset();
+    this.showAddItem = false;
   }
 
-  public newPoId: any = 25;
+  public clear() {
+    this.selection.clear();
+    this.sortedData2.data = [];
+    this.poForm.reset();
+  }
+
+  public newPoId: any = 33;
   public createPO() {
     if (this.poForm.valid) {
       this.poService.createPO(this.poForm.value).subscribe({
@@ -178,7 +213,10 @@ export class CreatePoComponent {
       .createBulkPoItem(this.newPoId, this.selection.selected)
       .subscribe({
         next: (response) => {
-          console.log('PO Items added successfully:');
+          this.sortedData2.data = [];
+          this.selection.clear();
+          this.poForm.reset();
+          this.toaster.success('Purchase Order Created Successfully ');
         },
       });
   }
@@ -193,6 +231,15 @@ export class CreatePoComponent {
     this.isAllSelected()
       ? this.selection.clear()
       : this.sortedData1.data.forEach((row) => this.selection.select(row));
+  }
+  removeSelectedItem(item: any) {
+    const index = this.selection.selected.findIndex(
+      (selected: any) => selected.itemId === item.itemId
+    );
+    if (index > -1) {
+      this.selection.selected.splice(index, 1);
+      this.sortedData2.data = [...this.selection.selected];
+    }
   }
   sortData(sort: Sort) {
     const data = this.purchaseOrdersList.data.slice();
