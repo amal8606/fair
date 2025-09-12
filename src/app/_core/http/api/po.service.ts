@@ -34,9 +34,16 @@ export class PoService {
       po
     );
   }
+
+  public createBulkPoItem(poId: any, poItem: any) {
+    return this.http.post<any>(
+      `${environment.api}/OrderManagement/BulkAdd?poId=${poId}`,
+      poItem
+    );
+  }
   public updatePOItem(po: any) {
     return this.http.put<any>(
-      `${environment.api}/OrderManagement/UpdatePOItem`,    
+      `${environment.api}/OrderManagement/UpdatePOItem`,
       po
     );
   }
