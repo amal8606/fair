@@ -6,6 +6,7 @@ import { AddPoComponent } from '../../component/add-po/add-po.component';
 import { PoModelComponent } from '../../component/po-model/po-model.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { PoService } from '../../../../_core/http/api/po.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,8 @@ import { PoService } from '../../../../_core/http/api/po.service';
 })
 export class HomeComponent {
   constructor(
-    private readonly poService: PoService // private readonly report: ReportsApiService
+    private readonly poService: PoService,
+    private readonly router: Router // private readonly report: ReportsApiService
   ) {}
   public showModel = false;
   public showAddPo = false;
@@ -127,7 +129,8 @@ export class HomeComponent {
   }
 
   public openAddPo() {
-    this.showAddPo = true;
+    // this.showAddPo = true;
+    this.router.navigate(['/admin/create-po']);
   }
   public closeAddPo() {
     this.showAddPo = false;
