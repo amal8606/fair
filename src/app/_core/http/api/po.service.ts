@@ -53,4 +53,14 @@ export class PoService {
       `${environment.api}/OrderManagement/GetCustomers`
     );
   }
+  //import po
+  public importPO(po: any) {
+    return this.http.post<any>(
+      `${environment.api}/OrderManagement/import`,
+      po,{
+        reportProgress: true,
+        observe: 'events'
+      }
+    );
+  }
 }

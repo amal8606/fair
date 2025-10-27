@@ -3,13 +3,25 @@ import { FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { PoService } from '../../../../_core/http/api/po.service';
-import { MatButton } from "@angular/material/button";
+import { MatButton } from '@angular/material/button';
 import { ToastrService } from 'ngx-toastr';
+import {
+  ProgressBarMode,
+  MatProgressBarModule,
+} from '@angular/material/progress-bar';
+import {MatRadioModule} from '@angular/material/radio'
 
 @Component({
   selector: 'app-po-model',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButton, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButton,
+    ReactiveFormsModule,
+    MatProgressBarModule,
+    MatRadioModule
+  ],
   templateUrl: './po-model.component.html',
 })
 export class PoModelComponent {
@@ -19,27 +31,29 @@ export class PoModelComponent {
   @Output() onClick = new EventEmitter();
   @Input() public po: any;
 
-  constructor(private readonly poService: PoService,private readonly toaster:ToastrService) {}
- public addItemModel:boolean=false;
+  constructor(
+    private readonly poService: PoService,
+    private readonly toaster: ToastrService
+  ) {}
+  public addItemModel: boolean = false;
   public productItems: any;
   public subTotal: any;
   public total: any;
   public loading = false;
-public createPOItemloading=false;
+  public createPOItemloading = false;
   public editingIndex: number | null = null;
-public addPOItemForm:FormGroup=new FormGroup({
-  description:new FormControl('',Validators.required),
-  quantity:new FormControl('',Validators.required),
-  unitPrice:new FormControl('',Validators.required),
-  traceabilityRequirement:new FormControl(''),
-  totalPrice:new FormControl(''),
-  unit:new FormControl('',Validators.required),
-  poId:new FormControl(''),
-  ManufacturerModel:new FormControl('',Validators.required),
-  PartNumber:new FormControl('',Validators.required),
-  ActualCostPerUnit:new FormControl(null,Validators.required),
-
-})
+  public addPOItemForm: FormGroup = new FormGroup({
+    description: new FormControl('', Validators.required),
+    quantity: new FormControl('', Validators.required),
+    unitPrice: new FormControl('', Validators.required),
+    traceabilityRequirement: new FormControl(''),
+    totalPrice: new FormControl(''),
+    unit: new FormControl('', Validators.required),
+    poId: new FormControl(''),
+    ManufacturerModel: new FormControl('', Validators.required),
+    PartNumber: new FormControl('', Validators.required),
+    ActualCostPerUnit: new FormControl(null, Validators.required),
+  });
   editItem(index: number) {
     this.editingIndex = index;
   }
@@ -50,30 +64,30 @@ public addPOItemForm:FormGroup=new FormGroup({
 
   // Save PO details
   savePoDetails(po: any) {
-     this.poService.updatePOItem(po).subscribe({
-       next: () => {
-        this.toaster.success('PO details updated successfully','Success');
+    this.poService.updatePOItem(po).subscribe({
+      next: () => {
+        this.toaster.success('PO details updated successfully', 'Success');
         this.getPO();
-         // Optionally show a success message
-       },
-       error: () => {
-        this.toaster.error('Failed to update PO details','Error');
-         // Optionally show an error message
-       }
-     });
+        // Optionally show a success message
+      },
+      error: () => {
+        this.toaster.error('Failed to update PO details', 'Error');
+        // Optionally show an error message
+      },
+    });
   }
 
   // Save a line item
   saveItem(item: any) {
     this.poService.updatePOItem(item).subscribe({
       next: () => {
-         this.toaster.success('PO details updated successfully','Success');
+        this.toaster.success('PO details updated successfully', 'Success');
         this.getPO();
       },
-     error: () => {
-        this.toaster.error('Failed to update PO details','Error');
-         // Optionally show an error message
-       }
+      error: () => {
+        this.toaster.error('Failed to update PO details', 'Error');
+        // Optionally show an error message
+      },
     });
   }
 
@@ -121,23 +135,26 @@ public addPOItemForm:FormGroup=new FormGroup({
   }
 
   onSubmit() {
-    this.createPOItemloading=true;
+    this.createPOItemloading = true;
     this.addPOItemForm.patchValue({
-      poId:this.po.id,
-      totalPrice:this.addPOItemForm.value.quantity * this.addPOItemForm.value.unitPrice
+      poId: this.po.id,
+      totalPrice:
+        this.addPOItemForm.value.quantity * this.addPOItemForm.value.unitPrice,
     });
     this.poService.createPOItem(this.addPOItemForm.value).subscribe({
       next: (response) => {
-        this.toaster.success('PO Item added successfully','Success');
+        this.toaster.success('PO Item added successfully', 'Success');
         this.getPO();
-        this.addItemModel=false;
+        this.addItemModel = false;
         this.addPOItemForm.reset();
       },
       error: (error) => {
-        this.toaster.error('Failed to add PO Item','Error');
-        this.createPOItemloading=false;
-      },complete:()=>{ this.createPOItemloading=false;  }
+        this.toaster.error('Failed to add PO Item', 'Error');
+        this.createPOItemloading = false;
+      },
+      complete: () => {
+        this.createPOItemloading = false;
+      },
     });
-    
   }
 }

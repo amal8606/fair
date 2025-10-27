@@ -4,6 +4,7 @@ import { AdminComponent } from './pages/admin.component';
 import { create } from 'domain';
 import { CreatePoComponent } from './pages/create-po/create-po.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ImportPosComponent } from './pages/import-pos/import-pos.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
         path: 'create-po',
         component: CreatePoComponent,
       },
+      {
+        path: 'import-pos',
+        component: ImportPosComponent,
+      }
     ],
   },
 ];

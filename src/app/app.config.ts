@@ -18,6 +18,6 @@ export const appConfig: ApplicationConfig = {
     //inject toaster
     provideToastr({
       positionClass: 'toast-top-right',
-    }),
+    }), provideAnimationsAsync(),
   ],
 };
