@@ -5,6 +5,7 @@ import { create } from 'domain';
 import { CreatePoComponent } from './pages/create-po/create-po.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ImportPosComponent } from './pages/import-pos/import-pos.component';
+import { OrganizationComponent } from './pages/organization/organization.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,11 @@ const routes: Routes = [
       {
         path: 'import-pos',
         component: ImportPosComponent,
-      }
+      },
+      {
+        path: 'organization',
+        component: OrganizationComponent,
+      },
     ],
   },
 ];

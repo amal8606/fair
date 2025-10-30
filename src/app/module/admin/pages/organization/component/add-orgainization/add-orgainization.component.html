@@ -1,0 +1,361 @@
+<div
+  class="fixed flex items-center justify-center bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto sm:inset-0 h-[calc(100%-1rem)] md:h-full"
+  (click)="closeModel(false)"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="relative w-full max-w-5xl **max-h-[90vh]**"
+  >
+    <div class="relative bg-white rounded-lg shadow **my-8** px-2">
+      <div class="flex justify-between p-6 border-b rounded-t">
+        <h3 class="text-xl flex mb-0 items-center font-semibold text-gray-400">
+          Add Organization
+        </h3>
+        <button
+          type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+          (click)="closeModel(false)"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+
+      <div class="**px-6 py-4 overflow-y-auto max-h-[70vh] scrollbar-hide**">
+        <form
+          [formGroup]="orgForm"
+          class="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div>
+            <label
+              for="orgName"
+              class="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Organization Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="orgName"
+              placeholder="Enter organization name"
+              formControlName="name"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label
+              for="orgType"
+              class="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Type <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="orgType"
+              placeholder="Client or Vendor"
+              formControlName="type"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label
+              for="email"
+              class="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Email <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter email address"
+              formControlName="email"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label
+              for="phone"
+              class="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Phone <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="Enter phone number"
+              formControlName="phone"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label
+              for="taxId"
+              class="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Tax ID <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="taxId"
+              placeholder="Enter Tax ID"
+              formControlName="taxId"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div class="flex items-end pb-2">
+            <input
+              type="checkbox"
+              id="isActive"
+              formControlName="isActive"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label
+              for="isActive"
+              class="ml-2 text-sm font-medium text-gray-700"
+            >
+              Is Active
+            </label>
+          </div>
+
+          <div class="md:col-span-2 mt-4 border-t pt-4">
+            <h4 class="text-lg font-semibold text-gray-600 mb-4">Addresses</h4>
+
+            <div formArrayName="addresses">
+              <div
+                *ngFor="let addressGroup of addresses.controls; let i = index"
+                [formGroupName]="i"
+                class="border p-4 mb-4 rounded-lg bg-gray-50"
+              >
+                <div class="flex justify-between items-center mb-4">
+                  <p class="font-medium text-sm text-gray-700">
+                    Address #{{ i + 1 }}
+                  </p>
+                  <button
+                    *ngIf="addresses.length > 1"
+                    type="button"
+                    (click)="removeAddress(i)"
+                    class="text-red-500 hover:text-red-700 text-sm font-medium"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      for="addressType-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Type <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="addressType-{{ i }}"
+                      formControlName="addressType"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="Mailing">Mailing</option>
+                      <option value="Physical">Physical</option>
+                      <option value="Shipping">Shipping</option>
+                      <option value="Billing">Billing</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      for="addressLine1-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Address Line 1 <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="addressLine1-{{ i }}"
+                      placeholder="Street address, P.O. Box"
+                      formControlName="addressLine1"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <label
+                      for="addressLine2-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Address Line 2 (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="addressLine2-{{ i }}"
+                      placeholder="Apt, Suite, Bldg"
+                      formControlName="addressLine2"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="city-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      City <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="city-{{ i }}"
+                      placeholder="City"
+                      formControlName="city"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="state-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      State/Province <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="state-{{ i }}"
+                      placeholder="State or Province"
+                      formControlName="state"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="postalCode-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Postal Code <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="postalCode-{{ i }}"
+                      placeholder="Zip or Postal Code"
+                      formControlName="postalCode"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="country-{{ i }}"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Country <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="country-{{ i }}"
+                      placeholder="Country"
+                      formControlName="country"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div class="flex items-end pb-2">
+                    <input
+                      type="checkbox"
+                      id="isDefault-{{ i }}"
+                      formControlName="isDefault"
+                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label
+                      for="isDefault-{{ i }}"
+                      class="ml-2 text-sm font-medium text-gray-700"
+                    >
+                      Set as Default Address
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              (click)="addAddress()"
+              class="text-green-600 hover:text-green-800 text-sm font-medium mt-2 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              Add Another Address
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="flex items-center p-6 space-x-2 **border-t** rounded-b">
+        <button
+          *ngIf="!isLoading"
+          type="button"
+          class="text-white bg-green-600 hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-white disabled:bg-green-400 disabled:cursor-not-allowed focus:z-10"
+          [disabled]="orgForm.invalid"
+          (click)="onSubmit()"
+        >
+          Submit Organization
+        </button>
+
+        <button
+          *ngIf="isLoading"
+          type="button"
+          class="text-white bg-green-500 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 disabled:bg-green-200 disabled:cursor-not-allowed focus:z-10"
+          disabled
+        >
+          <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+            />
+          </svg>
+          Loading...
+        </button>
+        <button
+          type="button"
+          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+          (click)="closeModel(false)"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
