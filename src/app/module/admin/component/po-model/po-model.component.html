@@ -66,7 +66,7 @@
             <div>
               <button
                 (click)="addItemModel = !addItemModel"
-                class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                class="bg-green-500 text-white px-4 py-2 rounded mb-4"
               >
                 Add New Item
               </button>
@@ -190,11 +190,7 @@
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.terms }}
-                      <!-- <input [(ngModel)]="po.terms" class="border rounded px-2 py-1 w-32" /> -->
                     </td>
-                    <!-- <td class="border px-2 py-1">
-                      <button (click)="savePoDetails(po)" class="bg-green-500 text-white px-2 py-1 rounded mr-2">Save</button>
-                    </td> -->
                   </tr>
                 </tbody>
               </table>
@@ -334,7 +330,7 @@
                         <ng-template #actionBtns>
                           <button
                             (click)="editItem(i)"
-                            class="bg-blue-500 text-white px-2 py-1 rounded"
+                            class="bg-green-500 text-white px-2 py-1 rounded"
                           >
                             Edit
                           </button>

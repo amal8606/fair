@@ -135,7 +135,7 @@
       </div>
       <div class="mt-6 flex" (click)="$event.stopPropagation()">
         <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           (click)="showAddItem = true"
         >
           Add PO Items
@@ -315,7 +315,7 @@
       </div>
       <div class="mt-6 flex justify-center gap-3">
         <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           [disabled]="poForm.invalid || sortedData2.data.length === 0"
           (click)="createPO()"
         >
@@ -362,14 +362,14 @@
             <button
               (click)="addNewItem = true; addExisting = false"
               [disabled]="addNewItem"
-              class="bg-blue-500 text-white px-4 py-2 rounded mb-4 disabled:bg-blue-300 disabled:cursor-not-allowed"
+              class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
             >
               Add New Item
             </button>
             <button
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
-              class="bg-blue-500 text-white px-4 py-2 rounded mb-4 disabled:bg-blue-300 disabled:cursor-not-allowed"
+              class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
             >
               Add From Existing PO
             </button>
@@ -493,7 +493,7 @@
               </div>
               <div>
                 <button
-                  class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                  class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
                   (click)="getPO()"
                   [disabled]="poId.invalid"
                 >
@@ -717,7 +717,7 @@
             <div class="mt-6 flex justify-end">
               <button
                 (click)="closeModel()"
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
                 [disabled]="selection.selected.length === 0"
               >
                 Add Selected Item to New Po

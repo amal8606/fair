@@ -1,0 +1,322 @@
+<div
+  class="fixed flex items-center justify-center bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto sm:inset-0 h-[calc(100%-1rem)] md:h-full"
+  (click)="onClose()"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="relative w-full max-w-5xl max-h-[90vh]"
+  >
+    <div
+      class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full rounded-lg shadow-lg overflow-y-auto max-h-[80vh] hide-scrollbar"
+      [formGroup]="organizationForm"
+    >
+      <div class="sm:flex sm:items-start">
+        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+          <h3
+            class="text-xl leading-6 font-medium text-gray-900 border-b pb-2 mb-4"
+            id="modal-title"
+          >
+            Edit Organization: {{ organizationForm.get("name")?.value }}
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700"
+                >Organization Name</label
+              >
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="type" class="block text-sm font-medium text-gray-700"
+                >Type</label
+              >
+              <select
+                id="type"
+                formControlName="type"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+              >
+                <option value="Client">Client</option>
+                <option value="Vendor">Vendor</option>
+              </select>
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700"
+                >Phone</label
+              >
+              <input
+                id="phone"
+                type="text"
+                formControlName="phone"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="taxId" class="block text-sm font-medium text-gray-700"
+                >Tax ID</label
+              >
+              <input
+                id="taxId"
+                type="text"
+                formControlName="taxId"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <hr class="my-6 border-t border-gray-200" />
+
+          <h4 class="text-lg font-semibold text-gray-800 mb-3">
+            Addresses ({{ addresses.length }})
+          </h4>
+
+          <div
+            formArrayName="addresses"
+            class="space-y-4 max-h-60 overflow-y-auto pr-2"
+          >
+            <div
+              *ngFor="let addressGroup of addresses.controls; let i = index"
+              [formGroupName]="i"
+              class="p-4 border border-gray-200 rounded-lg bg-gray-50 relative"
+            >
+              <p
+                class="text-sm font-medium mb-2 text-gray-600 flex items-center"
+              >
+                Address #{{ i + 1 }}
+                <span
+                  *ngIf="addressGroup.get('isDefault')?.value"
+                  class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                >
+                  Default
+                </span>
+
+                <button
+                  *ngIf="addressGroup.get('isNewAddress')?.value"
+                  type="button"
+                  (click)="saveNewAddress(i)"
+                  [disabled]="addressGroup.invalid || isAddingAddress[i]"
+                  class="ml-3 inline-flex items-center px-2.5 py-0.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none disabled:opacity-50 transition duration-150"
+                  title="Save New Address"
+                >
+                  <svg
+                    *ngIf="isAddingAddress[i]"
+                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  {{ isAddingAddress[i] ? "Saving..." : "Save Address" }}
+                </button>
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+                <div>
+                  <label
+                    [for]="'addressType-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >Address Type</label
+                  >
+                  <input
+                    [id]="'addressType-' + i"
+                    type="text"
+                    formControlName="addressType"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+                <div class="flex items-end pb-1">
+                  <div class="flex items-center h-5">
+                    <input
+                      [id]="'isDefault-' + i"
+                      type="checkbox"
+                      formControlName="isDefault"
+                      class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div class="ml-2 text-sm">
+                    <label
+                      [for]="'isDefault-' + i"
+                      class="font-medium text-gray-700"
+                      >Set as Default</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label
+                    [for]="'addressLine1-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >Address Line 1</label
+                  >
+                  <input
+                    [id]="'addressLine1-' + i"
+                    type="text"
+                    formControlName="addressLine1"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    [for]="'addressLine2-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >Address Line 2 (Optional)</label
+                  >
+                  <input
+                    [id]="'addressLine2-' + i"
+                    type="text"
+                    formControlName="addressLine2"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-3">
+                <div>
+                  <label
+                    [for]="'city-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >City</label
+                  >
+                  <input
+                    [id]="'city-' + i"
+                    type="text"
+                    formControlName="city"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    [for]="'state-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >State/Province</label
+                  >
+                  <input
+                    [id]="'state-' + i"
+                    type="text"
+                    formControlName="state"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    [for]="'postalCode-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >Postal Code</label
+                  >
+                  <input
+                    [id]="'postalCode-' + i"
+                    type="text"
+                    formControlName="postalCode"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    [for]="'country-' + i"
+                    class="block text-xs font-medium text-gray-700"
+                    >Country</label
+                  >
+                  <input
+                    [id]="'country-' + i"
+                    type="text"
+                    formControlName="country"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                  />
+                </div>
+              </div>
+
+              <button
+                (click)="deleteAddress(i)"
+                type="button"
+                [disabled]="isSaving || isAddingAddress[i]"
+                class="absolute top-2 right-2 text-red-600 hover:text-red-800 transition duration-150 p-1 rounded-full bg-white disabled:opacity-50"
+                title="Delete Address"
+              >
+                <svg
+                  class="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="addAddress()"
+            class="mt-4 px-3 py-1 text-sm bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition duration-150"
+          >
+            + Add Another Address
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+      <button
+        type="submit"
+        (click)="onSubmit()"
+        [disabled]="isSaving || organizationForm.invalid"
+        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+      >
+        {{ isSaving ? "Saving..." : "Save Changes" }}
+      </button>
+      <button
+        type="button"
+        (click)="onClose()"
+        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-delete-model
+  *ngIf="showDeleteModel"
+  [addressId]="addressId"
+  (onClick)="closeDeleteAdress($event)"
+></app-delete-model>
