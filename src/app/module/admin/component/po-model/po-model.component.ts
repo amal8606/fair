@@ -9,7 +9,7 @@ import {
   ProgressBarMode,
   MatProgressBarModule,
 } from '@angular/material/progress-bar';
-import {MatRadioModule} from '@angular/material/radio'
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-po-model',
@@ -20,7 +20,7 @@ import {MatRadioModule} from '@angular/material/radio'
     MatButton,
     ReactiveFormsModule,
     MatProgressBarModule,
-    MatRadioModule
+    MatRadioModule,
   ],
   templateUrl: './po-model.component.html',
 })
@@ -43,16 +43,17 @@ export class PoModelComponent {
   public createPOItemloading = false;
   public editingIndex: number | null = null;
   public addPOItemForm: FormGroup = new FormGroup({
-    description: new FormControl('', Validators.required),
-    quantity: new FormControl('', Validators.required),
-    unitPrice: new FormControl('', Validators.required),
-    traceabilityRequirement: new FormControl(''),
-    totalPrice: new FormControl(''),
-    unit: new FormControl('', Validators.required),
     poId: new FormControl(''),
-    ManufacturerModel: new FormControl('', Validators.required),
-    PartNumber: new FormControl('', Validators.required),
-    ActualCostPerUnit: new FormControl(null, Validators.required),
+    quantity: new FormControl('', Validators.required),
+    unit: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    manufacturerModel: new FormControl('', Validators.required),
+    partNumber: new FormControl('', Validators.required),
+    traceabilityRequired: new FormControl(''),
+    unitPrice: new FormControl('', Validators.required),
+    totalPrice: new FormControl(''),
+    actualCostPerUnit: new FormControl(null, Validators.required),
+    terms: new FormControl(''),
   });
   editItem(index: number) {
     this.editingIndex = index;
@@ -118,10 +119,8 @@ export class PoModelComponent {
           0
         );
         this.total = this.subTotal;
-        console.log(this.productItems);
       },
       error: (error) => {
-        console.log(error);
         if (error.status === 404) {
           this.productItems = [];
         }
@@ -134,7 +133,10 @@ export class PoModelComponent {
     this.onClick.emit();
   }
 
+  public isAdding: boolean = false;
+
   onSubmit() {
+    this.isAdding = true;
     this.createPOItemloading = true;
     this.addPOItemForm.patchValue({
       poId: this.po.id,
@@ -143,12 +145,14 @@ export class PoModelComponent {
     });
     this.poService.createPOItem(this.addPOItemForm.value).subscribe({
       next: (response) => {
+        this.isAdding = false;
         this.toaster.success('PO Item added successfully', 'Success');
         this.getPO();
         this.addItemModel = false;
         this.addPOItemForm.reset();
       },
       error: (error) => {
+        this.isAdding = false;
         this.toaster.error('Failed to add PO Item', 'Error');
         this.createPOItemloading = false;
       },
@@ -156,5 +160,9 @@ export class PoModelComponent {
         this.createPOItemloading = false;
       },
     });
+  }
+  closeItemModel() {
+    this.addItemModel = !this.addItemModel;
+    this.addPOItemForm.reset();
   }
 }

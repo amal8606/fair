@@ -39,9 +39,18 @@
       <button
         [disabled]="loading"
         type="submit"
-        class="w-full bg-green-600 disabled:bg-blue-400 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold mt-3"
+        class="w-full bg-green-600 disabled:bg-green-400 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold mt-3"
       >
-        Login
+        <ng-container *ngIf="!loading"> Login </ng-container>
+
+        <ng-container *ngIf="loading">
+          <span>Logging in</span>
+          <span class="loading-dots">
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+          </span>
+        </ng-container>
       </button>
     </form>
     <p class="mt-4 text-center text-gray-600">

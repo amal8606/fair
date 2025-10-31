@@ -13,7 +13,7 @@
         <p
           class="text-[1rem] flex mb-0 items-center font-semibold text-gray-900"
         >
-          fairmount LLC
+          Fairmount LLC
         </p>
         <button
           type="button"
@@ -40,29 +40,6 @@
       <div class="px-6 mt-4">
         <div class="space-y-4 text-sm text-gray-700">
           <div class="flex flex-col justify-between gap-8">
-            <!-- <div>
-              <strong>REF: {{ po.poNumber }}</strong>
-              <div class="w-1/3">
-                The P.O. number must appear on all related correspondence,
-                shipping papers, and invoices:
-              </div>
-            </div> -->
-            <!-- <div>
-              <strong>SUPPLIER REF:</strong>
-            </div>
-          </div> -->
-
-            <!-- <div><strong>SHIP VIA:</strong> THROUGH SHIPPING AGENT</div> -->
-            <!-- <div class="flex justify-between flex-wrap gap-8">
-            <div>
-              <strong>TO:</strong><br />
-              {{ po.customer.customerName }}<br />
-              {{ po.customer.address }}<br />
-              Email:{{ po.customer.email }}<br />
-              Phone:{{ po.customer.phone }}<br />
-            </div>
-            <div><strong>SHIP TO:</strong><br /></div>
-          </div> -->
             <div>
               <button
                 (click)="addItemModel = !addItemModel"
@@ -77,7 +54,7 @@
               <div *ngIf="addItemModel">
                 <div class="grid grid-cols-4 gap-4 mb-4">
                   <div class="flex flex-col">
-                    <label for="">quantity</label>
+                    <label for="">Quantity</label>
                     <input
                       formControlName="quantity"
                       type="number"
@@ -93,7 +70,7 @@
                     />
                   </div>
                   <div class="flex flex-col">
-                    <label for="">description</label>
+                    <label for="">Description</label>
                     <input
                       formControlName="description"
                       type="text"
@@ -111,11 +88,12 @@
                   <div class="flex flex-col">
                     <label for="">Actual Cost Per Unit</label>
                     <input
-                      formControlName="ActualCostPerUnit"
+                      formControlName="actualCostPerUnit"
                       type="number"
                       class="border rounded px-2 py-2"
                     />
                   </div>
+
                   <div class="flex flex-col">
                     <label for="">Part #</label>
                     <input
@@ -127,7 +105,7 @@
                   <div class="flex flex-col">
                     <label for="">Trace</label>
                     <select
-                      formControlName="traceabilityRequirement"
+                      formControlName="traceabilityRequired"
                       class="px-2 py-2 border-2 rounded-sm"
                       name="trace"
                       id=""
@@ -138,9 +116,17 @@
                     </select>
                   </div>
                   <div class="flex flex-col">
-                    <label for="">Manufacturer/Model</label>
+                    <label for="">Manufacturer Model</label>
                     <input
-                      formControlName="ManufacturerModel"
+                      formControlName="manufacturerModel"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Terms</label>
+                    <input
+                      formControlName="terms"
                       type="text"
                       class="border rounded px-2 py-2"
                     />
@@ -149,15 +135,25 @@
                 <div class="w-[20%] flex gap-2 items-end">
                   <button
                     (click)="onSubmit()"
+                    [disabled]="isAdding || addPOItemForm.invalid"
                     class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
                   >
-                    Add Item
+                    <ng-container *ngIf="!isAdding"> Add Item </ng-container>
+
+                    <ng-container *ngIf="isAdding">
+                      <span>Adding </span>
+                      <span class="loading-dots">
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                      </span>
+                    </ng-container>
                   </button>
                   <button
-                    (click)="addItemModel = !addItemModel"
+                    (click)="closeItemModel()"
                     class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
                   >
-                    cancel
+                    Cancel
                   </button>
                 </div>
               </div>
@@ -205,6 +201,7 @@
                     <th class="border px-2 py-1">DESCRIPTION</th>
                     <th class="border px-2 py-1">MFR/MODEL</th>
                     <th class="border px-2 py-1">PART #</th>
+                    <th class="border px-2 py-1">TERMS</th>
                     <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
@@ -266,6 +263,15 @@
                         />
                       </ng-container>
                       <ng-template #readPart>{{ item.partNumber }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readTerms">
+                        <input
+                          [(ngModel)]="item.terms"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readTerms>{{ item.terms }}</ng-template>
                     </td>
                     <td class="border px-2 py-1">
                       <ng-container *ngIf="editingIndex === i; else readTrace">
@@ -407,7 +413,14 @@
           </div>
         </div>
         <div *ngIf="loading">
-          <p class="px-2 py-1 text-center text-gray-500">Loading items...</p>
+          <p class="px-2 py-1 text-center text-gray-500">
+            <span>Loading </span>
+            <span class="loading-dots">
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+            </span>
+          </p>
         </div>
         <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 rounded-b">

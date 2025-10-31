@@ -17,7 +17,7 @@
           <input
             type="text"
             class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
+            placeholder="Enter supplier/quote ref"
             formControlName="supplier"
           />
         </div>
@@ -29,7 +29,7 @@
             formControlName="customerId"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="null" disabled selected>Select customer</option>
+            <option [value]="null" disabled selected>Select customer</option>
             <option
               *ngFor="let customer of customers"
               [value]="customer.customerId"
@@ -51,27 +51,26 @@
         <div>
           <label class="block text-gray-700">PO Amount</label>
           <input
-            type="text"
+            type="number"
             class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
+            placeholder="Enter total amount"
             formControlName="totalAmount"
           />
         </div>
         <div>
           <label class="block text-gray-700">PO Cost</label>
           <input
-            type="text"
+            type="number"
             class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po number"
+            placeholder="Enter total cost"
             formControlName="totalCost"
           />
         </div>
         <div>
           <label class="block text-gray-700">Description</label>
           <textarea
-            type="text"
             class="w-full px-3 py-2 border rounded"
-            placeholder="Enter po Description"
+            placeholder="Enter description"
             formControlName="description"
           ></textarea>
         </div>
@@ -135,6 +134,7 @@
       </div>
       <div class="mt-6 flex" (click)="$event.stopPropagation()">
         <button
+          type="button"
           class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           (click)="showAddItem = true"
         >
@@ -145,139 +145,80 @@
         *ngIf="sortedData2.data.length > 0"
         class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
       >
-        <table
-          mat-table
-          class="mat-elevation-z8"
-          [dataSource]="sortedData2"
-          (matSortChange)="sortData($event)"
-          matSort
-          #empTbSort="matSort"
-        >
-          <!-- Select Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-              >
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <!-- Other columns -->
+        <table mat-table class="mat-elevation-z8" [dataSource]="sortedData2">
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId">
-              Item ID
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Item ID</th>
             <td mat-cell *matCellDef="let element">
               {{ element.itemId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId">
-              PO Id
-            </th>
+            <th mat-header-cell *matHeaderCellDef>PO Id</th>
             <td mat-cell *matCellDef="let element">
               {{ element.poId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber">
-              Line Number
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Line Number</th>
             <td mat-cell *matCellDef="let element">
               {{ element.lineNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="manufacturerModel">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="manufacturerModel"
-            >
-              Manufacturer Model
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Manufacturer Model</th>
             <td mat-cell *matCellDef="let element">
               {{ element.manufacturerModel }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
-              Part Number
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Part Number</th>
             <td mat-cell *matCellDef="let element">
               {{ element.partNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">
-              Quantity
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
             <td mat-cell *matCellDef="let element">
               {{ element.quantity }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="actualCostPerUnit">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header="actualCostPerUnit"
-            >
-              Description
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
             <td mat-cell *matCellDef="let element">
               {{ element.actualCostPerUnit | currency : "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice">
-              Unit Price
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Unit Price</th>
             <td mat-cell *matCellDef="let element">
               {{ element.unitPrice | currency : "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice">
-              Total Price
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Total Price</th>
             <td mat-cell *matCellDef="let element">
               {{ element.totalPrice | currency : "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-              Description
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Description</th>
             <td mat-cell *matCellDef="let element">
               {{ element.description }}
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit">
-              Unit
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Unit</th>
             <td mat-cell *matCellDef="let element">
               {{ element.unit }}
             </td>
           </ng-container>
-          <!-- Actions Column -->
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let element">
@@ -302,10 +243,8 @@
             </td>
           </ng-container>
 
-          <!-- Header row -->
           <tr mat-header-row *matHeaderRowDef="displayedColumnsSecond"></tr>
 
-          <!-- Data rows -->
           <tr
             mat-row
             *matRowDef="let element; columns: displayedColumnsSecond"
@@ -316,8 +255,11 @@
       <div class="mt-6 flex justify-center gap-3">
         <button
           class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          [disabled]="poForm.invalid || sortedData2.data.length === 0"
+          [disabled]="
+            poForm.invalid || sortedData2.data.length === 0 || isLoading
+          "
           (click)="createPO()"
+          type="button"
         >
           <svg
             *ngIf="isLoading"
@@ -346,6 +288,7 @@
         <button
           (click)="clear()"
           class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          type="button"
         >
           Clear
         </button>
@@ -363,6 +306,7 @@
               (click)="addNewItem = true; addExisting = false"
               [disabled]="addNewItem"
               class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
+              type="button"
             >
               Add New Item
             </button>
@@ -370,12 +314,12 @@
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
               class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
+              type="button"
             >
               Add From Existing PO
             </button>
           </div>
 
-          <!-- ADD ITEMS SECTION -->
           <form [formGroup]="newPoItem">
             <div *ngIf="addNewItem">
               <div class="grid grid-cols-4 gap-4 mb-4">
@@ -420,7 +364,7 @@
                   />
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Total Price</label>
+                  <label for="">Total Price </label>
                   <input
                     formControlName="totalPrice"
                     type="number"
@@ -443,15 +387,23 @@
                     name="trace"
                     id=""
                   >
-                    <option value="" disabled selected>Select trace</option>
+                    <option [value]="0" disabled selected>Select trace</option>
                     <option [value]="1">yes</option>
                     <option [value]="0">no</option>
                   </select>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Manufacturer/Model</label>
+                  <label for="">Manufacturer Model</label>
                   <input
                     formControlName="manufacturerModel"
+                    type="text"
+                    class="border rounded px-2 py-2"
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label for="">Terms</label>
+                  <input
+                    formControlName="terms"
                     type="text"
                     class="border rounded px-2 py-2"
                   />
@@ -462,18 +414,21 @@
                   (click)="addItem()"
                   [disabled]="newPoItem.invalid"
                   class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  type="button"
                 >
                   Add Item
                 </button>
                 <button
                   (click)="closeModel()"
                   class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  type="button"
                 >
-                  cancel
+                  Cancel
                 </button>
               </div>
             </div>
           </form>
+
           <div *ngIf="addExisting">
             <div class="flex justify-center items-end gap-3">
               <div class="w-2/3">
@@ -483,7 +438,7 @@
                     class="w-full px-3 py-2 border rounded"
                     formControlName="poId"
                   >
-                    <option value="null" disabled selected>Select PO</option>
+                    <option [value]="null" disabled selected>Select PO</option>
 
                     <option *ngFor="let po of poList" [value]="po.id">
                       {{ po.poNumber }}
@@ -496,12 +451,12 @@
                   class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
                   (click)="getPO()"
                   [disabled]="poId.invalid"
+                  type="button"
                 >
                   Get Po
                 </button>
               </div>
             </div>
-
             <div
               class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
             >
@@ -511,9 +466,8 @@
                 [dataSource]="sortedData1"
                 (matSortChange)="sortData($event)"
                 matSort
-                #empTbSort="matSort"
+                #matSort="matSort"
               >
-                <!-- Select Checkbox Column -->
                 <ng-container matColumnDef="select">
                   <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox
@@ -532,8 +486,21 @@
                     </mat-checkbox>
                   </td>
                 </ng-container>
+                <ng-container matColumnDef="selectedQuantity">
+                  <th mat-header-cell *matHeaderCellDef>Select Qty</th>
+                  <td mat-cell *matCellDef="let element">
+                    <input
+                      type="number"
+                      [value]="element.selectedQuantity"
+                      (change)="updateSelectionQuantity(element, $event)"
+                      min="0"
+                      [max]="element.quantity"
+                      class="w-20 px-2 py-1 border rounded text-center"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </td>
+                </ng-container>
 
-                <!-- Other columns -->
                 <ng-container matColumnDef="itemId">
                   <th
                     mat-header-cell
@@ -601,7 +568,7 @@
                     *matHeaderCellDef
                     mat-sort-header="quantity"
                   >
-                    Quantity
+                    Available Qty
                   </th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.quantity }}
@@ -614,7 +581,7 @@
                     *matHeaderCellDef
                     mat-sort-header="actualCostPerUnit"
                   >
-                    Description
+                    Actual Cost
                   </th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.actualCostPerUnit | currency : "USD" }}
@@ -633,6 +600,7 @@
                     {{ element.unitPrice | currency : "USD" }}
                   </td>
                 </ng-container>
+
                 <ng-container matColumnDef="totalPrice">
                   <th
                     mat-header-cell
@@ -645,6 +613,7 @@
                     {{ element.totalPrice | currency : "USD" }}
                   </td>
                 </ng-container>
+
                 <ng-container matColumnDef="description">
                   <th
                     mat-header-cell
@@ -665,50 +634,23 @@
                     {{ element.unit }}
                   </td>
                 </ng-container>
-                <!-- Actions Column -->
-                <ng-container matColumnDef="actions">
-                  <th mat-header-cell *matHeaderCellDef>Actions</th>
-                  <td mat-cell *matCellDef="let element">
-                    <button
-                      (click)="$event.stopPropagation()"
-                      type="button"
-                      class="bg-transparent"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        class="w-6 h-6 fill-red-400 hover:fill-red-600"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </td>
-                </ng-container>
 
-                <!-- Header row -->
                 <tr
                   mat-header-row
                   *matHeaderRowDef="displayedColumnsFirst"
                 ></tr>
 
-                <!-- Data rows -->
                 <tr
                   mat-row
                   *matRowDef="let element; columns: displayedColumnsFirst"
                   class="example-element-row"
                 ></tr>
               </table>
-              <div>
-                <p
-                  *ngIf="sortedData1.data.length === null"
-                  class="text-center mt-4"
-                >
-                  No items found for the selected PO.
-                </p>
+              <div
+                *ngIf="sortedData1.data.length === 0 && !loading && poId.valid"
+                class="text-center mt-4"
+              >
+                <p>No items found for the selected PO.</p>
               </div>
               <div *ngIf="loading" class="text-center mt-4">
                 <p>Loading...</p>
@@ -719,6 +661,7 @@
                 (click)="closeModel()"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
                 [disabled]="selection.selected.length === 0"
+                type="button"
               >
                 Add Selected Item to New Po
               </button>

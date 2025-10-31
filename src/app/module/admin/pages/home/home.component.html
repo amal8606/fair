@@ -1,4 +1,3 @@
-<!-- po list-->
 <section class="p-2">
   <div class="flex items-center">
     <p class="text-3xl text-gray-700 font-bold">Purchase Order Management</p>
@@ -20,132 +19,526 @@
       New PO
     </button>
   </div>
-  <div class="overflow-x-auto shadow-lg p-2 sm:rounded-lg mt-2">
-    <div *ngIf="!isLoading">
-      <table
-        mat-table
-        class="mat-elevation-z8"
-        [dataSource]="sortedData"
-        (matSortChange)="sortData($event)"
-        matSort
-        #empTbSort="matSort"
-      >
-        <ng-container matColumnDef="poNumber">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
-            #PO
-          </th>
-          <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
-        </ng-container>
-        <ng-container matColumnDef="customerName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="customerName">
-            Customer Name
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.customer.customerName }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="orderDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
-            Order Date
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.orderDate | date }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="modeOfShipment">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header="modeOfShipment"
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+    <mat-tab label="OUTGOING">
+      <div class="overflow-x-auto shadow-lg p-2 sm:rounded-lg mt-2">
+        <div *ngIf="!isLoading">
+          <table
+            mat-table
+            class="mat-elevation-z8 min-w-full"
+            [dataSource]="sortedData"
+            (matSortChange)="sortData($event)"
+            matSort
+            #empTbSort="matSort"
           >
-            Mode of Shipment
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.modeOfShipment }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="totalCost">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
-            Total Cost
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.totalCost | currency : "USD" }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="totalAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
-            Total Amount
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.totalAmount | currency : "USD" }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
-            Description
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.description }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="createdBy">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
-            Created By
-          </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.user.fullName }}
-          </td>
-        </ng-container>
+            <!-- PO Number Column -->
+            <ng-container matColumnDef="poNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
+                #PO
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let element">
-            <button
-              (click)="$event.stopPropagation()"
-              type="button"
-              class="bg-transparent"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="w-6 h-6 fill-red-400 hover:fill-red-600"
+            <!-- Customer Name Column -->
+            <ng-container matColumnDef="customerName">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="customerName"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </td>
-        </ng-container>
+                Customer Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.buyerOrgName }}
+              </td>
+            </ng-container>
 
-        <!-- Header row definition -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Supplier Column -->
+            <ng-container matColumnDef="supplier">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="supplier">
+                Supplier
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.supplier }}
+              </td>
+            </ng-container>
 
-        <!-- Data rows -->
-        <tr
-          mat-row
-          *matRowDef="let element; columns: displayedColumns"
-          class="example-element-row"
-          (click)="openPOModel(element)"
-        ></tr>
-      </table>
-    </div>
+            <!-- Destination Column -->
+            <ng-container matColumnDef="destination">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="destination"
+              >
+                Destination
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.destination }}
+              </td>
+            </ng-container>
 
-    <div class="mt-10" *ngIf="!isLoading && sortedData.data?.length === 0">
-      <p class="no-data-row text-center mt-5 text-gray-500 text-xl">
-        No data to display
-      </p>
-    </div>
-    <div class="mt-10" *ngIf="isLoading">
-      <p class="no-data-row text-center text-gray-500 text-xl">
-        Loading data...
-      </p>
-    </div>
-  </div>
+            <!-- Order Date Column -->
+            <ng-container matColumnDef="orderDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
+                Order Date
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.orderDate | date }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Delivery Schedule Column -->
+            <ng-container matColumnDef="deliverySchedule">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="deliverySchedule"
+              >
+                Delivery Due
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.deliverySchedule | date }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Payment Terms Column -->
+            <ng-container matColumnDef="paymentTerms">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="paymentTerms"
+              >
+                Payment Terms
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.paymentTerms }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Delivery Terms Column -->
+            <ng-container matColumnDef="deliveryTerms">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="deliveryTerms"
+              >
+                Delivery Terms
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.deliveryTerms }}
+              </td>
+            </ng-container>
+
+            <!-- Mode of Shipment Column -->
+            <ng-container matColumnDef="modeOfShipment">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="modeOfShipment"
+              >
+                Mode of Shipment
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.modeOfShipment }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Shipping Charges Column -->
+            <ng-container matColumnDef="shippingCharges">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="shippingCharges"
+              >
+                Shipping Charges
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.shippingCharges | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Discount Column -->
+            <ng-container matColumnDef="discount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="discount">
+                Discount (%)
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.discount }}%
+              </td>
+            </ng-container>
+
+            <!-- Total Cost Column -->
+            <ng-container matColumnDef="totalCost">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
+                Total Cost
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.totalCost | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- Total Amount Column -->
+            <ng-container matColumnDef="totalAmount">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="totalAmount"
+              >
+                Total Amount
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.totalAmount | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Description Column -->
+            <ng-container matColumnDef="description">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="description"
+              >
+                Description
+              </th>
+              <td mat-cell *matCellDef="let element" class="max-w-xs truncate">
+                {{ element.description }}
+              </td>
+            </ng-container>
+
+            <!-- PO Status Column -->
+            <ng-container matColumnDef="poStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="poStatus">
+                Status
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.poStatus }}
+              </td>
+            </ng-container>
+
+            <!-- Created By Column -->
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
+                Created By
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.createdBy }}
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  (click)="$event.stopPropagation()"
+                  type="button"
+                  class="bg-transparent"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+            <tr
+              mat-row
+              *matRowDef="let element; columns: displayedColumns"
+              class="example-element-row cursor-pointer hover:bg-gray-100"
+              (click)="openPOModel(element)"
+            ></tr>
+          </table>
+        </div>
+
+        <div class="mt-10" *ngIf="!isLoading && sortedData.data?.length === 0">
+          <p class="no-data-row text-center mt-5 text-gray-500 text-xl">
+            No data to display
+          </p>
+        </div>
+        <div class="mt-10" *ngIf="isLoading">
+          <p class="no-data-row text-center text-gray-500 text-xl">
+            <span>Loading Data</span>
+            <span class="loading-dots">
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- OUTGOING TAB CONTENT (Duplicated structure for consistency) -->
+    <mat-tab label="OUTGOING">
+      <div class="overflow-x-auto shadow-lg p-2 sm:rounded-lg mt-2">
+        <div *ngIf="!isLoading">
+          <table
+            mat-table
+            class="mat-elevation-z8 min-w-full"
+            [dataSource]="sortedData"
+            (matSortChange)="sortData($event)"
+            matSort
+            #empTbSort="matSort"
+          >
+            <!-- PO Number Column -->
+            <ng-container matColumnDef="poNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
+                #PO
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
+            </ng-container>
+
+            <!-- Customer Name Column -->
+            <ng-container matColumnDef="customerName">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="customerName"
+              >
+                Customer Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.buyerOrgName }}
+              </td>
+            </ng-container>
+
+            <!-- Supplier Column -->
+            <ng-container matColumnDef="supplier">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="supplier">
+                Supplier
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.supplier }}
+              </td>
+            </ng-container>
+
+            <!-- Destination Column -->
+            <ng-container matColumnDef="destination">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="destination"
+              >
+                Destination
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.destination }}
+              </td>
+            </ng-container>
+
+            <!-- Order Date Column -->
+            <ng-container matColumnDef="orderDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
+                Order Date
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.orderDate | date }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Delivery Schedule Column -->
+            <ng-container matColumnDef="deliverySchedule">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="deliverySchedule"
+              >
+                Delivery Due
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.deliverySchedule | date }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Payment Terms Column -->
+            <ng-container matColumnDef="paymentTerms">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="paymentTerms"
+              >
+                Payment Terms
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.paymentTerms }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Delivery Terms Column -->
+            <ng-container matColumnDef="deliveryTerms">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="deliveryTerms"
+              >
+                Delivery Terms
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.deliveryTerms }}
+              </td>
+            </ng-container>
+
+            <!-- Mode of Shipment Column -->
+            <ng-container matColumnDef="modeOfShipment">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="modeOfShipment"
+              >
+                Mode of Shipment
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.modeOfShipment }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Shipping Charges Column -->
+            <ng-container matColumnDef="shippingCharges">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="shippingCharges"
+              >
+                Shipping Charges
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.shippingCharges | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Discount Column -->
+            <ng-container matColumnDef="discount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="discount">
+                Discount (%)
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.discount }}%
+              </td>
+            </ng-container>
+
+            <!-- Total Cost Column -->
+            <ng-container matColumnDef="totalCost">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
+                Total Cost
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.totalCost | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- Total Amount Column -->
+            <ng-container matColumnDef="totalAmount">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="totalAmount"
+              >
+                Total Amount
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.totalAmount | currency : "USD" }}
+              </td>
+            </ng-container>
+
+            <!-- NEW: Description Column -->
+            <ng-container matColumnDef="description">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="description"
+              >
+                Description
+              </th>
+              <td mat-cell *matCellDef="let element" class="max-w-xs truncate">
+                {{ element.description }}
+              </td>
+            </ng-container>
+
+            <!-- PO Status Column -->
+            <ng-container matColumnDef="poStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="poStatus">
+                Status
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.poStatus }}
+              </td>
+            </ng-container>
+
+            <!-- Created By Column -->
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
+                Created By
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.createdBy }}
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  (click)="$event.stopPropagation()"
+                  type="button"
+                  class="bg-transparent"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+            <tr
+              mat-row
+              *matRowDef="let element; columns: displayedColumns"
+              class="example-element-row cursor-pointer hover:bg-gray-100"
+              (click)="openPOModel(element)"
+            ></tr>
+          </table>
+        </div>
+
+        <div class="mt-10" *ngIf="!isLoading && sortedData.data?.length === 0">
+          <p class="no-data-row text-center mt-5 text-gray-500 text-xl">
+            No data to display
+          </p>
+        </div>
+        <div class="mt-10" *ngIf="isLoading">
+          <p class="no-data-row text-center text-gray-500 text-xl">
+            <span>Loading Date </span>
+            <span class="loading-dots">
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </section>
-<!-- pagination -->
 <mat-paginator
   class=""
   #paginator

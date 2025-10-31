@@ -191,22 +191,12 @@
           class="text-white bg-green-500 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 disabled:bg-green-200 disabled:cursor-not-allowed focus:z-10"
           disabled
         >
-          <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-            />
-          </svg>
-          Loading...
+          <span>Loading </span>
+          <span class="loading-dots">
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+          </span>
         </button>
         <button
           type="button"

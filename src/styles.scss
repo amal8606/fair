@@ -78,3 +78,46 @@ body {
   /* For Firefox */
   scrollbar-width: none;
 }
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* 1. Define the Keyframes for the animation */
+@keyframes dot-flashing {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 2. Style the Container and Dots */
+.loading-dots {
+  display: inline-block;
+  margin-left: 4px; /* Space after the word 'Deleting' */
+}
+
+.dot {
+  opacity: 0; /* Start invisible */
+  animation: dot-flashing 1.4s infinite linear; /* Apply the animation */
+}
+
+/* 3. Apply staggered delay to each dot */
+/* The delay makes them appear one after the other */
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
