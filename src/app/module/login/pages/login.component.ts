@@ -9,12 +9,13 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
 })
 export class LoginComponent {
   constructor(
@@ -36,7 +37,6 @@ export class LoginComponent {
         this.toaster.success('Login Successful');
       },
       error: (err) => {
-        console.error(err);
         alert('Login failed. Please check your credentials and try again.');
         this.loading = false;
       },
