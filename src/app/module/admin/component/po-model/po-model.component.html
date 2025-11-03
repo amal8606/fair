@@ -6,9 +6,7 @@
     (click)="$event.stopPropagation()"
     class="relative h-full w-full max-w-7xl max-h-[650px] overflow-y-scroll rounded-lg no-scrollbar"
   >
-    <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow mt-50">
-      <!-- Modal header -->
       <div class="flex justify-between p-6 border-b rounded-t bg-blue-200">
         <p
           class="text-[1rem] flex mb-0 items-center font-semibold text-gray-900"
@@ -36,7 +34,6 @@
           <span class="sr-only">Close modal</span>
         </button>
       </div>
-      <!-- Modal body -->
       <div class="px-6 mt-4">
         <div class="space-y-4 text-sm text-gray-700">
           <div class="flex flex-col justify-between gap-8">
@@ -49,7 +46,6 @@
               </button>
             </div>
 
-            <!-- ADD ITEMS SECTION -->
             <form [formGroup]="addPOItemForm">
               <div *ngIf="addItemModel">
                 <div class="grid grid-cols-4 gap-4 mb-4">
@@ -167,22 +163,18 @@
                     <th class="border px-2 py-1">MODE OF SHIPMENT</th>
                     <th class="border px-2 py-1">DELIVERY SCHEDULE</th>
                     <th class="border px-2 py-1">TERMS</th>
-                    <!-- <th class="border px-2 py-1">ACTIONS</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="border px-2 py-1">
                       {{ po.orderDate | date : "dd/MM/yyyy" }}
-                      <!-- <input type="date" [(ngModel)]="po.orderDate" class="border rounded px-2 py-1 w-32" /> -->
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.modeOfShipment }}
-                      <!-- <input [(ngModel)]="po.modeOfShipment" class="border rounded px-2 py-1 w-32" /> -->
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.deliverySchedule }}
-                      <!-- <input [(ngModel)]="po.deliverySchedule" class="border rounded px-2 py-1 w-32" /> -->
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.terms }}
@@ -206,6 +198,7 @@
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
                     <th class="border px-2 py-1">TOTAL ($)</th>
+                    <th class="border px-2 py-1">STATUS</th>
                     <th class="border px-3 py-2">ACTIONS</th>
                   </tr>
                 </thead>
@@ -315,6 +308,9 @@
                     <td class="border px-2 py-1">
                       {{ item.totalPrice }}
                     </td>
+                    <td class="border px-2 py-1 font-semibold">
+                      {{ item.itemStatus?.statusName }}
+                    </td>
                     <td class="border px-3 py-2">
                       <div class="flex items-center space-x-2">
                         <ng-container
@@ -352,7 +348,7 @@
                   </tr>
                   <tr *ngIf="productItems?.length === 0">
                     <td
-                      colspan="10"
+                      colspan="12"
                       class="border px-2 py-1 text-center text-gray-500"
                     >
                       No items found
@@ -361,7 +357,7 @@
                 </tbody>
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     SUB TOTAL
@@ -372,7 +368,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     DISCOUNT
@@ -381,7 +377,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     FREIGHT /SHIPPING
@@ -390,7 +386,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     CUSTOM FEE /TAX
@@ -399,7 +395,7 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     TOTAL AMOUNT
@@ -422,7 +418,6 @@
             </span>
           </p>
         </div>
-        <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 rounded-b">
           <button
             type="button"

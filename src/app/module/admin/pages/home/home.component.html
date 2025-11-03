@@ -21,7 +21,7 @@
   </div>
 
   <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
-    <mat-tab label="OUTGOING">
+    <mat-tab label="INCOMING">
       <div class="overflow-x-auto shadow-lg p-2 sm:rounded-lg mt-2">
         <div *ngIf="!isLoading">
           <table
@@ -32,15 +32,15 @@
             matSort
             #empTbSort="matSort"
           >
-            <!-- PO Number Column -->
             <ng-container matColumnDef="poNumber">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
                 #PO
               </th>
-              <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
+              <td mat-cell *matCellDef="let element" class="min-w-[120px]">
+                {{ element.poNumber }}
+              </td>
             </ng-container>
 
-            <!-- Customer Name Column -->
             <ng-container matColumnDef="customerName">
               <th
                 mat-header-cell
@@ -54,7 +54,6 @@
               </td>
             </ng-container>
 
-            <!-- Supplier Column -->
             <ng-container matColumnDef="supplier">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="supplier">
                 Supplier
@@ -64,7 +63,6 @@
               </td>
             </ng-container>
 
-            <!-- Destination Column -->
             <ng-container matColumnDef="destination">
               <th
                 mat-header-cell
@@ -78,7 +76,6 @@
               </td>
             </ng-container>
 
-            <!-- Order Date Column -->
             <ng-container matColumnDef="orderDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
                 Order Date
@@ -88,7 +85,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Delivery Schedule Column -->
             <ng-container matColumnDef="deliverySchedule">
               <th
                 mat-header-cell
@@ -102,7 +98,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Payment Terms Column -->
             <ng-container matColumnDef="paymentTerms">
               <th
                 mat-header-cell
@@ -116,7 +111,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Delivery Terms Column -->
             <ng-container matColumnDef="deliveryTerms">
               <th
                 mat-header-cell
@@ -130,7 +124,6 @@
               </td>
             </ng-container>
 
-            <!-- Mode of Shipment Column -->
             <ng-container matColumnDef="modeOfShipment">
               <th
                 mat-header-cell
@@ -144,7 +137,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Shipping Charges Column -->
             <ng-container matColumnDef="shippingCharges">
               <th
                 mat-header-cell
@@ -158,7 +150,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Discount Column -->
             <ng-container matColumnDef="discount">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="discount">
                 Discount (%)
@@ -168,7 +159,6 @@
               </td>
             </ng-container>
 
-            <!-- Total Cost Column -->
             <ng-container matColumnDef="totalCost">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
                 Total Cost
@@ -178,7 +168,6 @@
               </td>
             </ng-container>
 
-            <!-- Total Amount Column -->
             <ng-container matColumnDef="totalAmount">
               <th
                 mat-header-cell
@@ -192,31 +181,36 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Description Column -->
-            <ng-container matColumnDef="description">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header="description"
-              >
-                Description
-              </th>
-              <td mat-cell *matCellDef="let element" class="max-w-xs truncate">
-                {{ element.description }}
-              </td>
-            </ng-container>
-
-            <!-- PO Status Column -->
             <ng-container matColumnDef="poStatus">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="poStatus">
                 Status
               </th>
               <td mat-cell *matCellDef="let element">
-                {{ element.poStatus }}
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-800': element.poStatus === 'Created',
+                    'bg-green-100 text-green-800':
+                      element.poStatus === 'Approved',
+                    'bg-yellow-100 text-yellow-800':
+                      element.poStatus === 'Processing',
+                    'bg-indigo-100 text-indigo-800':
+                      element.poStatus === 'Completed',
+                    'bg-sky-100 text-sky-800': element.poStatus === 'Sent',
+                    'bg-lime-100 text-lime-800':
+                      element.poStatus === 'Supplier Confirmed',
+                    'bg-purple-100 text-purple-800':
+                      element.poStatus === 'Received',
+                    'bg-teal-100 text-teal-800':
+                      element.poStatus === 'Invoiced',
+                    'bg-gray-100 text-gray-800': element.poStatus === 'Closed'
+                  }"
+                >
+                  {{ element.poStatus }}
+                </span>
               </td>
             </ng-container>
 
-            <!-- Created By Column -->
             <ng-container matColumnDef="createdBy">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
                 Created By
@@ -226,7 +220,6 @@
               </td>
             </ng-container>
 
-            <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let element">
@@ -250,11 +243,11 @@
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="activeDisplayedColumns"></tr>
 
             <tr
               mat-row
-              *matRowDef="let element; columns: displayedColumns"
+              *matRowDef="let element; columns: activeDisplayedColumns"
               class="example-element-row cursor-pointer hover:bg-gray-100"
               (click)="openPOModel(element)"
             ></tr>
@@ -279,7 +272,6 @@
       </div>
     </mat-tab>
 
-    <!-- OUTGOING TAB CONTENT (Duplicated structure for consistency) -->
     <mat-tab label="OUTGOING">
       <div class="overflow-x-auto shadow-lg p-2 sm:rounded-lg mt-2">
         <div *ngIf="!isLoading">
@@ -291,15 +283,15 @@
             matSort
             #empTbSort="matSort"
           >
-            <!-- PO Number Column -->
             <ng-container matColumnDef="poNumber">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="poNumber">
                 #PO
               </th>
-              <td mat-cell *matCellDef="let element">{{ element.poNumber }}</td>
+              <td mat-cell *matCellDef="let element" class="min-w-[120px]">
+                {{ element.poNumber }}
+              </td>
             </ng-container>
 
-            <!-- Customer Name Column -->
             <ng-container matColumnDef="customerName">
               <th
                 mat-header-cell
@@ -313,7 +305,6 @@
               </td>
             </ng-container>
 
-            <!-- Supplier Column -->
             <ng-container matColumnDef="supplier">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="supplier">
                 Supplier
@@ -323,7 +314,6 @@
               </td>
             </ng-container>
 
-            <!-- Destination Column -->
             <ng-container matColumnDef="destination">
               <th
                 mat-header-cell
@@ -337,7 +327,6 @@
               </td>
             </ng-container>
 
-            <!-- Order Date Column -->
             <ng-container matColumnDef="orderDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="orderDate">
                 Order Date
@@ -347,7 +336,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Delivery Schedule Column -->
             <ng-container matColumnDef="deliverySchedule">
               <th
                 mat-header-cell
@@ -361,7 +349,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Payment Terms Column -->
             <ng-container matColumnDef="paymentTerms">
               <th
                 mat-header-cell
@@ -375,7 +362,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Delivery Terms Column -->
             <ng-container matColumnDef="deliveryTerms">
               <th
                 mat-header-cell
@@ -389,7 +375,6 @@
               </td>
             </ng-container>
 
-            <!-- Mode of Shipment Column -->
             <ng-container matColumnDef="modeOfShipment">
               <th
                 mat-header-cell
@@ -403,7 +388,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Shipping Charges Column -->
             <ng-container matColumnDef="shippingCharges">
               <th
                 mat-header-cell
@@ -417,7 +401,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Discount Column -->
             <ng-container matColumnDef="discount">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="discount">
                 Discount (%)
@@ -427,7 +410,6 @@
               </td>
             </ng-container>
 
-            <!-- Total Cost Column -->
             <ng-container matColumnDef="totalCost">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
                 Total Cost
@@ -437,7 +419,6 @@
               </td>
             </ng-container>
 
-            <!-- Total Amount Column -->
             <ng-container matColumnDef="totalAmount">
               <th
                 mat-header-cell
@@ -451,7 +432,6 @@
               </td>
             </ng-container>
 
-            <!-- NEW: Description Column -->
             <ng-container matColumnDef="description">
               <th
                 mat-header-cell
@@ -465,17 +445,36 @@
               </td>
             </ng-container>
 
-            <!-- PO Status Column -->
             <ng-container matColumnDef="poStatus">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="poStatus">
                 Status
               </th>
               <td mat-cell *matCellDef="let element">
-                {{ element.poStatus }}
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-800': element.poStatus === 'Created',
+                    'bg-green-100 text-green-800':
+                      element.poStatus === 'Approved',
+                    'bg-yellow-100 text-yellow-800':
+                      element.poStatus === 'Processing',
+                    'bg-indigo-100 text-indigo-800':
+                      element.poStatus === 'Completed',
+                    'bg-sky-100 text-sky-800': element.poStatus === 'Sent',
+                    'bg-lime-100 text-lime-800':
+                      element.poStatus === 'Supplier Confirmed',
+                    'bg-purple-100 text-purple-800':
+                      element.poStatus === 'Received',
+                    'bg-teal-100 text-teal-800':
+                      element.poStatus === 'Invoiced',
+                    'bg-gray-100 text-gray-800': element.poStatus === 'Closed'
+                  }"
+                >
+                  {{ element.poStatus }}
+                </span>
               </td>
             </ng-container>
 
-            <!-- Created By Column -->
             <ng-container matColumnDef="createdBy">
               <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy">
                 Created By
@@ -485,7 +484,6 @@
               </td>
             </ng-container>
 
-            <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let element">
@@ -509,11 +507,11 @@
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="activeDisplayedColumns"></tr>
 
             <tr
               mat-row
-              *matRowDef="let element; columns: displayedColumns"
+              *matRowDef="let element; columns: activeDisplayedColumns"
               class="example-element-row cursor-pointer hover:bg-gray-100"
               (click)="openPOModel(element)"
             ></tr>
