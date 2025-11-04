@@ -165,20 +165,20 @@ export class CreatePoComponent implements OnInit {
     this.sortedData1.data = [];
     this.purchaseOrdersList.data = [];
     this.loading = true;
-    this.selection.clear(); // Clear previous selections when fetching new data
+    this.selection.clear();
     const poId = this.poId.get('poId')?.value;
 
     this.poService.getPO(poId).subscribe({
       next: (response: PoItem[]) => {
         this.loading = false;
-        // Initialize selectedQuantity to 0 for all fetched items
-        const itemsWithSelectedQty = response.map((item, index) => ({
+
+        const filteredResponse = response.filter((item) => item.quantity > 0);
+
+        const itemsWithSelectedQty = filteredResponse.map((item, index) => ({
           ...item,
-          // Assign (index + 1) as line number if it's not provided by the API
           lineNumber: item.lineNumber || index + 1,
           selectedQuantity: 0,
-          // Setting total price to 0 to be consistent with 0 selected quantity
-          totalPrice: 0,
+          totalPrice: 0, // Note: You might want to use the 'totalPrice' from the API data instead of setting it to 0
         }));
 
         this.sortedData1.data = itemsWithSelectedQty;
