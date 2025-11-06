@@ -49,23 +49,43 @@ export class HomeComponent implements AfterViewInit {
   public purchaseOrdersOutgoing = new MatTableDataSource<any>();
   public sortedData = new MatTableDataSource<any>();
 
-  // UPDATED: Added new column names for all fields present in the sample PO object
-  displayedColumns: string[] = [
+  // NEW: Property to hold the currently active displayed columns
+  public activeDisplayedColumns: string[] = [];
+
+  private incomingColumns: string[] = [
     'poNumber',
+    'poStatus',
     'customerName', // Maps to buyerOrgName
     'supplier', // Maps to vendorOrgName / supplier
     'destination',
     'orderDate',
-    'deliverySchedule', // NEW: Added deliverySchedule
-    'paymentTerms', // NEW: Added paymentTerms
-    'deliveryTerms', // NEW: Added deliveryTerms
+    'deliverySchedule',
+    'paymentTerms',
+    'deliveryTerms',
     'modeOfShipment',
-    'shippingCharges', // NEW: Added shippingCharges
-    'discount', // NEW: Added discount
+    'shippingCharges',
+    'discount',
     'totalCost',
     'totalAmount',
-    'description', // NEW: Added description
+    'createdBy',
+    'actions',
+  ];
+
+  private outgoingColumns: string[] = [
+    'poNumber',
     'poStatus',
+    'customerName',
+    'supplier',
+    'destination',
+    'orderDate',
+    'deliverySchedule',
+    'paymentTerms',
+    'deliveryTerms',
+    'modeOfShipment',
+    'shippingCharges',
+    'discount',
+    'totalCost',
+    'totalAmount',
     'createdBy',
     'actions',
   ];
@@ -109,7 +129,7 @@ export class HomeComponent implements AfterViewInit {
         this.purchaseOrdersOutgoing.data = outgoingPOs;
         this.purchaseOrders.data = response;
 
-        // Apply sorting/pagination after data load
+        // Apply sorting/pagination and set initial columns after data load
         this.onTabChange(0);
       },
       error: (error: any) => {
@@ -123,8 +143,10 @@ export class HomeComponent implements AfterViewInit {
 
     if (tabIndex === 0) {
       activeData = this.purchaseOrdersIncoming.data;
+      this.activeDisplayedColumns = this.incomingColumns; // Set columns for INCOMING
     } else if (tabIndex === 1) {
       activeData = this.purchaseOrdersOutgoing.data;
+      this.activeDisplayedColumns = this.outgoingColumns; // Set columns for OUTGOING
     }
 
     this.sortedData.data = activeData;
@@ -142,8 +164,7 @@ export class HomeComponent implements AfterViewInit {
         direction: this.empTbSort.direction,
       };
 
-      // FIX: Explicitly trigger the custom sortData function by emitting the MatSortChange event.
-      // DO NOT call this.sortedData.sort.sort(sortState), as it expects MatSortable, not Sort.
+      // Explicitly trigger the custom sortData function by emitting the MatSortChange event.
       this.empTbSort.sortChange.emit(sortState);
     }
   }
@@ -199,8 +220,6 @@ export class HomeComponent implements AfterViewInit {
           return this.compare(a.totalCost, b.totalCost, isAsc);
         case 'totalAmount':
           return this.compare(a.totalAmount, b.totalAmount, isAsc);
-        case 'description': // Existing sort case, ensuring it's handled
-          return this.compare(a.description, b.description, isAsc);
         case 'poStatus':
           return this.compare(a.poStatus, b.poStatus, isAsc);
         case 'createdBy':

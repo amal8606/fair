@@ -6,6 +6,7 @@ import { CreatePoComponent } from './pages/create-po/create-po.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ImportPosComponent } from './pages/import-pos/import-pos.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
+import { ProFormaInvoiceComponent } from './pages/invoice/pro-forma-invoice/pro-forma-invoice.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'organization',
         component: OrganizationComponent,
+      },
+      {
+        path: 'pro-forma-invoice',
+        component: ProFormaInvoiceComponent,
       },
     ],
   },

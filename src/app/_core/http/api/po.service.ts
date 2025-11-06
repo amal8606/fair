@@ -35,9 +35,9 @@ export class PoService {
     );
   }
 
-  public createBulkPoItem(poId: any, poItem: any) {
+  public createBulkPoItem(poId: any, poTypeId: any, poItem: any) {
     return this.http.post<any>(
-      `${environment.api}/OrderManagement/BulkAdd?poId=${poId}`,
+      `${environment.api}/OrderManagement/BulkAdd?poId=${poId}&typeId=${poTypeId}`,
       poItem
     );
   }
@@ -57,9 +57,10 @@ export class PoService {
   public importPO(po: any) {
     return this.http.post<any>(
       `${environment.api}/OrderManagement/import`,
-      po,{
+      po,
+      {
         reportProgress: true,
-        observe: 'events'
+        observe: 'events',
       }
     );
   }
