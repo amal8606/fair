@@ -121,3 +121,28 @@ body {
 .dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide browser print header/footer (URL, title, etc.) */
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+
+  /* Remove unwanted page elements */
+  header,
+  footer,
+  .navbar,
+  .print-hidden {
+    display: none !important;
+  }
+}
