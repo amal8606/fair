@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import {
   FormBuilder,
@@ -13,13 +14,12 @@ import {
 import { PoService } from '../../../../../_core/http/api/po.service';
 import { InvoiceService } from '../../../../../_core/http/api/invoice.service';
 import { OrgainizationService } from '../../../../../_core/http/api/orginization.service';
-
-// --- Data Structures (Interfaces) ---
+import { InvoicedProFormaComponent } from '../invoiced-pro-forma/invoiced-pro-forma.component';
 
 @Component({
   selector: 'app-pro-forma-invoice',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, FormsModule],
   templateUrl: './pro-forma-invoice.component.html',
 })
 export class ProFormaInvoiceComponent implements OnInit {
@@ -45,7 +45,6 @@ export class ProFormaInvoiceComponent implements OnInit {
     proformaItems: new FormArray([], Validators.required),
     selectedPoNumber: new FormControl(null, Validators.required),
 
-    // NEW NESTED FORM GROUP FOR ADDRESSES
     invoiceDetails: new FormGroup({
       customerAddress: new FormControl('', Validators.required),
       shipToAddress: new FormControl('', Validators.required),
@@ -58,10 +57,17 @@ export class ProFormaInvoiceComponent implements OnInit {
 
   public finalInvoiceData: any;
   public isLoading: boolean = false;
+  public isPoLoading: boolean = false;
 
-  // NEW PROPERTIES FOR ADDRESS MANAGEMENT
   public customerAddresses: any[] = [];
   public selectedCustomer?: any;
+
+  // Pro Forma Invoice History
+  public proFormaInvoices: any[] = [];
+  public startDate: string = '';
+  public endDate: string = '';
+  public isProFormaLoading: boolean = false;
+  public showProFormaHistory: boolean = false;
 
   seller = {
     name: 'FAIRMOUNT INTERNATIONAL LLC',
@@ -118,7 +124,6 @@ export class ProFormaInvoiceComponent implements OnInit {
       ),
       statusId: new FormControl(itemData.statusId || 0),
       terms: new FormControl(itemData.terms),
-      // Read-only field for UI display
       extendedPrice: new FormControl({
         value: extendedPrice.toFixed(2),
         disabled: true,
@@ -129,12 +134,9 @@ export class ProFormaInvoiceComponent implements OnInit {
   ngOnInit(): void {
     this.getProFormaInvoicablePO();
     this.getCustomer();
-    // Set the initial creation date (formatted as 'YYYY-MM-DD' for date input)
     this.proFormaForm
       .get('createdAt')
       ?.setValue(new Date().toISOString().substring(0, 10));
-
-    // Listen to changes on the customerId control to handle manual selection in Step 2.
     this.proFormaForm
       .get('customerId')
       ?.valueChanges.subscribe((customerId) => {
@@ -144,15 +146,10 @@ export class ProFormaInvoiceComponent implements OnInit {
       });
   }
 
-  // --- Data Fetching Methods ---
-
-  public getPOs() {
-    this.poService.getActivePO().subscribe((res: any[]) => {
-      this.incomingPOs = res.filter((po: any) => po.poType === 'Incoming');
-    });
-  }
   public getProFormaInvoicablePO() {
+    this.isPoLoading = true;
     this.invoiceService.getProFormaInvoicablePO().subscribe((res: any[]) => {
+      this.isPoLoading = false;
       this.incomingPOs = res;
     });
   }
@@ -173,23 +170,16 @@ export class ProFormaInvoiceComponent implements OnInit {
     this.isLoading = true;
     this.selectedPO = po;
     this.proFormaForm.get('purchaseOrderId')?.setValue(po.id);
-
     this.selectedCustomer = this.customers.find(
       (c: any) => c.organizationId === po.buyerOrgId
     );
-
-    // Set customerId without emitting event to prevent double-call to onCustomerSelect
     this.proFormaForm
       .get('customerId')
       ?.setValue(this.selectedCustomer?.organizationId || null, {
         emitEvent: false,
       });
-
     this.proFormaForm.get('selectedPoNumber')?.setValue(po.poNumber);
-
-    // Call the customer selection logic to fetch and set addresses
     this.fetchAndSetCustomerAddresses(po.buyerOrgId, this.selectedCustomer);
-
     this.poService.getPO(po.id).subscribe({
       next: (items: any[]) => {
         this.itemsArray.clear();
@@ -198,7 +188,6 @@ export class ProFormaInvoiceComponent implements OnInit {
             this.itemsArray.push(this.createProformaItemFormGroup(item));
           });
         }
-
         this.isLoading = false;
         this.nextStep();
       },
@@ -211,16 +200,11 @@ export class ProFormaInvoiceComponent implements OnInit {
     });
   }
 
-  /**
-   * Fetches all addresses for a given customer and sets the default address in the form.
-   */
   private fetchAndSetCustomerAddresses(customerId: number, customer: any) {
     this.orgService.getOrganizationById(customerId).subscribe({
       next: (res: any) => {
-        // Assuming addresses come back as an array of address objects
         this.customerAddresses = res.addresses || [];
 
-        // Determine a default address to display
         const defaultAddress =
           customer?.fullAddress ||
           this.customerAddresses[0]?.fullAddress ||
@@ -238,18 +222,15 @@ export class ProFormaInvoiceComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles manual customer selection from the dropdown in Step 2.
-   * @param customerId The ID of the selected customer organization.
-   */
+  orgId(orgId: any) {
+    const org = this.customers.find((c: any) => c.organizationId == orgId);
+    return org.name;
+  }
   onCustomerSelect(customerId: number): void {
-    // Find the customer using 'organizationId' which is the value used in the select
     this.selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId === customerId
+      (c: any) => c.organizationId == customerId
     );
-
     if (this.selectedCustomer) {
-      // Fetch addresses for the new customer and set the default address
       this.fetchAndSetCustomerAddresses(customerId, this.selectedCustomer);
     } else {
       this.customerAddresses = [];
@@ -260,19 +241,14 @@ export class ProFormaInvoiceComponent implements OnInit {
     }
   }
 
-  /**
-   * Handles selection from the Customer Address dropdown.
-   */
   onCustomerAddressSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const selectedAddressId = selectElement.value;
 
-    // Find the selected address object from customerAddresses
     const selectedAddress = this.customerAddresses.find(
       (addr: any) => addr.addressId === +selectedAddressId
     );
     if (selectedAddress) {
-      // Format the address as a readable string
       const fullAddress = [
         selectedAddress.addressLine1,
         selectedAddress.addressLine2,
@@ -284,21 +260,16 @@ export class ProFormaInvoiceComponent implements OnInit {
         .filter(Boolean)
         .join(', ');
 
-      // Update form control
       this.proFormaForm
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
     }
   }
 
-  /**
-   * Handles selection from the Ship To Address dropdown.
-   */
   onShipToAddressSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const selectedAddressId = selectElement.value;
 
-    // Find the selected address object from customerAddresses
     const selectedAddress = this.customerAddresses.find(
       (addr: any) => addr.addressId === +selectedAddressId
     );
@@ -314,7 +285,6 @@ export class ProFormaInvoiceComponent implements OnInit {
         .filter(Boolean)
         .join(', ');
 
-      // Update form control
       this.proFormaForm
         .get('invoiceDetails.shipToAddress')
         ?.setValue(fullAddress);
@@ -322,10 +292,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     }
   }
 
-  // --- (Navigation and Calculation methods) ---
-
   nextStep(): void {
-    // Step 1 validation: Check if PO is selected
     if (this.currentStep === 1) {
       if (this.proFormaForm.get('selectedPoNumber')?.value) {
         this.currentStep++;
@@ -333,11 +300,8 @@ export class ProFormaInvoiceComponent implements OnInit {
         alert('Please select a Purchase Order to continue.');
         this.proFormaForm.get('selectedPoNumber')?.markAsTouched();
       }
-    }
-    // Step 2 validation: Check form validity and generate invoice data
-    else if (this.currentStep === 2) {
+    } else if (this.currentStep === 2) {
       this.proFormaForm.markAllAsTouched();
-      // Also ensure the items array has at least one valid item
       const areAllItemsValid = this.itemsArray.controls.every(
         (control) => control.valid
       );
@@ -349,9 +313,7 @@ export class ProFormaInvoiceComponent implements OnInit {
           'Please correct all validation errors (including all line item fields) before proceeding.'
         );
       }
-    }
-    // General step increment (shouldn't be reached if logic above is followed)
-    else if (this.currentStep < this.totalSteps) {
+    } else if (this.currentStep < this.totalSteps) {
       this.currentStep++;
     }
   }
@@ -367,17 +329,14 @@ export class ProFormaInvoiceComponent implements OnInit {
     const price = itemGroup.get('unitPrice')?.value || 0;
     const extendedPrice = qty * price;
 
-    // Update the extendedPrice UI field (read-only)
     itemGroup
       .get('extendedPrice')
       ?.setValue(extendedPrice.toFixed(2), { emitEvent: false });
 
-    // Update the totalPrice posting field
     itemGroup.get('totalPrice')?.setValue(extendedPrice, { emitEvent: false });
 
     return extendedPrice;
   }
-  // onclick="window.print()"
   finalProFormaPostData: any;
   generateInvoice(): void {
     const formValue = this.proFormaForm.getRawValue();
@@ -438,7 +397,6 @@ export class ProFormaInvoiceComponent implements OnInit {
       freightType: formValue.freightType,
       estimatedShipDate: formValue.estimatedShipDate,
 
-      // Line Items & Totals
       items: this.finalProFormaPostData.proformaItems,
       notes: formValue.notes,
       totals: {
@@ -448,14 +406,39 @@ export class ProFormaInvoiceComponent implements OnInit {
       },
     };
 
-    this.currentStep = 3; // Manually move to step 3
+    this.currentStep = 3;
   }
+  public generateLoding: boolean = false;
   postInvoice() {
+    this.generateLoding = true;
     this.invoiceService
       .postProFormaInvoiceData(this.finalProFormaPostData)
-      .subscribe({});
+      .subscribe({
+        next: (res) => {
+          this.generateLoding = false;
+          this.currentStep = 3;
+        },
+      });
   }
   printProForma() {
     window.print();
+  }
+
+  viewProFormaDetails(invoice: any): void {
+    alert(`Viewing Pro Forma Invoice: ${invoice.proformaNumber}`);
+  }
+
+  downloadProFormaCode(invoice: any): void {
+    const invoiceCode = JSON.stringify(invoice, null, 2);
+    const element = document.createElement('a');
+    element.setAttribute(
+      'href',
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode)
+    );
+    element.setAttribute('download', `proforma-${invoice.proformaNumber}.json`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   }
 }

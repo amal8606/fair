@@ -7,6 +7,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ImportPosComponent } from './pages/import-pos/import-pos.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { ProFormaInvoiceComponent } from './pages/invoice/pro-forma-invoice/pro-forma-invoice.component';
+import { InvoicedProFormaComponent } from './pages/invoice/invoiced-pro-forma/invoiced-pro-forma.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'pro-forma-invoice',
         component: ProFormaInvoiceComponent,
+      },
+      {
+        path: 'pro-forma-invoiced-list',
+        component: InvoicedProFormaComponent,
       },
     ],
   },

@@ -2,7 +2,7 @@
   class="p-6 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
 >
   <header class="mb-8 text-center print:hidden">
-    <h1 class="text-3xl font-bold text-blue-700">PRO FORMA INVOICE CREATOR</h1>
+    <p class="text-3xl font-bold text-blue-500">PRO FORMA INVOICE CREATOR</p>
     <p class="text-gray-600 mt-2">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
@@ -11,7 +11,7 @@
     </p>
     <div class="h-2 bg-gray-200 rounded-full mt-4">
       <div
-        class="h-full bg-blue-500 rounded-full transition-all duration-500"
+        class="h-full bg-blue rounded-full transition-all duration-500"
         [style.width]="(currentStep / totalSteps) * 100 + '%'"
       ></div>
     </div>
@@ -19,14 +19,14 @@
 
   <form [formGroup]="proFormaForm" class="space-y-8">
     <section *ngIf="currentStep === 1">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">
+      <p class="text-xl font-semibold mb-4 text-blue-500">
         Select Incoming Purchase Order
-      </h2>
+      </p>
       <div
         *ngIf="isLoading"
         class="absolute inset-0 h-full flex items-center justify-center bg-white bg-opacity-80 z-10"
       >
-        <p class="text-lg font-medium text-blue-600">Loading PO Details...</p>
+        <p class="text-sm font-medium text-blue">Loading PO Details...</p>
       </div>
 
       <div
@@ -58,7 +58,7 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngIf="incomingPOs.length === 0">
+            <tr *ngIf="incomingPOs.length === 0 && isPoLoading === false">
               <td
                 colspan="4"
                 class="px-6 py-4 text-center text-sm text-gray-500"
@@ -66,14 +66,29 @@
                 No incoming Purchase Orders found.
               </td>
             </tr>
-            <tr *ngFor="let po of incomingPOs" class="hover:bg-blue-50">
+            <tr *ngIf="isPoLoading">
+              <td
+                colspan="4"
+                class="px-6 py-4 text-center text-sm text-gray-500"
+              >
+                <p class="no-data-row text-center text-gray-500">
+                  <span>Loading Date </span>
+                  <span class="loading-dots">
+                    <span class="dot">.</span>
+                    <span class="dot">.</span>
+                    <span class="dot">.</span>
+                  </span>
+                </p>
+              </td>
+            </tr>
+            <tr *ngFor="let po of incomingPOs" class="hover:bg-[#A9D08D]/30">
               <td
                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
               >
                 {{ po.poNumber }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {{ po.buyerOrgName }}
+                {{ orgId(po.buyerOrgId) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ po.createdAt | date : "shortDate" }}
@@ -82,7 +97,7 @@
                 <button
                   type="button"
                   (click)="selectPO(po)"
-                  class="px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-600 transition duration-150"
+                  class="px-3 py-1 bg-blue text-white text-xs font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-600 bg-blue-500 transition duration-150"
                   [disabled]="isLoading"
                 >
                   Select PO
@@ -106,7 +121,7 @@
     </section>
 
     <section *ngIf="currentStep === 2">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">Invoice Details</h2>
+      <p class="text-2xl font-semibold mb-4 text-blue">Invoice Details</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="space-y-1">
@@ -324,7 +339,7 @@
         </div>
       </div>
 
-      <h3 class="text-lg font-semibold my-4 text-gray-700">Line Items</h3>
+      <p class="text-lg font-semibold my-4 text-blue-500">Line Items</p>
 
       <div
         class="overflow-x-auto border rounded-lg shadow-sm print:shadow-none"
@@ -385,7 +400,7 @@
                     type="number"
                     min="1"
                     (input)="calculateExtendedPrice(itemGroup)"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right"
+                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -401,14 +416,14 @@
                   <input
                     formControlName="unit"
                     type="text"
-                    class="w-16 border-gray-300 rounded-md text-sm"
+                    class="w-16 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
                   <textarea
                     formControlName="description"
                     rows="2"
-                    class="w-full border-gray-300 rounded-md text-sm"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   ></textarea>
                   <div
                     *ngIf="
@@ -425,13 +440,13 @@
                     formControlName="manufacturerModel"
                     type="text"
                     placeholder="Model"
-                    class="w-full mb-1 border-gray-300 rounded-md text-sm"
+                    class="w-full mb-1 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                   <input
                     formControlName="partNumber"
                     type="text"
                     placeholder="Part Number"
-                    class="w-full border-gray-300 rounded-md text-sm"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
@@ -440,7 +455,7 @@
                     type="number"
                     min="0"
                     (input)="calculateExtendedPrice(itemGroup)"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -503,29 +518,30 @@
 
     <section *ngIf="currentStep === 3">
       <style>
+        /* Define a darker green for headings/accents in print */
         @media print {
           /* General text color: Use a very dark green (almost black) for primary text */
           .print\:text-black-or-dark-green {
             color: #000000 !important; /* Very Dark Green/Near Black */
           }
-          /* Accent color: Primary Green for headings/totals */
+          /* Accent color: Primary Green for headings/totals (Used a custom dark shade) */
           .print\:text-green-700 {
-            color: #000000 !important; /* Primary Green */
+            color: #749c63 !important; /* Darker Green derived from #A9D08D */
           }
-          /* Table header/background color: Light Green */
+          /* Table header/background color: Light Green (Using the base color) */
           .print\:bg-green-100 {
-            background-color: #60d89a !important; /* Very Light Green */
+            background-color: #a9d08d !important; /* Base Light Green */
           }
-          /* Border color: Medium Green */
+          /* Border color: Medium Green (Used a dark shade for contrast) */
           .print\:border-green-500 {
-            border-color: #000000fa !important; /* Medium Green */
+            border-color: #749c63 !important; /* Medium Green/Dark Green */
           }
         }
       </style>
 
-      <h2 class="text-xl font-semibold mb-4 text-gray-700 print:hidden">
+      <p class="text-xl font-semibold mb-4 text-blue-600 print:hidden">
         Review & Print
-      </h2>
+      </p>
 
       <div
         *ngIf="finalInvoiceData"
@@ -536,81 +552,81 @@
           <div class="inline-block w-3/5">
             <div>
               <img
-                src="/assets/FMLogo.png"
+                src="/src/assets/FMLogo.jpg"
                 alt="FM Logo"
                 class="h-8 mb-1 print:h-6"
               />
             </div>
-            <p class="text-xl font-bold print:text-green-700">
+            <p class="text-xl font-bold print:text-[#749c63]">
               {{ finalInvoiceData.sellerName }}
             </p>
             <p
-              class="text-xs text-gray-600 whitespace-pre-line print:text-black-or-dark-green"
+              class="text-xs text-gray-600 whitespace-pre-line print:text-black"
             >
               {{ finalInvoiceData.sellerAddress }}
             </p>
-            <p class="text-[10px] text-gray-500 print:text-black-or-dark-green">
+            <p class="text-[10px] text-gray-500 print:text-black">
               Phone: {{ finalInvoiceData.sellerPhone }}
             </p>
-            <p class="text-[10px] text-gray-500 print:text-black-or-dark-green">
+            <p class="text-[10px] text-gray-500 print:text-black">
               Fax: {{ finalInvoiceData.sellerFax }}
             </p>
           </div>
 
           <div class="w-2/5 flex flex-col items-end">
             <p
-              class="text-2xl font-extrabold print:text-green-700 mb-2 print:text-base"
+              class="text-2xl font-extrabold print:text-[#749c63] mb-2 print:text-base"
             >
               PRO FORMA INVOICE
             </p>
             <table
-              class="w-64 border-collapse border print:border-green-500 text-sm print:w-48 print:text-[8pt]"
+              class="w-64 border-collapse border print:border-gray-400 text-sm print:w-48 print:text-[8pt]"
             >
               <tbody>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold w-1/2 print:bg-green-100"
+                    class="p-1 border print:border-gray-400 font-semibold w-1/2 print:bg-[#749c63]"
                   >
                     Date
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right w-1/2 print:text-black-or-dark-green"
+                    class="p-1 border print:border-gray-400 text-right w-1/2 print:text-black"
                   >
                     {{ finalInvoiceData.date | date : "dd-MMM-yy" }}
                   </td>
                 </tr>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold print:bg-green-100"
+                    class="p-1 border print:border-gray-400 font-semibold print:bg-[#749c63]"
                   >
                     PO#
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right print:text-black-or-dark-green"
+                    class="p-1 border print:border-gray-400 text-right print:text-black"
                   >
                     {{ finalInvoiceData.poNumber }}
                   </td>
                 </tr>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold print:bg-green-100"
+                    class="p-1 border print:border-gray-400 font-semibold print:bg-[#749c63]"
                   >
                     Invoice #
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right print:text-black-or-dark-green"
+                    class="p-1 border print:border-gray-400 text-right print:text-black"
                   >
                     {{ finalInvoiceData.invoiceNumber }}
                   </td>
                 </tr>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold print:bg-green-100"
+                    class="p-1 border print:border-gray-400 font-semibold print:bg-[#749c63]"
                   >
                     Customer ID
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right print:text-black-or-dark-green"
+                    class="p-1 border print:border-gray-400 text-right print:text-black"
                   >
                     {{ finalInvoiceData.customerId }}
                   </td>
@@ -621,14 +637,14 @@
         </div>
 
         <div
-          class="grid grid-cols-2 gap-4 mb-4 text-sm border-t border-b print:border-none py-2 print:text-[8pt]"
+          class="grid grid-cols-2 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
         >
           <div>
-            <h5
-              class="font-bold print:text-green-700 mb-1 border-b print:border-green-500"
+            <p
+              class="font-bold print:text-[#749c63] mb-1 print:border-gray-400"
             >
               CUSTOMER
-            </h5>
+            </p>
             <div class="whitespace-pre-wrap">
               <p class="font-semibold">
                 {{ finalInvoiceData.customerName }}
@@ -640,31 +656,31 @@
             </div>
           </div>
           <div>
-            <h5
-              class="font-bold print:text-green-700 mb-1 border-b print:border-green-500"
+            <p
+              class="font-bold print:text-[#749c63] mb-1 border-b print:border-gray-400"
             >
               SHIP TO
-            </h5>
+            </p>
             <div class="whitespace-pre-wrap">
               <p>{{ finalInvoiceData.shipToAddress }}</p>
             </div>
           </div>
         </div>
 
-        <h5 class="font-bold print:text-green-700 mb-2 print:text-[8pt]">
+        <p class="font-bold print:text-[#749c63] mb-2 print:text-[8pt]">
           SHIPPING DETAILS
-        </h5>
+        </p>
         <div
           class="grid grid-cols-3 print:grid-cols-2 gap-4 mb-4 text-sm text-gray-700 print:text-[8pt]"
         >
           <div>
-            <span class="font-semibold print:text-green-700"
+            <span class="font-semibold print:text-[#749c63]"
               >Freight Type:</span
             >
             {{ finalInvoiceData.freightType }}
           </div>
           <div>
-            <span class="font-semibold print:text-green-700"
+            <span class="font-semibold print:text-[#749c63]"
               >Est Ship Date:</span
             >
             {{ finalInvoiceData.estimatedShipDate | date : "mediumDate" }}
@@ -672,66 +688,85 @@
         </div>
 
         <div
-          class="border rounded-lg overflow-hidden mb-4 print:border-green-500"
+          class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
         >
           <table
-            class="min-w-full divide-y print:divide-green-500 text-sm print:text-[8pt]"
+            class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
           >
-            <thead class="print:bg-green-100">
+            <thead class="print:bg-[#749c63]">
               <tr>
                 <th
-                  class="p-1 text-left font-bold print:text-green-700 uppercase w-10"
+                  class="p-1 text-left font-bold print:text-black uppercase w-10 print:border-r print:border-gray-400"
                 >
                   LN#
                 </th>
                 <th
-                  class="p-1 text-left font-bold print:text-green-700 uppercase w-24"
+                  class="p-1 text-left font-bold print:text-black uppercase w-24 print:border-r print:border-gray-400"
                 >
                   PART NUMBER
                 </th>
                 <th
-                  class="p-1 text-left font-bold print:text-green-700 uppercase w-12"
+                  class="p-1 text-left font-bold print:text-black uppercase w-12 print:border-r print:border-gray-400"
                 >
                   UI
                 </th>
                 <th
-                  class="p-1 text-left font-bold print:text-green-700 uppercase"
+                  class="p-1 text-left font-bold print:text-black uppercase print:border-r print:border-gray-400"
                 >
                   DESCRIPTION
                 </th>
                 <th
-                  class="p-1 text-right font-bold print:text-green-700 uppercase w-12"
+                  class="p-1 text-right font-bold print:text-black uppercase w-12 print:border-r print:border-gray-400"
                 >
                   QTY
                 </th>
                 <th
-                  class="p-1 text-right font-bold print:text-green-700 uppercase w-24"
+                  class="p-1 text-right font-bold print:text-black uppercase w-24 print:border-r print:border-gray-400"
                 >
                   UNIT PRICE
                 </th>
                 <th
-                  class="p-1 text-right font-bold print:text-green-700 uppercase w-24"
+                  class="p-1 text-right font-bold print:text-black uppercase w-24 print:border-r print:border-gray-400"
                 >
                   E-PRICE
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y print:divide-green-500">
-              <tr *ngFor="let item of finalInvoiceData.items; let i = index">
-                <td class="p-1 align-top">{{ i + 1 }}</td>
-                <td class="p-1 align-top">{{ item.partNumber }}</td>
-                <td class="p-1 align-top">{{ item.unit }}</td>
-                <td class="p-1 align-top">
-                  <p class="font-medium">{{ item.description }}</p>
+            <tbody
+              class="bg-white divide-y print:divide-[#749c63] print:border-[#749c63]"
+            >
+              <tr
+                *ngFor="let item of finalInvoiceData.items; let i = index"
+                class=""
+              >
+                <td class="p-1 align-top print:border print:border-gray-400">
+                  {{ i + 1 }}
+                </td>
+                <td class="p-1 align-top print:border print:border-gray-400">
+                  {{ item.partNumber }}
+                </td>
+                <td class="p-1 align-top print:border print:border-gray-400">
+                  {{ item.unit }}
+                </td>
+                <td class="p-1 align-top print:border print:border-gray-400">
+                  <p class="font-medium">
+                    {{ item.description }}
+                  </p>
                   <p
                     *ngIf="item.manufacturerModel"
-                    class="text-xs text-gray-500 print:text-black-or-dark-green"
+                    class="text-xs text-gray-500"
                   >
                     MANUFACTURER: {{ item.manufacturerModel }}
                   </p>
                 </td>
-                <td class="p-1 align-top text-right">{{ item.quantity }}</td>
-                <td class="p-1 align-top text-right">
+                <td
+                  class="p-1 align-top text-right print:border print:border-gray-400"
+                >
+                  {{ item.quantity }}
+                </td>
+                <td
+                  class="p-1 align-top text-right print:border print:border-gray-400"
+                >
                   {{
                     item.unitPrice
                       | currency
@@ -741,7 +776,7 @@
                   }}
                 </td>
                 <td
-                  class="p-1 align-top text-right font-semibold print:text-green-700"
+                  class="p-1 align-top text-right font-semibold print:text-[#749c63] print:border print:border-gray-400"
                 >
                   {{
                     item.totalPrice
@@ -759,9 +794,9 @@
         <div class="flex justify-between">
           <div class="w-2/5">
             <div *ngIf="finalInvoiceData.notes" class="mb-4">
-              <h5 class="font-semibold print:text-green-700 mb-1">Notes:</h5>
+              <p class="font-semibold print:text-[#749c63] mb-1">Notes:</p>
               <p
-                class="text-sm text-gray-600 whitespace-pre-wrap print:text-black-or-dark-green"
+                class="text-sm text-gray-600 whitespace-pre-wrap print:text-[#749c63]"
               >
                 {{ finalInvoiceData.notes }}
               </p>
@@ -769,17 +804,17 @@
           </div>
           <div class="w-1/3">
             <table
-              class="w-full border-collapse border print:border-green-500 text-sm print:text-[8pt]"
+              class="w-full border-collapse border print:border-gray-400 text-sm print:text-[8pt]"
             >
               <tbody>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold print:bg-green-100 w-1/2"
+                    class="p-1 border print:border-gray-400 font-semibold print:bg-[#749c63] w-1/2"
                   >
                     TOTAL
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right font-bold print:text-green-700 w-1/2"
+                    class="p-1 border print:border-gray-400 text-right font-bold print:text-[#749c63] w-1/2"
                   >
                     {{
                       finalInvoiceData.totals.total
@@ -792,12 +827,12 @@
                 </tr>
                 <tr>
                   <td
-                    class="p-1 border print:border-green-500 font-semibold print:bg-green-100"
+                    class="p-1 border print:border-gray-400 font-semibold print:bg-[#749c63]"
                   >
                     Currency
                   </td>
                   <td
-                    class="p-1 border print:border-green-500 text-right print:text-black-or-dark-green"
+                    class="p-1 border print:border-gray-400 text-right print:text-[#749c63]"
                   >
                     {{ finalInvoiceData.totals.currency }}
                   </td>
@@ -809,26 +844,25 @@
 
         <div class="flex justify-end text-sm mt-8 print:mt-4">
           <div class="w-1/3 text-center mr-8">
-            <div class="border-b print:border-green-500 pt-1 mb-1">
+            <div class="border-b print:border-[#749c63] pt-1 mb-1">
               {{ finalInvoiceData.signerName }}
             </div>
-            <div class="text-xs text-gray-500 print:text-green-700">
+            <div class="text-xs text-gray-500 print:text-[#749c63]">
               FAIRMOUNT INTERNATIONAL LLC
             </div>
           </div>
           <div class="w-1/3 text-center">
-            <div class="border-b print:border-green-500 pt-1 mb-1">
+            <div class="border-b print:border-[#749c63] pt-1 mb-1">
               {{ finalInvoiceData.signDate }}
             </div>
-            <div class="text-xs text-gray-500 print:text-green-700">Date</div>
+            <div class="text-xs text-gray-500 print:text-[#749c63]">Date</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- NAVIGATION -->
     <div
-      class="flex justify-between pt-6 border-t print:border-t-0 border-gray-300 print:hidden"
+      class="flex justify-between pt-6 border-t border-gray-300 print:hidden"
     >
       <button
         type="button"
@@ -845,9 +879,11 @@
             *ngIf="currentStep === totalSteps"
             (click)="postInvoice()"
             type="button"
-            class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-green-700"
+            [disabled]="isLoading"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
-            Generate Pro Forma
+            <span *ngIf="!isLoading">Generate Pro Forma</span>
+            <span *ngIf="isLoading"> Generating... </span>
           </button>
           <button
             *ngIf="currentStep === totalSteps"
@@ -866,7 +902,7 @@
           [disabled]="
             currentStep === 1 && !proFormaForm.get('selectedPoNumber')?.value
           "
-          class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700 disabled:opacity-50"
+          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-600 disabled:opacity-50"
         >
           {{
             currentStep === 1
