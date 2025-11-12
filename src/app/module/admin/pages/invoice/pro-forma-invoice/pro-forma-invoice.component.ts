@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import {
   FormBuilder,
   FormGroup,
@@ -7,87 +9,65 @@ import {
   ReactiveFormsModule,
   FormArray,
   AbstractControl,
+  FormControl,
 } from '@angular/forms';
 import { PoService } from '../../../../../_core/http/api/po.service';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
-
-// --- Data Structures (Interfaces) ---
-
-export interface Customer {
-  customerId: number;
-  customerName: string;
-  fullAddress: string;
-}
-
-export interface POSummary {
-  id: number;
-  poNumber: string;
-  buyerOrgName: string; // Customer Name
-  createdAt: string;
-  poType: string;
-}
-
-// NEW INTERFACE for the individual item data fetched by getPOItems
-export interface POItem {
-  itemId: number;
-  poId: number;
-  quantity: number;
-  unit: string; // Mapped to unitOfIssue
-  description: string;
-  manufacturerModel: string;
-  partNumber: string;
-  traceabilityRequired: number;
-  unitPrice: number;
-  totalPrice: number;
-  actualCostPerUnit: number;
-  statusId: number | null;
-  terms: string;
-  itemStatus: string | null;
-}
-
-// Interface for the full PO details (NO LONGER includes the items array)
-export interface FullPO {
-  id: number;
-  customerId: number;
-  poNumber: string;
-  buyerOrgName: string;
-  destination: string;
-  // ... (other PO header fields)
-}
-
-export interface ProFormaData {
-  invoiceNumber: string;
-  date: string;
-  poNumber: string;
-  customerAddress: string;
-  shipToAddress: string;
-  freightType: string;
-  estimatedShipDate: string;
-  items: any[];
-  totals: { subTotal: number; total: number; currency: string };
-}
+import { InvoiceService } from '../../../../../_core/http/api/invoice.service';
+import { OrgainizationService } from '../../../../../_core/http/api/orginization.service';
+import { InvoicedProFormaComponent } from '../invoiced-pro-forma/invoiced-pro-forma.component';
 
 @Component({
   selector: 'app-pro-forma-invoice',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, FormsModule],
   templateUrl: './pro-forma-invoice.component.html',
 })
 export class ProFormaInvoiceComponent implements OnInit {
   currentStep: number = 1;
   totalSteps: number = 3;
 
-  proFormaForm!: FormGroup;
+  proFormaForm: FormGroup = new FormGroup({
+    proformaNumber: new FormControl('', Validators.required),
+    purchaseOrderId: new FormControl(null),
+    customerId: new FormControl(null, Validators.required),
+    shipToId: new FormControl(0),
+    freightType: new FormControl('PICK UP'),
+    currencyCode: new FormControl('USD'),
+    totalAmount: new FormControl(0, Validators.min(0)),
+    notes: new FormControl(''),
+    estimatedShipDate: new FormControl(''),
+    status: new FormControl('Pending'),
+    createdBy: new FormControl(0),
+    createdAt: new FormControl(
+      new Date().toISOString().substring(0, 10),
+      Validators.required
+    ),
+    proformaItems: new FormArray([], Validators.required),
+    selectedPoNumber: new FormControl(null, Validators.required),
+
+    invoiceDetails: new FormGroup({
+      customerAddress: new FormControl('', Validators.required),
+      shipToAddress: new FormControl('', Validators.required),
+    }),
+  });
 
   public incomingPOs: any[] = [];
-  public customers: any[] = [];
-  selectedPO?: FullPO; // Use the updated interface
+  public customers: any = [];
+  public selectedPO?: any;
 
-  finalInvoiceData: any;
-
-  // NEW: State variable to track loading status
+  public finalInvoiceData: any;
   public isLoading: boolean = false;
+  public isPoLoading: boolean = false;
+
+  public customerAddresses: any[] = [];
+  public selectedCustomer?: any;
+
+  // Pro Forma Invoice History
+  public proFormaInvoices: any[] = [];
+  public startDate: string = '';
+  public endDate: string = '';
+  public isProFormaLoading: boolean = false;
+  public showProFormaHistory: boolean = false;
 
   seller = {
     name: 'FAIRMOUNT INTERNATIONAL LLC',
@@ -96,166 +76,244 @@ export class ProFormaInvoiceComponent implements OnInit {
     fax: '321-783-3895',
   };
 
-  constructor(private fb: FormBuilder, private readonly poService: PoService) {}
+  constructor(
+    private readonly poService: PoService,
+    private readonly invoiceService: InvoiceService,
+    private readonly orgService: OrgainizationService
+  ) {}
 
-  ngOnInit(): void {
-    this.initForm();
-    this.getPOs();
-    this.getCustomer();
-  }
+  public createProformaItemFormGroup(item?: any): FormGroup {
+    const itemData: any = {
+      itemId: item?.itemId || 0,
+      poId: item?.poId || 0,
+      quantity: item?.quantity || 1,
+      unit: item?.unit || 'EA',
+      description: item?.description || '',
+      manufacturerModel: item?.manufacturerModel || '',
+      partNumber: item?.partNumber || '',
+      traceabilityRequired: item?.traceabilityRequired || 0,
+      unitPrice: item?.unitPrice || 0,
+      totalPrice: item?.totalPrice || 0,
+      actualCostPerUnit: item?.actualCostPerUnit || 0,
+      statusId: item?.statusId || 0,
+      terms: item?.terms || '',
+      itemStatus: item?.itemStatus || null,
+    };
 
-  initForm(): void {
-    this.proFormaForm = this.fb.group({
-      selectedPoNumber: ['', Validators.required],
-      invoiceDetails: this.fb.group({
-        customerId: [null as number | null, Validators.required],
-        invoiceNumber: [
-          '',
-          [Validators.required, Validators.pattern('FM-PI-\\d{4}-\\d{5}')],
-        ],
-        date: [
-          { value: new Date().toISOString().substring(0, 10), disabled: false },
-          Validators.required,
-        ],
-        customerAddress: ['', Validators.required],
-        shipToAddress: ['', Validators.required],
-        freightType: ['PICK UP', Validators.required],
-        estimatedShipDate: ['N/A'],
-        currency: ['USD', Validators.required],
+    const extendedPrice = itemData.quantity * itemData.unitPrice;
+
+    return new FormGroup({
+      itemId: new FormControl(itemData.itemId),
+      quantity: new FormControl(itemData.quantity, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      unit: new FormControl(itemData.unit || 'EA', Validators.required),
+      description: new FormControl(itemData.description, Validators.required),
+      manufacturerModel: new FormControl(itemData.manufacturerModel),
+      partNumber: new FormControl(itemData.partNumber),
+      traceabilityRequired: new FormControl(itemData.traceabilityRequired),
+      unitPrice: new FormControl(itemData.unitPrice, [
+        Validators.required,
+        Validators.min(0),
+      ]),
+      totalPrice: new FormControl(itemData.totalPrice),
+      actualCostPerUnit: new FormControl(
+        itemData.actualCostPerUnit,
+        Validators.min(0)
+      ),
+      statusId: new FormControl(itemData.statusId || 0),
+      terms: new FormControl(itemData.terms),
+      extendedPrice: new FormControl({
+        value: extendedPrice.toFixed(2),
+        disabled: true,
       }),
-
-      lineItems: this.fb.array([]),
     });
   }
 
-  // --- Data Fetching Methods ---
+  ngOnInit(): void {
+    this.getProFormaInvoicablePO();
+    this.getCustomer();
+    this.proFormaForm
+      .get('createdAt')
+      ?.setValue(new Date().toISOString().substring(0, 10));
+    this.proFormaForm
+      .get('customerId')
+      ?.valueChanges.subscribe((customerId) => {
+        if (customerId) {
+          this.onCustomerSelect(customerId);
+        }
+      });
+  }
 
-  public getPOs() {
-    this.poService.getActivePO().subscribe((res: POSummary[]) => {
-      this.incomingPOs = res.filter(
-        (po: POSummary) => po.poType === 'Incoming'
-      );
+  public getProFormaInvoicablePO() {
+    this.isPoLoading = true;
+    this.invoiceService.getProFormaInvoicablePO().subscribe((res: any[]) => {
+      this.isPoLoading = false;
+      this.incomingPOs = res;
     });
   }
 
   public getCustomer() {
-    this.poService.getCustomer().subscribe({
-      next: (response: Customer[]) => {
+    this.orgService.getOrganization().subscribe({
+      next: (response: any) => {
         this.customers = response;
-        this.customers = this.customers.map((c) => ({
-          ...c,
-          fullAddress:
-            c.fullAddress || `${c.customerName}'s Default Address Placeholder`,
-        }));
       },
-      error: (error: any) => {},
     });
   }
 
-  // --- Form & Step Logic ---
-
   get itemsArray(): FormArray {
-    return this.proFormaForm.get('lineItems') as FormArray;
+    return this.proFormaForm.get('proformaItems') as FormArray;
   }
 
-  /**
-   * Fetches PO header details, updates form, then fetches PO line items,
-   * populates the FormArray, and finally moves to the next step.
-   * @param poId The ID of the Purchase Order to select.
-   */
-  selectPO(poId: number): void {
-    this.isLoading = true; // START LOADING
-    this.selectedPO = undefined; // Clear previous PO
-
-    // 1. Fetch PO Header Details
-    this.poService.getPO(poId).subscribe({
-      next: (poDetails: any) => {
-        const fullPO = poDetails as FullPO;
-        this.selectedPO = fullPO;
-
-        // Populate header and address fields
-        const customerAddressPlaceholder = `${fullPO.buyerOrgName}\nDestination: ${fullPO.destination}`;
-        this.proFormaForm.get('selectedPoNumber')?.setValue(fullPO.poNumber);
-        this.proFormaForm.get('invoiceDetails')?.patchValue({
-          customerId: fullPO.customerId || null,
-          customerAddress: customerAddressPlaceholder,
-          shipToAddress: customerAddressPlaceholder,
-        });
-
-        // 2. Fetch PO Line Items
-        this.poService.getPO(poId).subscribe({
-          next: (items: POItem[]) => {
-            // 3. Populate Line Items FormArray
-            this.itemsArray.clear();
-            if (items && items.length > 0) {
-              items.forEach((item: POItem) => {
-                const extendedPrice = item.quantity * item.unitPrice;
-                this.itemsArray.push(
-                  this.fb.group({
-                    // Mapping fields from the new POItem structure
-                    partNumber: [item.partNumber],
-                    description: [item.description, Validators.required],
-                    quantity: [
-                      item.quantity,
-                      [Validators.required, Validators.min(1)],
-                    ],
-                    unitPrice: [
-                      item.unitPrice,
-                      [Validators.required, Validators.min(0)],
-                    ],
-                    unitOfIssue: [item.unit || 'EA'], // Use 'unit' field from POItem
-                    extendedPrice: [
-                      { value: extendedPrice.toFixed(2), disabled: true },
-                    ],
-                  })
-                );
-              });
-            }
-
-            // 4. Move to the next step and stop loading
-            this.isLoading = false; // STOP LOADING on success
-            this.nextStep();
-          },
-          error: (err: any) => {
-            this.isLoading = false; // STOP LOADING on error
-            alert(
-              'Could not load PO line items. Please check the PO ID or network connection.'
-            );
-          },
-        });
+  selectPO(po: any): void {
+    this.isLoading = true;
+    this.selectedPO = po;
+    this.proFormaForm.get('purchaseOrderId')?.setValue(po.id);
+    this.selectedCustomer = this.customers.find(
+      (c: any) => c.organizationId === po.buyerOrgId
+    );
+    this.proFormaForm
+      .get('customerId')
+      ?.setValue(this.selectedCustomer?.organizationId || null, {
+        emitEvent: false,
+      });
+    this.proFormaForm.get('selectedPoNumber')?.setValue(po.poNumber);
+    this.fetchAndSetCustomerAddresses(po.buyerOrgId, this.selectedCustomer);
+    this.poService.getPO(po.id).subscribe({
+      next: (items: any[]) => {
+        this.itemsArray.clear();
+        if (items && items.length > 0) {
+          items.forEach((item: any) => {
+            this.itemsArray.push(this.createProformaItemFormGroup(item));
+          });
+        }
+        this.isLoading = false;
+        this.nextStep();
       },
-      error: (err) => {
-        this.isLoading = false; // STOP LOADING on error
+      error: (err: any) => {
+        this.isLoading = false;
         alert(
-          'Could not load PO header details. Please check the PO ID or network connection.'
+          'Could not load PO line items. Please check the PO ID or network connection.'
         );
       },
     });
   }
 
-  onCustomerSelect(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const customerId = parseInt(selectElement.value, 10);
+  private fetchAndSetCustomerAddresses(customerId: number, customer: any) {
+    this.orgService.getOrganizationById(customerId).subscribe({
+      next: (res: any) => {
+        this.customerAddresses = res.addresses || [];
 
-    if (customerId) {
-      const selectedCustomer = this.customers.find(
-        (c) => c.customerId === customerId
-      );
+        const defaultAddress =
+          customer?.fullAddress ||
+          this.customerAddresses[0]?.fullAddress ||
+          'Address not available.';
 
-      if (selectedCustomer) {
-        const address = selectedCustomer.fullAddress;
+        // Patch values on the nested FormGroup
         this.proFormaForm.get('invoiceDetails')?.patchValue({
-          customerAddress: address,
-          shipToAddress: address,
+          customerAddress: defaultAddress,
+          shipToAddress: defaultAddress,
         });
-      }
+      },
+      error: (err) => {
+        this.customerAddresses = [];
+      },
+    });
+  }
+
+  orgId(orgId: any) {
+    const org = this.customers.find((c: any) => c.organizationId == orgId);
+    return org.name;
+  }
+  onCustomerSelect(customerId: number): void {
+    this.selectedCustomer = this.customers.find(
+      (c: any) => c.organizationId == customerId
+    );
+    if (this.selectedCustomer) {
+      this.fetchAndSetCustomerAddresses(customerId, this.selectedCustomer);
+    } else {
+      this.customerAddresses = [];
+      this.proFormaForm.get('invoiceDetails')?.patchValue({
+        customerAddress: 'Select a customer first.',
+        shipToAddress: 'Select a customer first.',
+      });
     }
   }
 
-  // --- (Navigation and Calculation methods remain the same) ---
+  onCustomerAddressSelect(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedAddressId = selectElement.value;
+
+    const selectedAddress = this.customerAddresses.find(
+      (addr: any) => addr.addressId === +selectedAddressId
+    );
+    if (selectedAddress) {
+      const fullAddress = [
+        selectedAddress.addressLine1,
+        selectedAddress.addressLine2,
+        selectedAddress.city,
+        selectedAddress.state,
+        selectedAddress.postalCode,
+        selectedAddress.country,
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      this.proFormaForm
+        .get('invoiceDetails.customerAddress')
+        ?.setValue(fullAddress);
+    }
+  }
+
+  onShipToAddressSelect(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedAddressId = selectElement.value;
+
+    const selectedAddress = this.customerAddresses.find(
+      (addr: any) => addr.addressId === +selectedAddressId
+    );
+    if (selectedAddress) {
+      const fullAddress = [
+        selectedAddress.addressLine1,
+        selectedAddress.addressLine2,
+        selectedAddress.city,
+        selectedAddress.state,
+        selectedAddress.postalCode,
+        selectedAddress.country,
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      this.proFormaForm
+        .get('invoiceDetails.shipToAddress')
+        ?.setValue(fullAddress);
+      this.proFormaForm.get('shipToId')?.setValue(selectedAddress.addressId);
+    }
+  }
 
   nextStep(): void {
-    if (this.currentStep < this.totalSteps) {
+    if (this.currentStep === 1) {
+      if (this.proFormaForm.get('selectedPoNumber')?.value) {
+        this.currentStep++;
+      } else {
+        alert('Please select a Purchase Order to continue.');
+        this.proFormaForm.get('selectedPoNumber')?.markAsTouched();
+      }
+    } else if (this.currentStep === 2) {
+      this.proFormaForm.markAllAsTouched();
+      const areAllItemsValid = this.itemsArray.controls.every(
+        (control) => control.valid
+      );
+
+      if (this.proFormaForm.valid && areAllItemsValid) {
+        this.generateInvoice();
+      } else {
+        alert(
+          'Please correct all validation errors (including all line item fields) before proceeding.'
+        );
+      }
+    } else if (this.currentStep < this.totalSteps) {
       this.currentStep++;
     }
   }
@@ -270,43 +328,117 @@ export class ProFormaInvoiceComponent implements OnInit {
     const qty = itemGroup.get('quantity')?.value || 0;
     const price = itemGroup.get('unitPrice')?.value || 0;
     const extendedPrice = qty * price;
+
     itemGroup
       .get('extendedPrice')
       ?.setValue(extendedPrice.toFixed(2), { emitEvent: false });
+
+    itemGroup.get('totalPrice')?.setValue(extendedPrice, { emitEvent: false });
+
     return extendedPrice;
   }
-
+  finalProFormaPostData: any;
   generateInvoice(): void {
-    if (this.proFormaForm.valid && this.selectedPO) {
-      const formValue = this.proFormaForm.getRawValue();
+    const formValue = this.proFormaForm.getRawValue();
+    const invoiceDetails = formValue.invoiceDetails;
+    const items = formValue.proformaItems;
+    const subTotal = items.reduce(
+      (sum: number, item: any) => sum + item.quantity * item.unitPrice,
+      0
+    );
+    const selectedCustomer = this.customers.find(
+      (c: any) => c.organizationId === formValue.customerId
+    );
 
-      const subTotal = formValue.lineItems.reduce(
-        (sum: number, item: any) => sum + item.quantity * item.unitPrice,
-        0
-      );
+    this.finalProFormaPostData = {
+      proformaNumber: formValue.proformaNumber,
+      purchaseOrderId: formValue.purchaseOrderId,
+      customerId: formValue.customerId,
+      shipToId: formValue.shipToId,
+      freightType: formValue.freightType,
+      currencyCode: formValue.currencyCode,
+      totalAmount: subTotal,
+      notes: formValue.notes,
+      estimatedShipDate: formValue.estimatedShipDate,
+      status: formValue.status,
+      createdBy: formValue.createdBy,
+      createdAt: formValue.createdAt,
+      proformaItems: items.map((item: any) => ({
+        itemId: item.itemId,
+        quantity: item.quantity,
+        unit: item.unit,
+        description: item.description,
+        manufacturerModel: item.manufacturerModel,
+        partNumber: item.partNumber,
+        traceabilityRequired: item.traceabilityRequired,
+        unitPrice: item.unitPrice,
+        totalPrice: item.quantity * item.unitPrice,
+        actualCostPerUnit: item.actualCostPerUnit,
+        statusId: item.statusId,
+        terms: item.terms,
+      })),
+    };
+    this.proFormaForm.get('totalAmount')?.setValue(subTotal);
 
-      this.finalInvoiceData = {
-        invoiceNumber: formValue.invoiceDetails.invoiceNumber,
-        date: formValue.invoiceDetails.date,
-        poNumber: this.selectedPO.poNumber,
-        customerAddress: formValue.invoiceDetails.customerAddress,
-        shipToAddress: formValue.invoiceDetails.shipToAddress,
-        freightType: formValue.invoiceDetails.freightType,
-        estimatedShipDate: formValue.invoiceDetails.estimatedShipDate,
-        items: formValue.lineItems,
-        totals: {
-          subTotal: subTotal,
-          total: subTotal,
-          currency: formValue.invoiceDetails.currency,
+    this.finalInvoiceData = {
+      sellerName: this.seller.name,
+      sellerAddress: this.seller.address,
+      sellerPhone: this.seller.phone,
+      signerName: 'Tony Jospeh',
+      signDate: formValue.createdAt,
+      invoiceNumber: formValue.proformaNumber,
+      date: formValue.createdAt,
+      poNumber: formValue.selectedPoNumber,
+      customerId: formValue.customerId,
+      customerName: selectedCustomer?.name,
+      customerPhone: selectedCustomer?.phone,
+      customerAddress: invoiceDetails.customerAddress,
+      shipToAddress: invoiceDetails.shipToAddress,
+      freightType: formValue.freightType,
+      estimatedShipDate: formValue.estimatedShipDate,
+
+      items: this.finalProFormaPostData.proformaItems,
+      notes: formValue.notes,
+      totals: {
+        subTotal: subTotal,
+        total: subTotal,
+        currency: formValue.currencyCode,
+      },
+    };
+
+    this.currentStep = 3;
+  }
+  public generateLoding: boolean = false;
+  postInvoice() {
+    this.generateLoding = true;
+    this.invoiceService
+      .postProFormaInvoiceData(this.finalProFormaPostData)
+      .subscribe({
+        next: (res) => {
+          this.generateLoding = false;
+          this.currentStep = 3;
         },
-      };
+      });
+  }
+  printProForma() {
+    window.print();
+  }
 
-      this.nextStep();
-    } else {
-      alert(
-        'Please complete all required fields before generating the invoice.'
-      );
-      this.proFormaForm.markAllAsTouched();
-    }
+  viewProFormaDetails(invoice: any): void {
+    alert(`Viewing Pro Forma Invoice: ${invoice.proformaNumber}`);
+  }
+
+  downloadProFormaCode(invoice: any): void {
+    const invoiceCode = JSON.stringify(invoice, null, 2);
+    const element = document.createElement('a');
+    element.setAttribute(
+      'href',
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode)
+    );
+    element.setAttribute('download', `proforma-${invoice.proformaNumber}.json`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   }
 }
