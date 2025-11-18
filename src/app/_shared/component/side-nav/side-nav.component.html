@@ -45,7 +45,7 @@
 
         <li>
           <button
-            (click)="toggleMenuReports()"
+            (click)="toggleProFormaMenu()"
             type="button"
             class="flex items-center p-2 w-full text-base font-normal bg-transparent text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
           >
@@ -63,7 +63,7 @@
             <span class="flex-1 ml-3 text-left whitespace-nowrap"
               >Pro Forma Invoice</span
             >
-            <span *ngIf="showMenuInvoice; else openInvoice">
+            <span *ngIf="showProFormaMenu; else openProFormaInvoice">
               <svg
                 class="w-6 h-6"
                 fill="currentColor"
@@ -77,7 +77,7 @@
                 ></path>
               </svg>
             </span>
-            <ng-template #openInvoice>
+            <ng-template #openProFormaInvoice>
               <svg
                 class="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@
               </svg>
             </ng-template>
           </button>
-          <ul *ngIf="showMenuInvoice" class="py-2 space-y-2">
+          <ul *ngIf="showProFormaMenu" class="py-2 space-y-2">
             <li (click)="navigateTo('pro-forma-invoice')">
               <a
                 routerLinkActive="bg-gray-100"
@@ -107,6 +107,74 @@
                 routerLinkActive="bg-gray-100"
                 class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                 >Pro Forma List</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li>
+          <button
+            (click)="toggleCommercialInvoiceMenu()"
+            type="button"
+            class="flex items-center p-2 w-full text-base font-normal bg-transparent text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
+            >
+              <path
+                d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"
+              />
+            </svg>
+
+            <span class="flex-1 ml-3 text-left whitespace-nowrap"
+              >Commercial Invoice</span
+            >
+            <span *ngIf="showCommercialInvoiceMenu; else openCommercialInvoice">
+              <svg
+                class="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </span>
+            <ng-template #openCommercialInvoice>
+              <svg
+                class="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </ng-template>
+          </button>
+          <ul *ngIf="showCommercialInvoiceMenu" class="py-2 space-y-2">
+            <li (click)="navigateTo('create-commerical-invoice')">
+              <a
+                routerLinkActive="bg-gray-100"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >Create Commercial Invoice</a
+              >
+            </li>
+            <li (click)="navigateTo('list-commerical-invoice')">
+              <a
+                routerLinkActive="bg-gray-100"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >Commercial Invoice List</a
               >
             </li>
           </ul>
