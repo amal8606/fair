@@ -13,25 +13,43 @@ import { PoService } from '../../../../../../_core/http/api/po.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CommercialInvoiceService } from '../../../../../../_core/http/api/commericalInvoice.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AnySrvRecord } from 'node:dns';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSortModule } from '@angular/material/sort';
+import { SelectionModel } from '@angular/cdk/collections';
+import { PackingListService } from '../../../../../../_core/http/api/packingList.service';
 
 @Component({
   selector: 'app-create-commerical-invoice',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DatePipe,
+    FormsModule,
+    MatTabsModule,
+    MatTableModule,
+    MatSortModule,
+    MatCheckboxModule,
+  ],
   templateUrl: './create-commerical-invoice.component.html',
 })
 export class CreateCommericalInvoiceComponent implements OnInit {
   currentStep: number = 1;
   totalSteps: number = 3;
 
+  public purchaseOrdersList = new MatTableDataSource<any>();
+  public sortedData1 = new MatTableDataSource<any>();
+  public sortedData2 = new MatTableDataSource<any>();
   commercialInvoiceForm: FormGroup = new FormGroup({
-    commercialInvoiceNumber: new FormControl('', Validators.required),
-    purchaseOrderId: new FormControl(null),
+    commercialInvoiceNumber: new FormControl(''),
     customerId: new FormControl(null, Validators.required),
     shipperId: new FormControl(1, Validators.required),
     shipToId: new FormControl(0),
     createdAt: new FormControl(
-      new Date().toISOString().substring(0, 10),
+      new Date().toISOString().substring(0, 19),
       Validators.required
     ),
 
@@ -42,10 +60,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     grandTotal: new FormControl(0, Validators.min(0)), // ADDED
     note: new FormControl(''),
     createdBy: new FormControl(0), // Keeping createdBy, though not in final payload
-    selectedPoNumber: new FormControl(null, Validators.required),
-    termsOfSale: new FormControl('', Validators.required),
-    termsOfPayment: new FormControl('', Validators.required),
-    termsOfShipping: new FormControl('', Validators.required),
+    selectedPoNumber: new FormControl(null),
+    termsOfSale: new FormControl(''),
+    termsOfPayment: new FormControl(''),
+    termsOfShipping: new FormControl(''),
     modeOfTransport: new FormControl(''),
     finalDestination: new FormControl(''),
     placeOfReceipt: new FormControl(''),
@@ -54,6 +72,14 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     taxId: new FormControl(''),
     ein: new FormControl(''),
     email: new FormControl(''),
+    billOfLandingAwbNo: new FormControl(''),
+    noOfBoxes: new FormControl(0, Validators.min(0)),
+    noOfPallets: new FormControl(0, Validators.min(0)),
+    grossWeight: new FormControl(0, Validators.min(0)),
+    marksandNumbers: new FormControl(''),
+    email2: new FormControl(''),
+    k11: new FormControl(''),
+    freightType: new FormControl(''),
     commercialInvoiceItems: new FormArray([], Validators.required),
     invoiceDetails: new FormGroup({
       customerAddress: new FormControl('', Validators.required),
@@ -61,12 +87,44 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     }),
   });
 
+  displayedColumnsFirst: string[] = [
+    'select',
+    'lineNumber', // Ensure it is displayed
+    'quantity', // Now shows 'Available Qty'
+    'itemId',
+    'poId',
+    'manufacturerModel',
+    'partNumber',
+    'actualCostPerUnit',
+    'unitPrice',
+    'totalPrice',
+    'description',
+    'unit',
+  ];
+
+  displayedColumnsSecond: string[] = [
+    'lineNumber', // Ensure it is displayed
+    'itemId',
+    'poId',
+    'manufacturerModel',
+    'partNumber',
+    'quantity', // Now shows the SELECTED quantity
+    'actualCostPerUnit',
+    'unitPrice',
+    'totalPrice',
+    'description',
+    'unit',
+    'actions',
+  ];
+
   public incomingPOs: any[] = [];
   public customers: any = [];
   public selectedPO?: any;
 
   public finalCommercialInvoiceData: any;
   public finalPostData: any;
+  public packingListData: any;
+
   public isLoading: boolean = false;
   public isPoLoading: boolean = false;
 
@@ -89,17 +147,18 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     private readonly poService: PoService,
     private readonly commercialInvoiceService: CommercialInvoiceService,
     private readonly orgService: OrgainizationService,
+    private readonly packingListService: PackingListService,
     private readonly toastr: ToastrService
   ) {}
 
   public createCommercialInvoiceItemFormGroup(
     item?: any,
-    lineNumber: number = 0
+    lineNumber?: number
   ): FormGroup {
     const itemData: any = {
-      itemId: item?.itemId || 0, // Using itemId for lineItemId
-      poId: item?.poId || 0, // Keeping poId for internal reference if needed
-      poNumber: this.selectedPO?.poNumber || '', // Keeping poNumber for internal reference if needed
+      itemId: item?.itemId,
+      poId: item?.poId || 0,
+      poNumber: item?.poNumber || '',
       quantity: item?.quantity || 1,
       unitPrice: item?.unitPrice || 0,
       description: item?.description || '',
@@ -108,14 +167,13 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       ui: item?.ui || '',
       totalPrice: item?.totalPrice || 0,
     };
-
     const totalPrice = itemData.quantity * itemData.unitPrice;
 
     return new FormGroup({
       itemId: new FormControl(itemData.itemId),
       commercialInvoiceNumber: new FormControl(
         this.commercialInvoiceForm.get('commercialInvoiceNumber')?.value || ''
-      ), // Will be set on generate/post
+      ),
       lineNumber: new FormControl(lineNumber), // Added lineNumber
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
@@ -132,10 +190,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         Validators.required,
         Validators.min(0),
       ]),
-      totalPrice: new FormControl({
-        value: totalPrice.toFixed(2),
-        disabled: true,
-      }),
+      totalPrice: new FormControl(totalPrice.toFixed(2)),
     });
   }
 
@@ -175,6 +230,105 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       },
     });
   }
+  public loading: boolean = false;
+  public poId: FormGroup = new FormGroup({
+    poId: new FormControl(null, Validators.required),
+  });
+
+  public getPO(po: any) {
+    this.sortedData1.data = [];
+    this.purchaseOrdersList.data = [];
+    this.loading = true;
+    const poParam = typeof po === 'string' ? po.trim() : po;
+    let selectedPO: any;
+    const parsedId = Number(poParam);
+    if (!Number.isNaN(parsedId)) {
+      selectedPO = this.incomingPOs.find(
+        (p: any) => p.poId === parsedId || String(p.poId) === String(poParam)
+      );
+    } else {
+      selectedPO = this.incomingPOs.find(
+        (p: any) => String(p.poNumber) === String(poParam)
+      );
+    }
+    const poNumber = selectedPO?.poNumber ?? String(poParam);
+    this.poService.getPO(po).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        const filteredResponse = response.filter(
+          (item: any) => item.quantity > 0
+        );
+        const itemsWithSelectedQty = filteredResponse.map(
+          (item: any, index: any) => ({
+            ...item,
+            lineNumber: item.lineNumber || index + 1,
+            selectedQuantity: 0,
+            totalPrice: 0,
+            poNumber: poNumber,
+          })
+        );
+
+        this.sortedData1.data = itemsWithSelectedQty;
+        this.purchaseOrdersList.data = itemsWithSelectedQty;
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.status === 404) {
+          this.toastr.info('No items found for the selected PO.');
+        } else {
+        }
+      },
+    });
+  }
+  public imageUrl = 'assets/images/companyLogo.png';
+  addItem() {
+    const selectedItems = this.selection.selected || [];
+    const existingIds = new Set(
+      this.sortedData2.data.map((i: any) => i.itemId)
+    );
+    const itemsToAdd = selectedItems.filter(
+      (item: any) => !existingIds.has(item.itemId)
+    );
+    if (itemsToAdd.length > 0) {
+      this.sortedData2.data = [...this.sortedData2.data, ...itemsToAdd];
+    }
+  }
+  selection = new SelectionModel<any>(true, []);
+
+  masterToggle() {
+    const isAllSelected = this.isAllSelected();
+    this.sortedData1.data.forEach((row) => {
+      if (!isAllSelected) {
+        this.selection.select(row);
+        row.selectedQuantity = row.quantity;
+        row.totalPrice = row.quantity * row.unitPrice;
+      } else {
+        this.selection.deselect(row);
+        row.selectedQuantity = 0;
+        row.totalPrice = 0;
+      }
+      const selectedItems = this.selection.selected;
+      this.sortedData2.data = [...this.sortedData2.data, ...selectedItems];
+    });
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.sortedData1.data.length;
+    return numSelected === numRows;
+  }
+  removeSelectedItem(item: any) {
+    const index = this.sortedData2.data.findIndex(
+      (selected: any) =>
+        selected.itemId === item.itemId ||
+        (selected.description === item.description &&
+          selected.quantity === item.quantity)
+    );
+    if (index > -1) {
+      this.sortedData2.data.splice(index, 1);
+      this.sortedData2.data = [...this.sortedData2.data];
+    }
+  }
 
   get commercialInvoiceItemsArray(): FormArray {
     return this.commercialInvoiceForm.get(
@@ -182,44 +336,17 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     ) as FormArray;
   }
 
-  selectPO(po: any): void {
-    this.isLoading = true;
-    this.selectedPO = po;
-    this.commercialInvoiceForm.get('purchaseOrderId')?.setValue(po.poId);
-    this.selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId === po.buyerOrgId
-    );
-    this.commercialInvoiceForm
-      .get('customerId')
-      ?.setValue(this.selectedCustomer?.organizationId || null, {
-        emitEvent: false,
-      });
-    this.commercialInvoiceForm.get('selectedPoNumber')?.setValue(po.poNumber);
-    this.fetchAndSetCustomerAddresses(po.buyerOrgId, this.selectedCustomer);
-    this.poService.getPO(po.poId).subscribe({
-      next: (items: any[]) => {
-        this.commercialInvoiceItemsArray.clear();
-        if (items && items.length > 0) {
-          items.forEach((item: any, index: number) => {
-            this.commercialInvoiceItemsArray.push(
-              this.createCommercialInvoiceItemFormGroup(item, index + 1)
-            );
-          });
-        }
-        this.isLoading = false;
-        // ADDED: Calculate totals after setting items
-        this.calculateGrandTotal();
-        this.nextStep();
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        alert(
-          'Could not load PO line items. Please check the PO ID or network connection.'
+  public combainItems() {
+    this.commercialInvoiceItemsArray.clear();
+    if (this.selection.selected && this.selection.selected.length > 0) {
+      this.selection.selected.forEach((item: any, index: number) => {
+        this.commercialInvoiceItemsArray.push(
+          this.createCommercialInvoiceItemFormGroup(item, index + 1)
         );
-      },
-    });
+      });
+    }
+    this.calculateGrandTotal();
   }
-
   private fetchAndSetCustomerAddresses(customerId: number, customer: any) {
     this.orgService.getOrganizationById(customerId).subscribe({
       next: (res: any) => {
@@ -230,12 +357,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
           this.customerAddresses[0]?.fullAddress ||
           'Address not available.';
 
-        // Patch values on the nested FormGroup
         this.commercialInvoiceForm.get('invoiceDetails')?.patchValue({
           customerAddress: defaultAddress,
           shipToAddress: defaultAddress,
         });
-        // Assuming shipToId can be set from the default address if available
         if (this.customerAddresses[0]?.addressId) {
           this.commercialInvoiceForm
             .get('shipToId')
@@ -322,11 +447,11 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   nextStep(): void {
     if (this.currentStep === 1) {
-      if (this.commercialInvoiceForm.get('selectedPoNumber')?.value) {
+      if (this.selection.selected.length > 0) {
+        this.combainItems();
         this.currentStep++;
       } else {
-        alert('Please select a Purchase Order to continue.');
-        this.commercialInvoiceForm.get('selectedPoNumber')?.markAsTouched();
+        alert('Please select items to continue.');
       }
     } else if (this.currentStep === 2) {
       this.commercialInvoiceForm.markAllAsTouched();
@@ -334,7 +459,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         (control) => control.valid
       );
 
-      // Check if the main form (excluding the nested FormArray) and all items are valid
       if (this.commercialInvoiceForm.valid && areAllItemsValid) {
         this.generateInvoice();
       } else {
@@ -356,22 +480,18 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   public calculateGrandTotal(): void {
     const items = this.commercialInvoiceItemsArray.getRawValue();
 
-    // Calculate Subtotal (sum of all line item total prices)
     const subTotal = items.reduce(
       (sum: number, item: any) =>
         sum + (item.quantity || 0) * (item.unitPrice || 0),
       0
     );
 
-    // Get the editable fields
     const taxable = this.commercialInvoiceForm.get('taxableAmount')?.value || 0;
     const shipping =
       this.commercialInvoiceForm.get('shippingCharge')?.value || 0;
 
-    // Calculate Grand Total
     const grandTotal = subTotal + taxable + shipping;
 
-    // Update form controls (totalAmount is used as Subtotal)
     this.commercialInvoiceForm.get('totalAmount')?.setValue(subTotal);
     this.commercialInvoiceForm.get('grandTotal')?.setValue(grandTotal);
   }
@@ -387,7 +507,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
     itemGroup.get('totalPrice')?.setValue(totalPrice, { emitEvent: false });
 
-    // ADDED: Trigger grand total calculation after item total changes
     this.calculateGrandTotal();
 
     return totalPrice;
@@ -397,14 +516,12 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const formValue = this.commercialInvoiceForm.getRawValue();
     const items = formValue.commercialInvoiceItems;
 
-    // ADDED: Recalculate totals one last time and grab the values
     this.calculateGrandTotal();
     const subTotal = this.commercialInvoiceForm.get('totalAmount')?.value;
     const taxableAmount = formValue.taxableAmount;
     const shippingCharge = formValue.shippingCharge;
     const grandTotal = this.commercialInvoiceForm.get('grandTotal')?.value;
 
-    // Prepare the final API POST data structure based on the required payload
     this.finalPostData = {
       commercialInvoiceNumber: formValue.commercialInvoiceNumber,
       purchaseOrderId: formValue.purchaseOrderId,
@@ -414,10 +531,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       createdAt: formValue.createdAt,
       createdBy: formValue.createdBy,
       currency: formValue.currency,
-      totalAmount: subTotal, // totalAmount now represents subTotal
-      taxableAmount: taxableAmount, // ADDED
-      shippingCharge: shippingCharge, // ADDED
-      grandTotal: grandTotal, // ADDED
+      totalAmount: subTotal,
+      taxableAmount: taxableAmount,
+      shippingCharge: shippingCharge,
+      grandTotal: grandTotal,
       termsOfSale: formValue.termsOfSale,
       termsOfPayment: formValue.termsOfPayment,
       termsOfShipping: formValue.termsOfShipping,
@@ -429,9 +546,49 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       taxId: formValue.taxId,
       ein: formValue.ein,
       email: formValue.email,
-      note: formValue.note,
       commercialInvoiceItems: items.map((item: any) => ({
-        commercialInvoiceNumber: formValue.commercialInvoiceNumber, // Ensure commercialInvoiceNumber is included in items
+        commercialInvoiceNumber: formValue.commercialInvoiceNumber,
+        itemId: item.itemId,
+        partNumber: item.partNumber,
+        poNumber: item.poNumber,
+        countryOfOrgin: item.countryOfOrgin,
+        ui: item.ui,
+        poId: item.poId,
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.quantity * item.unitPrice,
+      })),
+    };
+    this.packingListData = {
+      commercialInvoiceNumber: formValue.commercialInvoiceNumber,
+      customerId: formValue.customerId,
+      shipperId: formValue.shipperId,
+      shipToId: formValue.shipToId,
+      createdAt: formValue.createdAt,
+      createdBy: formValue.createdBy,
+      currency: formValue.currency,
+      termsOfSale: formValue.termsOfSale,
+      termsOfPayment: formValue.termsOfPayment,
+      termsOfShipping: formValue.termsOfShipping,
+      modeOfTransport: formValue.modeOfTransport,
+      placeOfReceipt: formValue.placeOfReceipt,
+      finalDestination: formValue.finalDestination,
+      contactNo: formValue.contactNo,
+      contactName: formValue.contactName,
+      taxId: formValue.taxId,
+      ein: formValue.ein,
+      email: formValue.email,
+      email2: formValue.email2,
+      note: formValue.note,
+      billOfLandingAwbNo: formValue.billOfLandingAwbNo,
+      numberOfBoxes: formValue.noOfBoxes,
+      numberOfPallets: formValue.noOfPallets,
+      grossWeight: formValue.grossWeight,
+      marksandNumbers: formValue.marksandNumbers,
+      k11: formValue.k11,
+      packingListItems: items.map((item: any) => ({
+        itemId: item.itemId,
         partNumber: item.partNumber,
         poNumber: item.poNumber,
         countryOfOrgin: item.countryOfOrgin,
@@ -444,16 +601,15 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       })),
     };
 
-    // Prepare data for the final display step (Step 3)
     const selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId === formValue.customerId
+      (c: any) => c.organizationId == formValue.customerId
     );
 
     this.finalCommercialInvoiceData = {
       sellerName: this.seller?.name,
       sellerAddress: this.seller.address,
       sellerPhone: this.seller.phone,
-      signerName: 'Tony Jospeh', // Static value
+      signerName: 'Tony Jospeh',
       signDate: formValue.createdAt,
       commercialInvoiceNumber: formValue.commercialInvoiceNumber,
       createdAt: formValue.createdAt,
@@ -476,12 +632,19 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       finalDestination: formValue.finalDestination,
       placeOfReceipt: formValue.placeOfReceipt,
       currency: formValue.currency,
+      email2: formValue.email2,
+      k11: formValue.k11,
+      noOfBoxes: formValue.noOfBoxes,
+      billOfLandingAwbNo: formValue.billOfLandingAwbNo,
+      noOfPallets: formValue.noOfPallets,
+      grossWeight: formValue.grossWeight,
+      marksandNumbers: formValue.marksandNumbers,
       items: this.finalPostData.commercialInvoiceItems,
       totals: {
         subTotal: subTotal,
-        taxableAmount: taxableAmount, // ADDED
-        shippingCharge: shippingCharge, // ADDED
-        grandTotal: grandTotal, // ADDED
+        taxableAmount: taxableAmount,
+        shippingCharge: shippingCharge,
+        grandTotal: grandTotal,
         currency: formValue.currency,
       },
     };
@@ -491,23 +654,54 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   public generateLoding: boolean = false;
   postInvoice() {
     this.generateLoding = true;
+
     this.commercialInvoiceService
       .postCommercialInvoice(this.finalPostData)
       .subscribe({
         next: (res) => {
-          this.generateLoding = false;
+          this.postPackingList(res.commercialInvoiceId);
+
           this.toastr.success('Commercial Invoice created successfully!');
         },
         error: (err) => {
           this.generateLoding = false;
           this.toastr.error('Failed to create Commercial Invoice.');
-          // Handle error
         },
       });
   }
+  postPackingList(ciId: any) {
+    this.packingListData = {
+      ...this.packingListData,
+      commercialInvoiceId: ciId,
+    };
+    this.packingListService.postPackingList(this.packingListData).subscribe({
+      next: (res) => {
+        this.generateLoding = false;
+
+        this.toastr.success('Packing List created successfully!');
+      },
+      error: (err) => {
+        this.generateLoding = false;
+        this.toastr.error('Failed to create Packing List.');
+      },
+    });
+  }
 
   printCommercialInvoice() {
+    const invoiceNumber = this.commercialInvoiceForm.get(
+      'commercialInvoiceNumber'
+    )?.value;
+    const originalTitle = document.title;
+
+    if (invoiceNumber) {
+      document.title = `FM-${invoiceNumber}`;
+    }
+
     window.print();
+
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 500);
   }
 
   viewCommercialInvoiceDetails(invoice: any): void {
@@ -516,15 +710,16 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   downloadCommercialInvoiceCode(invoice: any): void {
     const invoiceCode = JSON.stringify(invoice, null, 2);
+
+    const invoiceNumber = invoice?.commercialInvoiceNumber || 'NoInvoiceNumber';
+    const fileName = `FM-${invoiceNumber}.json`;
+
     const element = document.createElement('a');
     element.setAttribute(
       'href',
       'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode)
     );
-    element.setAttribute(
-      'download',
-      `commercial-invoice-${invoice.commercialInvoiceNumber}.json`
-    );
+    element.setAttribute('download', fileName);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();

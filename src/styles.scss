@@ -22,9 +22,6 @@ $fairMount-theme: mat.define-theme(
   )
 );
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 :root {
   @include mat.all-component-themes($fairMount-theme);
 }
@@ -144,5 +141,28 @@ body {
   .navbar,
   .print-hidden {
     display: none !important;
+  }
+}
+@media print {
+  /* Hides the entire tab header bar when printing */
+  .mat-tab-header {
+    display: none !important;
+  }
+  @media print {
+    /* Hide Angular Material Tab Header (all versions) */
+    .mat-mdc-tab-header,
+    .mat-mdc-tab-label-container,
+    .mat-mdc-tab,
+    .mdc-tab,
+    .mat-mdc-tab-list,
+    .mat-mdc-tab-labels {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Target your specific tab group */
+    .hide-tab-header-on-print .mat-mdc-tab-header {
+      display: none !important;
+    }
   }
 }

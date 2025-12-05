@@ -14,8 +14,13 @@ export class CommercialInvoiceService {
       `${environment.api}/CommercialInvoice/eligible-pos`
     );
   }
-  public getCommercialInvoicedPO(): Observable<any> {
-    return this.http.get<any>(`${environment.api}/CommercialInvoice`);
+  public getCommercialInvoicedPO(
+    startDate: any,
+    endDate: any
+  ): Observable<any> {
+    return this.http.get<any>(
+      `${environment.api}/CommercialInvoice?startDate=${startDate}&endDate=${endDate}`
+    );
   }
   public postCommercialInvoice(ciForm: any): Observable<any> {
     return this.http.post<any>(`${environment.api}/CommercialInvoice`, ciForm);

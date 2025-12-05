@@ -9,9 +9,6 @@ import { PoService } from '../../../../_core/http/api/po.service';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 
-// NOTE: I am assuming a type 'Request' is defined elsewhere or implicitly used for PO data structure
-// Since the original code used 'any', I will maintain that for flexibility but note it for best practice.
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -23,8 +20,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     AddPoComponent,
     MatPaginatorModule,
     MatTabsModule,
-    CurrencyPipe, // Added for potential use in the component if needed, though primarily in template
-    DatePipe, // Added for potential use in the component if needed, though primarily in template
+    CurrencyPipe,
+    DatePipe,
   ],
   templateUrl: './home.component.html',
 })
@@ -43,20 +40,18 @@ export class HomeComponent implements AfterViewInit {
   @ViewChild(MatSort) empTbSort!: MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
 
-  // Type placeholder for MatTableDataSource data, using 'any' as per original code
   public purchaseOrders = new MatTableDataSource<any>();
   public purchaseOrdersIncoming = new MatTableDataSource<any>();
   public purchaseOrdersOutgoing = new MatTableDataSource<any>();
   public sortedData = new MatTableDataSource<any>();
 
-  // NEW: Property to hold the currently active displayed columns
   public activeDisplayedColumns: string[] = [];
 
   private incomingColumns: string[] = [
     'poNumber',
     'poStatus',
-    'customerName', // Maps to buyerOrgName
-    'supplier', // Maps to vendorOrgName / supplier
+    'customerName',
+    'supplier',
     'destination',
     'orderDate',
     'deliverySchedule',
@@ -92,9 +87,6 @@ export class HomeComponent implements AfterViewInit {
 
   ngOnInit() {
     if (!localStorage.getItem('isLoggedIn')) {
-      // NOTE: Using window.location.href directly is generally discouraged in Angular.
-      // Prefer using the Router's navigate method for internal navigation.
-      // this.router.navigate(['/login']);
       window.location.href = '/login';
     } else {
       this.getActivePO();
@@ -103,9 +95,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Only set paginator on sortedData. The custom sortData function handles sorting.
     this.sortedData.paginator = this.paginator;
-    // Removed: this.sortedData.sort = this.empTbSort; to avoid conflict with custom sortData
   }
 
   public getActivePO() {
@@ -129,7 +119,6 @@ export class HomeComponent implements AfterViewInit {
         this.purchaseOrdersOutgoing.data = outgoingPOs;
         this.purchaseOrders.data = response;
 
-        // Apply sorting/pagination and set initial columns after data load
         this.onTabChange(0);
       },
       error: (error: any) => {
@@ -178,9 +167,7 @@ export class HomeComponent implements AfterViewInit {
     });
   }
 
-  // UPDATED: Added cases for all new commercial columns
   sortData(sort: Sort) {
-    // Slice ensures a copy of the array is sorted, not the source array
     const data = this.sortedData.data.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData.data = data;
@@ -194,7 +181,6 @@ export class HomeComponent implements AfterViewInit {
         case 'customerName':
           return this.compare(a.buyerOrgName, b.buyerOrgName, isAsc);
         case 'supplier':
-          // Using vendorOrgName or supplier based on where the correct value resides
           return this.compare(
             a.supplier || a.vendorOrgName,
             b.supplier || b.vendorOrgName,
@@ -204,17 +190,17 @@ export class HomeComponent implements AfterViewInit {
           return this.compare(a.destination, b.destination, isAsc);
         case 'orderDate':
           return this.compare(a.orderDate, b.orderDate, isAsc);
-        case 'deliverySchedule': // NEW sort case
+        case 'deliverySchedule':
           return this.compare(a.deliverySchedule, b.deliverySchedule, isAsc);
-        case 'paymentTerms': // NEW sort case
+        case 'paymentTerms':
           return this.compare(a.paymentTerms, b.paymentTerms, isAsc);
-        case 'deliveryTerms': // NEW sort case
+        case 'deliveryTerms':
           return this.compare(a.deliveryTerms, b.deliveryTerms, isAsc);
         case 'modeOfShipment':
           return this.compare(a.modeOfShipment, b.modeOfShipment, isAsc);
-        case 'shippingCharges': // NEW sort case
+        case 'shippingCharges':
           return this.compare(a.shippingCharges, b.shippingCharges, isAsc);
-        case 'discount': // NEW sort case
+        case 'discount':
           return this.compare(a.discount, b.discount, isAsc);
         case 'totalCost':
           return this.compare(a.totalCost, b.totalCost, isAsc);
