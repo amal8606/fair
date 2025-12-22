@@ -99,6 +99,7 @@
           mat-row
           *matRowDef="let row; columns: matHeaders"
           class="cursor-pointer hover:bg-gray-200 h-8"
+          (click)="openViewCIModel()"
         ></tr>
       </table>
     </div>
@@ -145,3 +146,9 @@
     [pageSizeOptions]="[10, 20, 50, 100]"
   ></mat-paginator>
 </section>
+<app-view-commerical-invoice
+  *ngIf="showModel"
+  [ciNumber]="ciNumber"
+  (onClick)="showModel = false"
+>
+</app-view-commerical-invoice>

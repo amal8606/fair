@@ -9,12 +9,12 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ToastrService } from 'ngx-toastr';
 import { CommercialInvoiceService } from '../../../../../../_core/http/api/commericalInvoice.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { OrgainizationService } from '../../../../../../_core/http/api/orginization.service';
+import { ViewCommericalInvoiceComponent } from './component/view-commerical-invoice/view-commerical-invoice.component';
 
 @Component({
   selector: 'app-list-commerical-invoice',
@@ -28,6 +28,7 @@ import { OrgainizationService } from '../../../../../../_core/http/api/orginizat
     MatSortModule,
     MatCheckboxModule,
     MatPaginator,
+    ViewCommericalInvoiceComponent,
   ],
   templateUrl: './list-commerical-invoice.component.html',
 })
@@ -74,6 +75,8 @@ export class ListCommericalInvoiceComponent {
       Validators.required
     ),
   });
+  ciNumber: any;
+  public showModel: boolean = false;
   ngOnInit(): void {
     this.orgainizationService.getOrganization().subscribe({
       next: (orgs: any) => {
@@ -111,6 +114,10 @@ export class ListCommericalInvoiceComponent {
           this.loadingReport = false;
         },
       });
+  }
+
+  public openViewCIModel() {
+    this.showModel = !this.showModel;
   }
 
   //   sort table headers

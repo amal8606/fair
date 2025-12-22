@@ -648,7 +648,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         currency: formValue.currency,
       },
     };
-
     this.currentStep = 3;
   }
   public generateLoding: boolean = false;
