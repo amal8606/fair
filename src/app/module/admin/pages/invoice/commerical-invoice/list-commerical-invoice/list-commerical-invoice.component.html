@@ -1,5 +1,5 @@
 <section class="p-5">
-  <p class="text-4xl font-medium">Designer Performance Report</p>
+  <p class="text-3xl text-gray-700 font-bold">Commerical Invoice</p>
 
   <form [formGroup]="CIReport">
     <div class="flex items-end mb-10">
@@ -147,7 +147,6 @@
   ></mat-paginator>
 </section>
 <app-view-commerical-invoice
-  *ngIf="showModel"
   [ciNumber]="ciNumber"
   (onClick)="showModel = false"
 >

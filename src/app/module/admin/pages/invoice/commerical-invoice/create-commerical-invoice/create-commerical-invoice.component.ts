@@ -339,7 +339,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   public combainItems() {
     this.commercialInvoiceItemsArray.clear();
     if (this.selection.selected && this.selection.selected.length > 0) {
-      this.selection.selected.forEach((item: any, index: number) => {
+      this.sortedData2.data.forEach((item: any, index: number) => {
         this.commercialInvoiceItemsArray.push(
           this.createCommercialInvoiceItemFormGroup(item, index + 1)
         );

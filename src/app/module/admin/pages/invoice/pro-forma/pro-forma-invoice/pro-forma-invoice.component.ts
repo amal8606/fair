@@ -361,6 +361,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       notes: formValue.notes,
       estimatedShipDate: formValue.estimatedShipDate,
       status: formValue.status,
+      sellerFax: this.seller.fax,
       createdBy: formValue.createdBy,
       createdAt: formValue.createdAt,
       proformaItems: items.map((item: any) => ({
@@ -421,6 +422,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       });
   }
   printProForma() {
+    console.log(this.finalInvoiceData);
     window.print();
   }
 

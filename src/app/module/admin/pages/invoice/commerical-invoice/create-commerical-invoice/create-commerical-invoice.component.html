@@ -2,7 +2,7 @@
   class="p-6 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
 >
   <header class="mb-8 text-center print:hidden">
-    <p class="text-3xl font-bold text-blue-500">COMMERCIAL INVOICE CREATOR</p>
+    <p class="text-3xl text-gray-700 font-bold">COMMERCIAL INVOICE CREATOR</p>
     <p class="text-gray-600 mt-2">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
@@ -49,14 +49,7 @@
           #matSort="matSort"
         >
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Select</th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox
                 (click)="$event.stopPropagation()"
@@ -1808,6 +1801,427 @@
             </div>
           </div>
         </mat-tab>
+        <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
+          <div
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt]"
+            style="font-size: 10pt"
+          >
+            <div
+              class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
+            >
+              <div class="border border-black p-2 text-center bg-gray-100">
+                <p class="text-sm font-bold">
+                  Shipper's Letter of Instructions (SLI)
+                </p>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold">1. USPPI Name</span>
+                    <div class="font-semibold text-blue-700 mt-2">
+                      {{ finalCommercialInvoiceData.ein }}
+                    </div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >2. USPPI Address Including Zip Code:</span
+                    >
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData.sellerName }}
+                    </div>
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData.sellerAddress }}
+                    </div>
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >3. Freight Location Company Name:</span
+                    >
+                    <div class="font-semibold text-blue-700"></div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >4.Freight Location Address (if not box #2):</span
+                    >
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold">5. Forwarding Agent:</span>
+                    <div class="font-semibold text-blue-700"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    6. USPPI EIN (IRS) No:
+                  </div>
+                  <div class="block font-bold border-black p-2">
+                    {{ finalCommercialInvoiceData.ein }}
+                  </div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    7. Related Party Indicator (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Related
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Non-Related
+                  </label>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    8. USPPI Reference#:
+                  </div>
+                  <div class="block font-bold border-black p-2"></div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    9. Routed Export Transaction (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Yes
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 border-b border-black">
+                <div class="p-2 border border-black">
+                  <div class="block font-bold">
+                    10. Ultimate Consignee Name & Address:
+                  </div>
+                  <div class="font-semibold mt-2">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </div>
+                  <div class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerAddress }}
+                  </div>
+
+                  <div class="font-semibold">
+                    Telephone (Office): +965-22055325, 22055326
+                  </div>
+                </div>
+                <div class="">
+                  <div class="font-bold border-b border-black p-2">
+                    11. Ultimate Consignee Type (select one):
+                  </div>
+                  <div class="text-left">
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Direct Consumer
+                      </label>
+                    </div>
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Government Entity
+                      </label>
+                    </div>
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Reseller
+                      </label>
+                    </div>
+                    <div class="font-semibold py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Other/Unknown
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-2 border border-black">
+                  <span class="block font-bold"
+                    >12. Intermediate Consignee Name & Address</span
+                  >
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                </div>
+              </div>
+              <div class="grid grid-cols-3">
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      13. Sate of Origin:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      14. Country of Ultimate Destination:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      15. Hazardous Material:
+                    </div>
+                    <div class="grid grid-cols-2 w-fit">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Yes
+                      </label>
+
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      16. In-Bond Code:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      17. Entry Number:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      18. FTZ Identifier:
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                INSTRUCTIONS TO FORWARDER:
+              </div>
+
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-gray-100 border-b border-black">
+                    <th class="border-r border-black p-1 text-left w-12">
+                      20. Domestic or Foreign (D/F)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-20">
+                      21. Schedule B / HTS Number and Commercial Commodity<br />
+                      Description For Vehicles: VIN/Year, Make, Model and<br />
+                      Vehicle Title Number are required
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-16">
+                      22. Quantity in Schedule B / HTS Units
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-16">
+                      23. DDTC Quantity and DDTC Unit of Measure
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-20">
+                      24. Shipping Weight (in Kilos)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      25. ECCN, EAR99 or USML Category No.
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      26. SME (Y/ N)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      27. Export License No., License Exception Symbol, D D TC
+                      Exemption No., D D TC ACM No. o r NLR
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      28. Value at the Port of Export ( U S Dollars)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      28. License Value by item (if applicable) ( US Dollars)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-black align-top">
+                    <td
+                      class="border-r border-black p-2 font-semibold text-center"
+                    >
+                      D
+                    </td>
+                    <td class="border-r border-black p-2">
+                      <span class="font-bold">3923.90.9000</span> <br />
+                      HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
+                      MANUFACTURER:C-TECH INDUSTRIES<br />
+                      PART #:8.925-157.0 HOSE NONMETALLIC
+                    </td>
+                    <td class="border-r border-black p-2 font-semibold">EA</td>
+                    <td class="border-r border-black p-2 font-semibold">35</td>
+                    <td class="border-r border-black p-2 font-semibold"></td>
+                    <td class="border-r border-black p-2 font-semibold">
+                      EAR99
+                    </td>
+                    <td class="border-r border-black p-2 font-semibold"></td>
+                    <td class="border-r border-black p-2 font-semibold">NLR</td>
+                    <td class="p-2 font-bold text-left border-r border-black">
+                      $27,885.00
+                    </td>
+                    <td class="p-2 font-bold text-right"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="grid grid-cols-2 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    30. DDTC Applicant Registration Number:
+                  </div>
+                  <div class="block font-bold border-black p-2 w-16"></div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    31. Eligible Party Certification:
+                  </div>
+                  <div class="flex gap-2">
+                    <div class="block font-bold border-black p-2 border-r">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Yes
+                      </label>
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                32.<label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here if there are any remaining non-licensable Schedule
+                  B / HTS Numbers that are valued $2500.00 or less and that do
+                  not otherwise require AES filing.
+                </label>
+              </div>
+              <div class="border-b border-black block font-bold p-2">
+                33.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here if the USPPI authorizes the above named forwarder
+                  to act as its true and lawful agent for purposes of preparing
+                  and filing the Electronic Export Information ("EEI") in
+                  accordance with the laws and regulations of the United States.
+                </label>
+              </div>
+              <div class="grid grid-cols-2">
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  35. USPPI E-mail Address:
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  {{ finalCommercialInvoiceData.email }}
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  37. Printed Name of Duly authorized officer or employee:
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  Tony Joseph
+                </div>
+              </div>
+              <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >38. Signature</span
+                  >
+                  <div class="p-2 text-sm italic font-serif"></div>
+                </div>
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >39. Title</span
+                  >
+                  <div class="p-2 font-semibold">CEO</div>
+                </div>
+                <div class="">
+                  <div class="block font-bold p-2 border-b border-black">
+                    40. Date
+                  </div>
+
+                  <div class="p-2 font-semibold">11/5/25</div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                33.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here to validate Electronic Signature. Electronic
+                  signatures must be typed in all capital letters in Box 38 in
+                  order to be valid.
+                </label>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
       </mat-tab-group>
     </section>
 
@@ -1841,7 +2255,7 @@
             type="button"
             class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
           >
-            Print Commercial Invoice
+            Print
           </button>
         </div>
 
