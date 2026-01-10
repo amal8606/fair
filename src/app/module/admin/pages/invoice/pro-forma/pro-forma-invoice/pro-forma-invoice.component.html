@@ -1,0 +1,807 @@
+<div
+  class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
+>
+  <header class="mb-8 text-center print:hidden">
+    <p class="text-3xl text-gray-700 font-bold">PRO FORMA INVOICE CREATOR</p>
+    <p class="text-gray-600 mt-2">
+      Step {{ currentStep }} of {{ totalSteps }}:
+      <span *ngIf="currentStep === 1">Select Purchase Order</span>
+      <span *ngIf="currentStep === 2">Enter Details & Confirm Items</span>
+      <span *ngIf="currentStep === 3">Review & Print Invoice</span>
+    </p>
+    <div class="h-2 bg-gray-200 rounded-full mt-4">
+      <div
+        class="h-full bg-blue-500 rounded-full transition-all duration-500"
+        [style.width]="(currentStep / totalSteps) * 100 + '%'"
+      ></div>
+    </div>
+  </header>
+
+  <form [formGroup]="proFormaForm" class="space-y-8">
+    <section *ngIf="currentStep === 1">
+      <p class="text-xl font-semibold mb-4 text-blue-500">
+        Select Incoming Purchase Order
+      </p>
+      <div
+        *ngIf="isLoading"
+        class="absolute inset-0 h-full flex items-center justify-center bg-white bg-opacity-80 z-10"
+      >
+        <p class="text-sm font-medium text-blue">Loading PO Details...</p>
+      </div>
+
+      <div class="overflow-x-auto border rounded-lg shadow-md">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                PO Number
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Customer
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Date Created
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngIf="incomingPOs.length === 0 && isPoLoading === false">
+              <td
+                colspan="4"
+                class="px-6 py-4 text-center text-sm text-gray-500"
+              >
+                No incoming Purchase Orders found.
+              </td>
+            </tr>
+            <tr *ngIf="isPoLoading">
+              <td
+                colspan="4"
+                class="px-6 py-4 text-center text-sm text-gray-500"
+              >
+                <p class="no-data-row text-center text-gray-500">
+                  <span>Loading Date </span>
+                  <span class="loading-dots">
+                    <span class="dot">.</span>
+                    <span class="dot">.</span>
+                    <span class="dot">.</span>
+                  </span>
+                </p>
+              </td>
+            </tr>
+            <tr *ngFor="let po of incomingPOs" class="hover:bg-[#A9D08D]/30">
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+              >
+                {{ po.poNumber }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                {{ orgId(po.buyerOrgId) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ po.createdAt | date : "shortDate" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button
+                  type="button"
+                  (click)="selectPO(po)"
+                  class="px-3 py-1 bg-blue text-white text-xs font-semibold rounded-md shadow-md hover:bg-blue-600 bg-blue-500 transition duration-150"
+                  [disabled]="isLoading"
+                >
+                  Select PO
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <input type="hidden" formControlName="selectedPoNumber" />
+
+      <div
+        *ngIf="
+          proFormaForm.get('selectedPoNumber')?.invalid &&
+          proFormaForm.get('selectedPoNumber')?.touched
+        "
+        class="text-red-600 text-sm mt-2"
+      >
+        Please select a Purchase Order to continue to the next step.
+      </div>
+    </section>
+
+    <section *ngIf="currentStep === 2">
+      <p class="text-2xl font-semibold mb-4 text-blue">Invoice Details</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-1">
+          <label
+            for="proformaNumber"
+            class="block text-sm font-medium text-gray-700"
+            >Proforma Number</label
+          >
+          <input
+            id="proformaNumber"
+            formControlName="proformaNumber"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              proFormaForm.get('proformaNumber')?.invalid &&
+              proFormaForm.get('proformaNumber')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Proforma Number is required.
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="date" class="block text-sm font-medium text-gray-700"
+            >Date</label
+          >
+          <input
+            id="createdAt"
+            formControlName="createdAt"
+            type="date"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              proFormaForm.get('createdAt')?.invalid &&
+              proFormaForm.get('createdAt')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Date is required.
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label
+            for="customerId"
+            class="block text-sm font-medium text-gray-700"
+            >Customer</label
+          >
+          <select
+            id="customerId"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            formControlName="customerId"
+            required
+          >
+            <option [value]="null" disabled selected>Select Customer</option>
+            <option
+              *ngFor="let customer of customers"
+              [value]="customer.organizationId"
+            >
+              {{ customer.name }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              proFormaForm.get('customerId')?.invalid &&
+              proFormaForm.get('customerId')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Customer is required.
+          </div>
+        </div>
+      </div>
+
+      <div
+        formGroupName="invoiceDetails"
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"
+      >
+        <div class="space-y-1">
+          <label
+            for="customerAddressSelect"
+            class="block text-sm font-medium text-gray-700"
+            >Select Customer Address</label
+          >
+
+          <select
+            id="customerAddressSelect"
+            (change)="onCustomerAddressSelect($event)"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="" disabled selected>Select or Review Address</option>
+            <option
+              *ngFor="let addr of customerAddresses"
+              [value]="addr.addressId"
+            >
+              {{ addr.addressLine1 }} ({{ addr.addressType }})
+            </option>
+          </select>
+
+          <label
+            for="customerAddress"
+            class="block text-sm font-medium text-gray-700 mt-2"
+            >Customer Address (Editable)</label
+          >
+          <textarea
+            id="customerAddress"
+            formControlName="customerAddress"
+            rows="3"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          ></textarea>
+
+          <div
+            *ngIf="
+              proFormaForm.get('invoiceDetails.customerAddress')?.invalid &&
+              proFormaForm.get('invoiceDetails.customerAddress')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Customer Address is required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label
+            for="shipToAddressSelect"
+            class="block text-sm font-medium text-gray-700"
+            >Select Shipping Address</label
+          >
+
+          <select
+            id="shipToAddressSelect"
+            (change)="onShipToAddressSelect($event)"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="" disabled selected>Select or Review Address</option>
+            <option
+              *ngFor="let addr of customerAddresses"
+              [value]="addr.addressId"
+            >
+              {{ addr.addressLine1 }} ({{ addr.addressType }})
+            </option>
+          </select>
+
+          <label
+            for="shippingAddress"
+            class="block text-sm font-medium text-gray-700 mt-2"
+            >Shipping To Address (Editable)</label
+          >
+          <textarea
+            id="shipToAddress"
+            formControlName="shipToAddress"
+            rows="3"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          ></textarea>
+
+          <div
+            *ngIf="
+              proFormaForm.get('invoiceDetails.shipToAddress')?.invalid &&
+              proFormaForm.get('invoiceDetails.shipToAddress')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Customer Address is required.
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div class="space-y-1">
+          <label
+            for="freightType"
+            class="block text-sm font-medium text-gray-700"
+            >Freight Type</label
+          >
+          <select
+            id="freightType"
+            formControlName="freightType"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="PICK UP">PICK UP</option>
+            <option value="PREPAID">PREPAID</option>
+            <option value="THIRD PARTY">THIRD PARTY</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label
+            for="estimatedShipDate"
+            class="block text-sm font-medium text-gray-700"
+            >Estimated Ship Date</label
+          >
+          <input
+            id="estimatedShipDate"
+            formControlName="estimatedShipDate"
+            type="date"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="space-y-1">
+          <label
+            for="currencyCode"
+            class="block text-sm font-medium text-gray-700"
+            >Currency</label
+          >
+          <input
+            id="currencyCode"
+            formControlName="currencyCode"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            readonly
+          />
+        </div>
+      </div>
+
+      <p class="text-lg font-semibold my-4 text-blue-500">Line Items</p>
+
+      <div class="overflow-x-auto border rounded-lg shadow-sm">
+        <div formArrayName="proformaItems">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  #
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Qty
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Unit
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Description
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Mfr Model / PN
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Unit Price
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Extended Price
+                </th>
+                <th class="px-3 py-2"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                *ngFor="let itemGroup of itemsArray.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                  {{ i + 1 }}
+                </td>
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="quantity"
+                    type="number"
+                    min="1"
+                    (input)="calculateExtendedPrice(itemGroup)"
+                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('quantity')?.invalid &&
+                      itemGroup.get('quantity')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="unit"
+                    type="text"
+                    class="w-16 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </td>
+                <td class="px-3 py-2">
+                  <textarea
+                    formControlName="description"
+                    rows="2"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  ></textarea>
+                  <div
+                    *ngIf="
+                      itemGroup.get('description')?.invalid &&
+                      itemGroup.get('description')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td class="px-3 py-2 text-sm text-gray-700">
+                  <input
+                    formControlName="manufacturerModel"
+                    type="text"
+                    placeholder="Model"
+                    class="w-full mb-1 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <input
+                    formControlName="partNumber"
+                    type="text"
+                    placeholder="Part Number"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </td>
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="unitPrice"
+                    type="number"
+                    min="0"
+                    (input)="calculateExtendedPrice(itemGroup)"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('unitPrice')?.invalid &&
+                      itemGroup.get('unitPrice')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td
+                  class="px-3 py-2 whitespace-nowrap text-sm font-medium text-right"
+                >
+                  <input
+                    formControlName="extendedPrice"
+                    type="text"
+                    [disabled]="true"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                  />
+                </td>
+                <td class="px-3 py-2">
+                  <button
+                    type="button"
+                    (click)="itemsArray.removeAt(i)"
+                    class="text-red-600 hover:text-red-900 text-sm"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-4 h-4"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.5 4.475C16.5 3.65 15.825 3 15 3h-6c-.825 0-1.5.65-1.5 1.475v.525H3v1.5h18v-1.5h-5.5v-.525zM17 7H7v12c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V7z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="space-y-1 mt-6">
+        <label for="notes" class="block text-sm font-medium text-gray-700"
+          >Notes</label
+        >
+        <textarea
+          id="notes"
+          formControlName="notes"
+          rows="3"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        ></textarea>
+      </div>
+    </section>
+
+    <section *ngIf="currentStep === 3">
+      <p class="text-xl font-semibold mb-4 text-blue-600 print:hidden">
+        Review & Print
+      </p>
+
+      <div
+        *ngIf="finalInvoiceData"
+        class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight"
+        style="font-size: 10pt"
+      >
+        <div class="grid grid-cols-3 justify-between mb-4 print:gap-2">
+          <div class="flex flex-col gap-x-3">
+            <span
+              class="text-lg print:text-base font-semibold px-1 text-[#a5b98b]"
+            >
+              {{ finalInvoiceData.sellerName }}
+            </span>
+            <span class="font-semibold print:font-normal text-sm px-1">
+              DATE -
+              {{ finalInvoiceData.sellerAddress }}
+            </span>
+            <span class="font-semibold text-sm px-1">
+              Phone:
+              {{ finalInvoiceData.sellerPhone }}
+            </span>
+            <span class="font-semibold text-sm px-1">
+              Fax: {{ finalInvoiceData.sellerFax }}
+            </span>
+          </div>
+          <div class="w-80 print:w-60 h-52 flex print:h-40">
+            <img class="w-full h-full mb-5" src="companyLogo.png" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-lg font-semibold px-1 text-[#a5b98b]">
+              PRO FORMA INVOICE
+            </span>
+            <table class="w-64 border-collapse border text-sm">
+              <tbody>
+                <tr>
+                  <td class="p-1 border font-semibold w-1/2 print:w-1/3">
+                    Date
+                  </td>
+                  <td class="p-1 border text-right w-1/2 print:w-1/3">
+                    {{ finalInvoiceData.date | date : "dd-MMM-yy" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-1 border font-semibold">PO#</td>
+                  <td class="p-1 border text-right">
+                    {{ finalInvoiceData.poNumber }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-1 border font-semibold">Invoice #</td>
+                  <td class="p-1 border text-right">
+                    {{ finalInvoiceData.invoiceNumber }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-1 border font-semibold">Customer ID</td>
+                  <td class="p-1 border text-right">
+                    {{ finalInvoiceData.customerId }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4 text-sm py-2">
+          <div>
+            <p class="text-lg font-semibold px-1 text-white bg-[#a5b98b]">
+              CUSTOMER
+            </p>
+            <div class="whitespace-pre-wrap">
+              <p class="font-semibold">
+                {{ finalInvoiceData.customerName }}
+              </p>
+              <p>{{ finalInvoiceData.customerAddress }}</p>
+              <p>Phone#: {{ finalInvoiceData.customerPhone }}</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-semibold px-1 text-white bg-[#a5b98b]">
+              SHIP TO
+            </p>
+            <div class="whitespace-pre-wrap">
+              <p class="font-semibold">
+                {{ finalInvoiceData.customerName }}
+              </p>
+              <p>{{ finalInvoiceData.shipToAddress }}</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-semibold px-1 text-white bg-[#a5b98b]">
+              SHIPPING DETAILS
+            </p>
+            <div class="whitespace-pre-wrap">
+              <p>Freight Type: {{ finalInvoiceData.freightType }}</p>
+              <p>
+                Est Ship Date:
+                {{ finalInvoiceData.estimatedShipDate | date : "dd-MMM-yy" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border rounded-lg overflow-hidden mb-4">
+          <table class="min-w-full divide-y text-sm">
+            <thead class="bg-[#a5b98b]">
+              <tr>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-10 border-r"
+                >
+                  LN#
+                </th>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                >
+                  PART NUMBER
+                </th>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                >
+                  UI
+                </th>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-80 border-r border-gray-400"
+                >
+                  DESCRIPTION
+                </th>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                >
+                  QTY
+                </th>
+                <th
+                  class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                >
+                  UNIT PRICE
+                </th>
+                <th
+                  class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
+                >
+                  E-PRICE
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y">
+              <tr
+                *ngFor="let item of finalInvoiceData.items; let i = index"
+                class=""
+              >
+                <td class="p-1 align-top border border-gray-400">
+                  {{ i + 1 }}
+                </td>
+                <td class="p-1 align-top border border-gray-400">
+                  {{ item.partNumber }}
+                </td>
+                <td class="p-1 align-top border border-gray-400">
+                  {{ item.ui }}
+                </td>
+                <td class="p-1 align-top border border-gray-400">
+                  <p class="font-medium">
+                    {{ item.description }}
+                  </p>
+                </td>
+
+                <td class="p-1 align-top text-right border border-gray-400">
+                  {{ item.quantity }}
+                </td>
+                <td class="p-1 align-top text-right border border-gray-400">
+                  {{
+                    item.unitPrice
+                      | currency
+                        : finalInvoiceData.totals.currency
+                        : "symbol"
+                        : "1.2-2"
+                  }}
+                </td>
+                <td
+                  class="p-1 align-top text-right font-semibold border border-gray-400"
+                >
+                  {{
+                    item.totalPrice
+                      | currency
+                        : finalInvoiceData.totals.currency
+                        : "symbol"
+                        : "1.2-2"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex gap-3 justify-end">
+          <div class="w-1/3">
+            <table class="w-full border-collapse border text-sm">
+              <tbody>
+                <tr>
+                  <td class="p-1 border font-semibold w-1/2">TOTAL</td>
+                  <td class="p-1 border text-right font-bold w-1/2">
+                    {{
+                      finalInvoiceData.totals.total
+                        | currency
+                          : finalInvoiceData.totals.currency
+                          : "symbol"
+                          : "1.2-2"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-1 border font-semibold">Currency</td>
+                  <td class="p-1 border text-right">
+                    {{ finalInvoiceData.totals.currency }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="flex justify-end text-sm mt-8">
+          <div class="w-1/3 text-center mr-8">
+            <div class="border-b pt-1 mb-1">
+              {{ finalInvoiceData.signerName }}
+            </div>
+            <div class="text-xs text-gray-500">FAIRMOUNT INTERNATIONAL LLC</div>
+          </div>
+          <div class="w-1/3 text-center">
+            <div class="border-b pt-1 mb-1">
+              {{ finalInvoiceData.signDate | date }}
+            </div>
+            <div class="text-xs text-gray-500">Date</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="flex justify-between pt-6 border-t border-gray-300 print:hidden"
+    >
+      <button
+        type="button"
+        (click)="prevStep()"
+        [disabled]="currentStep === 1"
+        class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 disabled:opacity-50"
+      >
+        &larr; Previous
+      </button>
+
+      <div class="flex flex-col space-y-2 items-end">
+        <div class="flex space-x-4">
+          <button
+            *ngIf="currentStep === totalSteps"
+            (click)="postInvoice()"
+            type="button"
+            [disabled]="isLoading"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isLoading">Generate Pro Forma</span>
+            <span *ngIf="isLoading"> Generating... </span>
+          </button>
+          <button
+            *ngIf="currentStep === totalSteps"
+            (click)="printProForma()"
+            type="button"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700"
+          >
+            Print Pro Forma
+          </button>
+        </div>
+
+        <button
+          *ngIf="currentStep < totalSteps"
+          type="button"
+          (click)="nextStep()"
+          [disabled]="
+            currentStep === 1 && !proFormaForm.get('selectedPoNumber')?.value
+          "
+          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 disabled:opacity-50"
+        >
+          {{
+            currentStep === 1
+              ? "Next: Enter Details →"
+              : "Review & Generate Invoice →"
+          }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

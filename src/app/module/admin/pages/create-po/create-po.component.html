@@ -1,13 +1,13 @@
 <div class="overflow-x-auto m-5 border border-gray-300 p-3 rounded-lg">
   <div (click)="closeModel()" class="cursor-pointer">
-    <p class="text-4xl font-bold mb-4 text-gray-400">Create Purchase Order</p>
+    <p class="text-3xl text-gray-700 font-bold mb-4">Create Purchase Order</p>
     <form [formGroup]="poForm">
       <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <label class="block text-gray-700">Purchase Order #</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter po number"
             formControlName="poNumber"
           />
@@ -16,7 +16,7 @@
           <label class="block text-gray-700">Supplier/Quote Ref #</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter supplier/quote ref"
             formControlName="supplier"
           />
@@ -27,7 +27,7 @@
             id="customerName"
             name="customerName"
             formControlName="customerId"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#749c63] focus:border-[#749c63]"
           >
             <option [value]="null" disabled selected>Select customer</option>
             <option
@@ -45,14 +45,14 @@
             id="orderDate"
             name="orderDate"
             formControlName="orderDate"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#749c63] focus:border-[#749c63]"
           />
         </div>
         <div>
           <label class="block text-gray-700">PO Amount</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter total amount"
             formControlName="totalAmount"
           />
@@ -61,7 +61,7 @@
           <label class="block text-gray-700">PO Cost</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter total cost"
             formControlName="totalCost"
           />
@@ -71,7 +71,7 @@
           <label class="block text-gray-700">Destination</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter Destination"
             formControlName="destination"
           />
@@ -80,7 +80,7 @@
           <label class="block text-gray-700">Payment Terms</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter terms"
             formControlName="paymentTerms"
           />
@@ -89,7 +89,7 @@
           <label class="block text-gray-700">Delivery Terms</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter delivery terms"
             formControlName="deliveryTerms"
           />
@@ -97,7 +97,7 @@
         <div>
           <label class="block text-gray-700">Mode of Shipment</label>
           <select
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             formControlName="modeOfShipment"
           >
             <option value="" disabled selected>Select mode of shipment</option>
@@ -110,7 +110,7 @@
           <label class="block text-gray-700">Freight /Shipping charges</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter charges"
             formControlName="shippingCharges"
           />
@@ -119,7 +119,7 @@
           <label class="block text-gray-700">Discount</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded"
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
             placeholder="Enter discount"
             formControlName="discount"
           />
@@ -128,7 +128,7 @@
       <div class="mt-6 flex" (click)="$event.stopPropagation()">
         <button
           type="button"
-          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454]"
           (click)="showAddItem = true"
         >
           Add PO Items
@@ -247,7 +247,7 @@
       </div>
       <div class="mt-6 flex justify-center gap-3">
         <button
-          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed flex items-center justify-center gap-2"
           (click)="createPO()"
           type="button"
         >
@@ -295,7 +295,7 @@
             <button
               (click)="addNewItem = true; addExisting = false"
               [disabled]="addNewItem"
-              class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
+              class="bg-[#749c63] text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-[#638454]"
               type="button"
             >
               Add New Item
@@ -303,7 +303,7 @@
             <button
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
-              class="bg-green-500 text-white px-4 py-2 rounded mb-4 disabled:bg-green-300 disabled:cursor-not-allowed"
+              class="bg-[#749c63] text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-[#638454]"
               type="button"
             >
               Add From Existing PO
@@ -318,7 +318,7 @@
                   <input
                     formControlName="quantity"
                     type="number"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -326,7 +326,7 @@
                   <input
                     formControlName="unit"
                     type="text"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -334,7 +334,7 @@
                   <input
                     formControlName="description"
                     type="text"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -342,7 +342,7 @@
                   <input
                     formControlName="unitPrice"
                     type="number"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -350,7 +350,7 @@
                   <input
                     formControlName="actualCostPerUnit"
                     type="number"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -358,7 +358,7 @@
                   <input
                     formControlName="totalPrice"
                     type="number"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -366,14 +366,14 @@
                   <input
                     formControlName="partNumber"
                     type="text"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
                   <label for="">Trace</label>
                   <select
                     formControlName="traceabilityRequired"
-                    class="px-2 py-2 border-2 rounded-sm"
+                    class="px-2 py-2 border-2 rounded-sm focus:ring-[#749c63] focus:border-[#749c63]"
                     name="trace"
                     id=""
                   >
@@ -387,7 +387,7 @@
                   <input
                     formControlName="manufacturerModel"
                     type="text"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
                 <div class="flex flex-col">
@@ -395,7 +395,7 @@
                   <input
                     formControlName="terms"
                     type="text"
-                    class="border rounded px-2 py-2"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
               </div>
@@ -403,14 +403,14 @@
                 <button
                   (click)="addItem()"
                   [disabled]="newPoItem.invalid"
-                  class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  class="bg-[#749c63] disabled:bg-[#a9d08d] disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6 hover:bg-[#638454]"
                   type="button"
                 >
                   Add Item
                 </button>
                 <button
                   (click)="closeModel()"
-                  class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  class="bg-gray-500 text-white px-4 py-2 rounded mt-6 hover:bg-gray-600"
                   type="button"
                 >
                   Cancel
@@ -425,7 +425,7 @@
                 <form [formGroup]="poId">
                   <label class="block text-gray-700">Select Po</label>
                   <select
-                    class="w-full px-3 py-2 border rounded"
+                    class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
                     formControlName="poId"
                   >
                     <option [value]="null" disabled selected>Select PO</option>
@@ -438,7 +438,7 @@
               </div>
               <div>
                 <button
-                  class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
+                  class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
                   (click)="getPO()"
                   [disabled]="poId.invalid"
                   type="button"
@@ -485,7 +485,7 @@
                       (change)="updateSelectionQuantity(element, $event)"
                       min="0"
                       [max]="element.quantity"
-                      class="w-20 px-2 py-1 border rounded text-center"
+                      class="w-20 px-2 py-1 border rounded text-center focus:ring-[#749c63] focus:border-[#749c63]"
                       (click)="$event.stopPropagation()"
                     />
                   </td>
@@ -649,7 +649,7 @@
             <div class="mt-6 flex justify-end">
               <button
                 (click)="closeModel()"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
+                class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
                 [disabled]="selection.selected.length === 0"
                 type="button"
               >

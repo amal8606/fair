@@ -6,7 +6,10 @@ import { CreatePoComponent } from './pages/create-po/create-po.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ImportPosComponent } from './pages/import-pos/import-pos.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
-import { ProFormaInvoiceComponent } from './pages/invoice/pro-forma-invoice/pro-forma-invoice.component';
+import { ProFormaInvoiceComponent } from './pages/invoice/pro-forma/pro-forma-invoice/pro-forma-invoice.component';
+import { InvoicedProFormaComponent } from './pages/invoice/pro-forma/invoiced-pro-forma/invoiced-pro-forma.component';
+import { CreateCommericalInvoiceComponent } from './pages/invoice/commerical-invoice/create-commerical-invoice/create-commerical-invoice.component';
+import { ListCommericalInvoiceComponent } from './pages/invoice/commerical-invoice/list-commerical-invoice/list-commerical-invoice.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,18 @@ const routes: Routes = [
       {
         path: 'pro-forma-invoice',
         component: ProFormaInvoiceComponent,
+      },
+      {
+        path: 'pro-forma-invoiced-list',
+        component: InvoicedProFormaComponent,
+      },
+      {
+        path: 'create-commerical-invoice',
+        component: CreateCommericalInvoiceComponent,
+      },
+      {
+        path: 'list-commerical-invoice',
+        component: ListCommericalInvoiceComponent,
       },
     ],
   },

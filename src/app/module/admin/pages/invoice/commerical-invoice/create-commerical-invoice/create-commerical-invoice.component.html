@@ -1,0 +1,2278 @@
+<div
+  class="p-6 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
+>
+  <header class="mb-8 text-center print:hidden">
+    <p class="text-3xl text-gray-700 font-bold">COMMERCIAL INVOICE CREATOR</p>
+    <p class="text-gray-600 mt-2">
+      Step {{ currentStep }} of {{ totalSteps }}:
+      <span *ngIf="currentStep === 1">Select Purchase Order</span>
+      <span *ngIf="currentStep === 2">Enter Details & Confirm Items</span>
+      <span *ngIf="currentStep === 3">Review & Print Invoice</span>
+    </p>
+    <div class="h-2 bg-gray-200 rounded-full mt-4">
+      <div
+        class="h-full bg-blue-500 rounded-full transition-all duration-500"
+        [style.width]="(currentStep / totalSteps) * 100 + '%'"
+      ></div>
+    </div>
+  </header>
+
+  <form [formGroup]="commercialInvoiceForm" class="space-y-8">
+    <section *ngIf="currentStep === 1">
+      <p class="text-xl font-semibold mb-4 text-blue-500">
+        Select Invoicable Purchase Order
+      </p>
+      <div class="flex justify-center items-end gap-3">
+        <div class="w-2/3">
+          <label class="block text-gray-700">Select Po</label>
+          <select
+            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            #poSelect
+            (change)="getPO(poSelect.value)"
+          >
+            <option [ngValue]="null" disabled selected>Select PO</option>
+
+            <option *ngFor="let po of incomingPOs" [value]="po.poId">
+              {{ po.poNumber }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+      >
+        <table
+          mat-table
+          class="mat-elevation-z8"
+          [dataSource]="sortedData1"
+          matSort
+          #matSort="matSort"
+        >
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>Select</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="itemId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId">
+              Item ID
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.itemId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId">
+              PO Id
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.poId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lineNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber">
+              Line Number
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.lineNumber }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="manufacturerModel">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="manufacturerModel"
+            >
+              Manufacturer Model
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.manufacturerModel }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="partNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
+              Part Number
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.partNumber }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">
+              Available Qty
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.quantity }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actualCostPerUnit">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="actualCostPerUnit"
+            >
+              Actual Cost
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.actualCostPerUnit | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice">
+              Unit Price
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.unitPrice | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice">
+              Total Price
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalPrice | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
+              Description
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.description }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="unit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit">
+              Unit
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.unit }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsFirst"></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let element; columns: displayedColumnsFirst"
+            class="example-element-row"
+          ></tr>
+        </table>
+        <div
+          *ngIf="sortedData1.data.length === 0 && !loading && poId.valid"
+          class="text-center mt-4"
+        >
+          <p>No items found for the selected PO.</p>
+        </div>
+        <div *ngIf="loading" class="text-center mt-4">
+          <p>Loading...</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button
+          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+          [disabled]="selection.selected.length === 0"
+          (click)="addItem()"
+          type="button"
+        >
+          Add Selected Item to New Po
+        </button>
+      </div>
+
+      <div
+        *ngIf="sortedData2.data.length > 0"
+        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+      >
+        <p class="text-xl font-semibold mb-4 text-blue-500">
+          Commerical Invoice Items
+        </p>
+        <table mat-table class="mat-elevation-z8" [dataSource]="sortedData2">
+          <ng-container matColumnDef="itemId">
+            <th mat-header-cell *matHeaderCellDef>Item ID</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.itemId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poId">
+            <th mat-header-cell *matHeaderCellDef>PO Id</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.poId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lineNumber">
+            <th mat-header-cell *matHeaderCellDef>Line Number</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.lineNumber }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="manufacturerModel">
+            <th mat-header-cell *matHeaderCellDef>Manufacturer Model</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.manufacturerModel }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="partNumber">
+            <th mat-header-cell *matHeaderCellDef>Part Number</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.partNumber }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.quantity }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actualCostPerUnit">
+            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.actualCostPerUnit | currency : "USD" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.unitPrice | currency : "USD" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef>Total Price</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.totalPrice | currency : "USD" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.description }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="unit">
+            <th mat-header-cell *matHeaderCellDef>Unit</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.unit }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                (click)="$event.stopPropagation()"
+                (click)="removeSelectedItem(element)"
+                type="button"
+                class="bg-transparent"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsSecond"></tr>
+
+          <tr
+            mat-row
+            *matRowDef="let element; columns: displayedColumnsSecond"
+            class="example-element-row"
+          ></tr>
+        </table>
+      </div>
+    </section>
+
+    <section *ngIf="currentStep === 2">
+      <p class="text-4xl font-semibold mb-4 text-blue-500">Invoice Details</p>
+
+      <p class="text-xl font-semibold mb-4 text-blue-400">Reference Details</p>
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 mb-4 border p-2 rounded-sm"
+      >
+        <div class="space-y-1">
+          <label
+            for="commercialInvoiceNumber"
+            class="block text-sm font-medium text-gray-700"
+            >Invoice Number</label
+          >
+          <input
+            id="commercialInvoiceNumber"
+            formControlName="commercialInvoiceNumber"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('commercialInvoiceNumber')?.invalid &&
+              commercialInvoiceForm.get('commercialInvoiceNumber')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Invoice Number is required.
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="createdAt" class="block text-sm font-medium text-gray-700"
+            >Date</label
+          >
+          <input
+            id="createdAt"
+            formControlName="createdAt"
+            type="date"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('createdAt')?.invalid &&
+              commercialInvoiceForm.get('createdAt')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Date is required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label
+            for="finalDestination"
+            class="block text-sm font-medium text-gray-700"
+            >Final Destination</label
+          >
+          <input
+            id="finalDestination"
+            formControlName="finalDestination"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="space-y-1">
+          <label
+            for="termsOfSale"
+            class="block text-sm font-medium text-gray-700"
+            >Terms of Sale</label
+          >
+          <input
+            id="termsOfSale"
+            formControlName="termsOfSale"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            required
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('termsOfSale')?.invalid &&
+              commercialInvoiceForm.get('termsOfSale')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label
+            for="termsOfPayment"
+            class="block text-sm font-medium text-gray-700"
+            >Terms of Payment</label
+          >
+          <input
+            id="termsOfPayment"
+            formControlName="termsOfPayment"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            required
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('termsOfPayment')?.invalid &&
+              commercialInvoiceForm.get('termsOfPayment')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label
+            for="termsOfShipping"
+            class="block text-sm font-medium text-gray-700"
+            >Terms of Shipping</label
+          >
+          <input
+            id="termsOfShipping"
+            formControlName="termsOfShipping"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            required
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('termsOfShipping')?.invalid &&
+              commercialInvoiceForm.get('termsOfShipping')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Required.
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="currency" class="block text-sm font-medium text-gray-700"
+            >Currency</label
+          >
+          <input
+            id="currency"
+            formControlName="currency"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            readonly
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="modeOfTransport"
+            class="block text-sm font-medium text-gray-700"
+            >Mode of Transport</label
+          >
+          <input
+            id="modeOfTransport"
+            formControlName="modeOfTransport"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="placeOfReceipt"
+            class="block text-sm font-medium text-gray-700"
+            >Place Of Receipt</label
+          >
+          <input
+            id="placeOfReceipt"
+            formControlName="placeOfReceipt"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="billOfLandingAwbNo"
+            class="block text-sm font-medium text-gray-700"
+            >Bill Of Landing Number / AWB NO</label
+          >
+          <input
+            id="billOfLandingAwbNo"
+            formControlName="billOfLandingAwbNo"
+            type="nu
+            "
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="noOfBoxes" class="block text-sm font-medium text-gray-700"
+            >Number Of Boxes</label
+          >
+          <input
+            id="noOfBoxes"
+            formControlName="noOfBoxes"
+            type="number"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="noOfPallets"
+            class="block text-sm font-medium text-gray-700"
+            >Number Of Pallets</label
+          >
+          <input
+            id="noOfPallets"
+            formControlName="noOfPallets"
+            type="number"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="grossWeight"
+            class="block text-sm font-medium text-gray-700"
+            >Gross Weight</label
+          >
+          <input
+            id="grossWeight"
+            formControlName="grossWeight"
+            type="number"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label
+            for="marksandNumbers"
+            class="block text-sm font-medium text-gray-700"
+            >Marks & Number</label
+          >
+          <input
+            id="marksandNumbers"
+            formControlName="marksandNumbers"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      <p class="text-xl font-semibold mt-4 text-blue-400">
+        Shipper Information
+      </p>
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 mb-4 border p-2 rounded-sm"
+      >
+        <div class="space-y-1">
+          <label
+            for="customerId"
+            class="block text-sm font-medium text-gray-700"
+            >Customer</label
+          >
+          <select
+            id="customerId"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            formControlName="customerId"
+            required
+          >
+            <option [value]="null" disabled selected>Select Customer</option>
+            <option
+              *ngFor="let customer of customers"
+              [value]="customer.organizationId"
+            >
+              {{ customer?.name }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('customerId')?.invalid &&
+              commercialInvoiceForm.get('customerId')?.touched
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            Customer is required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label
+            for="contactName"
+            class="block text-sm font-medium text-gray-700"
+            >Contact Name</label
+          >
+          <input
+            id="contactName"
+            formControlName="contactName"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="contactNo" class="block text-sm font-medium text-gray-700"
+            >Contact No</label
+          >
+          <input
+            id="contactNo"
+            formControlName="contactNo"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email</label
+          >
+          <input
+            id="email"
+            formControlName="email"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email</label
+          >
+          <input
+            id="email"
+            formControlName="email2"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="taxId" class="block text-sm font-medium text-gray-700"
+            >Tax Id</label
+          >
+          <input
+            id="taxId"
+            formControlName="taxId"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="ein" class="block text-sm font-medium text-gray-700"
+            >EIN</label
+          >
+          <input
+            id="ein"
+            formControlName="ein"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div class="space-y-1">
+          <label for="k11" class="block text-sm font-medium text-gray-700"
+            >K11</label
+          >
+          <input
+            id="k11"
+            formControlName="k11"
+            type="text"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        <div
+          formGroupName="invoiceDetails"
+          class="grid col-span-3 grid-cols-1 md:grid-cols-2 gap-4 mt-4"
+        >
+          <div class="space-y-1">
+            <label
+              for="customerAddressSelect"
+              class="block text-sm font-medium text-gray-700"
+              >Select Customer Address</label
+            >
+
+            <select
+              id="customerAddressSelect"
+              (change)="onCustomerAddressSelect($event)"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" disabled selected>
+                Select or Review Address
+              </option>
+              <option
+                *ngFor="let addr of customerAddresses"
+                [value]="addr.addressId"
+              >
+                {{ addr.addressLine1 }} ({{ addr.addressType }})
+              </option>
+            </select>
+
+            <label
+              for="customerAddress"
+              class="block text-sm font-medium text-gray-700 mt-2"
+              >Customer Address (Editable)</label
+            >
+            <textarea
+              id="customerAddress"
+              formControlName="customerAddress"
+              rows="3"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            ></textarea>
+
+            <div
+              *ngIf="
+                commercialInvoiceForm.get('invoiceDetails.customerAddress')
+                  ?.invalid &&
+                commercialInvoiceForm.get('invoiceDetails.customerAddress')
+                  ?.touched
+              "
+              class="text-red-600 text-xs mt-1"
+            >
+              Customer Address is required.
+            </div>
+          </div>
+          <div class="space-y-1">
+            <label
+              for="shipToAddressSelect"
+              class="block text-sm font-medium text-gray-700"
+              >Select Shipping Address</label
+            >
+
+            <select
+              id="shipToAddressSelect"
+              (change)="onShipToAddressSelect($event)"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" disabled selected>
+                Select or Review Address
+              </option>
+              <option
+                *ngFor="let addr of customerAddresses"
+                [value]="addr.addressId"
+              >
+                {{ addr.addressLine1 }} ({{ addr.addressType }})
+              </option>
+            </select>
+
+            <label
+              for="shipToAddress"
+              class="block text-sm font-medium text-gray-700 mt-2"
+              >Shipping To Address (Editable)</label
+            >
+            <textarea
+              id="shipToAddress"
+              formControlName="shipToAddress"
+              rows="3"
+              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            ></textarea>
+
+            <div
+              *ngIf="
+                commercialInvoiceForm.get('invoiceDetails.shipToAddress')
+                  ?.invalid &&
+                commercialInvoiceForm.get('invoiceDetails.shipToAddress')
+                  ?.touched
+              "
+              class="text-red-600 text-xs mt-1"
+            >
+              Customer Address is required.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-lg font-semibold my-4 text-blue-500">Line Items</p>
+
+      <div
+        class="overflow-x-auto border rounded-lg shadow-sm print:shadow-none"
+      >
+        <div formArrayName="commercialInvoiceItems">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-10"
+                >
+                  LIN
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-48"
+                >
+                  Part Number
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                >
+                  UI
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Description
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                >
+                  PO#
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                >
+                  COUNTRY OF ORIGIN
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                >
+                  Qty
+                </th>
+
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-24"
+                >
+                  Unit Price
+                </th>
+                <th
+                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-24"
+                >
+                  TOTAL PRICE
+                </th>
+                <th class="px-3 py-2 w-10"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                *ngFor="
+                  let itemGroup of commercialInvoiceItemsArray.controls;
+                  let i = index
+                "
+                [formGroupName]="i"
+              >
+                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                  {{ i + 1 }}
+                </td>
+                <td class="px-3 py-2 text-sm text-gray-700">
+                  <input
+                    formControlName="partNumber"
+                    type="text"
+                    placeholder="Part Number"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </td>
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="ui"
+                    type="text"
+                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('ui')?.invalid &&
+                      itemGroup.get('ui')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td class="px-3 py-2">
+                  <textarea
+                    formControlName="description"
+                    rows="2"
+                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                  ></textarea>
+                  <div
+                    *ngIf="
+                      itemGroup.get('description')?.invalid &&
+                      itemGroup.get('description')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="poNumber"
+                    type="text"
+                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('poNumber')?.invalid &&
+                      itemGroup.get('poNumber')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="countryOfOrigin"
+                    type="text"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('countryOfOrigin')?.invalid &&
+                      itemGroup.get('countryOfOrigin')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="quantity"
+                    type="number"
+                    min="1"
+                    (input)="calculateTotalPrice(itemGroup)"
+                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('quantity')?.invalid &&
+                      itemGroup.get('quantity')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+
+                <td class="px-3 py-2">
+                  <input
+                    formControlName="unitPrice"
+                    type="number"
+                    min="0"
+                    (input)="calculateTotalPrice(itemGroup)"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div
+                    *ngIf="
+                      itemGroup.get('unitPrice')?.invalid &&
+                      itemGroup.get('unitPrice')?.touched
+                    "
+                    class="text-red-600 text-xs mt-1"
+                  >
+                    Req
+                  </div>
+                </td>
+                <td
+                  class="px-3 py-2 whitespace-nowrap text-sm font-medium text-right"
+                >
+                  <input
+                    formControlName="totalPrice"
+                    type="text"
+                    [disabled]="true"
+                    class="w-24 border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                  />
+                </td>
+                <td class="px-3 py-2">
+                  <button
+                    type="button"
+                    (click)="commercialInvoiceItemsArray.removeAt(i)"
+                    class="text-red-600 hover:text-red-900 text-sm"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-4 h-4"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.5 4.475C16.5 3.65 15.825 3 15 3h-6c-.825 0-1.5.65-1.5 1.475v.525H3v1.5h18v-1.5h-5.5v-.525zM17 7H7v12c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V7z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-4">
+        <div class="w-full md:w-1/3 space-y-2">
+          <div class="flex justify-between items-center">
+            <label class="block text-sm font-medium text-gray-700"
+              >Subtotal</label
+            >
+            <input
+              type="text"
+              [value]="
+                commercialInvoiceForm.get('totalAmount')?.value
+                  | currency
+                    : commercialInvoiceForm.get('currency')?.value
+                    : 'symbol'
+                    : '1.2-2'
+              "
+              [disabled]="true"
+              class="w-36 text-right border-gray-300 rounded-md shadow-sm bg-gray-100"
+            />
+          </div>
+
+          <div class="flex justify-between items-center">
+            <label
+              for="taxableAmount"
+              class="block text-sm font-medium text-gray-700"
+              >Taxable Amount</label
+            >
+            <input
+              id="taxableAmount"
+              formControlName="taxableAmount"
+              type="number"
+              min="0"
+              (input)="calculateGrandTotal()"
+              class="w-36 text-right border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div class="flex justify-between items-center">
+            <label
+              for="shippingCharge"
+              class="block text-sm font-medium text-gray-700"
+              >Shipping Charge</label
+            >
+            <input
+              id="shippingCharge"
+              formControlName="shippingCharge"
+              type="number"
+              min="0"
+              (input)="calculateGrandTotal()"
+              class="w-36 text-right border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div
+            class="flex justify-between items-center pt-2 border-t border-gray-300"
+          >
+            <label class="block text-lg font-bold text-gray-900"
+              >Grand Total</label
+            >
+            <input
+              type="text"
+              [value]="
+                commercialInvoiceForm.get('grandTotal')?.value
+                  | currency
+                    : commercialInvoiceForm.get('currency')?.value
+                    : 'symbol'
+                    : '1.2-2'
+              "
+              [disabled]="true"
+              class="w-36 text-right border-gray-300 rounded-md shadow-sm bg-blue-50 text-lg font-bold text-blue-800"
+            />
+            <input type="hidden" formControlName="grandTotal" />
+          </div>
+        </div>
+      </div>
+      <div class="space-y-1 mt-6">
+        <label for="note" class="block text-sm font-medium text-gray-700"
+          >Note</label
+        >
+        <textarea
+          id="note"
+          formControlName="note"
+          rows="3"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+        ></textarea>
+      </div>
+    </section>
+
+    <section *ngIf="currentStep === 3">
+      <p class="text-xl font-semibold mb-4 text-blue-600 print:hidden">
+        Review & Print
+      </p>
+      <mat-tab-group class="hide-tab-header-on-print">
+        <mat-tab label="COMMERCIAL INVOICE">
+          <div
+            *ngIf="finalCommercialInvoiceData"
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
+            style="font-size: 10pt"
+          >
+            <div
+              class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
+            >
+              <p>COMMERCIAL INVOICE</p>
+            </div>
+            <div class="flex justify-between items-start mb-4 print:mb-2">
+              <div class="flex flex-col gap-x-3">
+                <span
+                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  REFERENCE DETAILS
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  DATE -
+                  {{
+                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                  }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  INVOICE NUMBER -
+                  {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  TERMS OF SALE - {{ finalCommercialInvoiceData.termsOfSale }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  FINAL DESTINATION -
+                  {{ finalCommercialInvoiceData.finalDestination }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  CURRENCY OF SALE - {{ finalCommercialInvoiceData.currency }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  MODE OF TRANSPORT -
+                  {{ finalCommercialInvoiceData.modeOfTransport }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  TERMS OF SHIPPING -
+                  {{ finalCommercialInvoiceData.termsOfShipping }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  PLACE OF RECEIPT -
+                  {{ finalCommercialInvoiceData.placeOfReceipt }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  TERMS OF PAYMENT -
+                  {{ finalCommercialInvoiceData.termsOfPayment }}
+                </span>
+              </div>
+              <div class="w-96 h-80">
+                <img class="w-full h-full mb-5" src="companyLogo.png" />
+              </div>
+
+              <div class="flex flex-col">
+                <span
+                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  SHIPPER INFORMATION
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  TAX ID - {{ finalCommercialInvoiceData.taxId }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  EIN - {{ finalCommercialInvoiceData.ein }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  COMPANY -{{ finalCommercialInvoiceData.sellerName }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  Contact Name - {{ finalCommercialInvoiceData.contactName }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  {{ finalCommercialInvoiceData.sellerAddress }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  Contact No - {{ finalCommercialInvoiceData.contactNo }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  E-mail - {{ finalCommercialInvoiceData.email }}
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
+            >
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  CUSTOMER
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </p>
+                  <p>
+                    {{ finalCommercialInvoiceData.customerAddress }}
+                  </p>
+                  <p>Phone#: {{ finalCommercialInvoiceData.customerPhone }}</p>
+                </div>
+              </div>
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  SHIP TO
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </p>
+                  <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
+                </div>
+              </div>
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  FREIGHT INFO
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p>TOTAL NUMBER OF PACKAGES</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
+            >
+              <table
+                class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
+              >
+                <thead class="bg-[#a5b98b]">
+                  <tr>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
+                    >
+                      LN#
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      PART NUMBER
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      UI
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
+                    >
+                      DESCRIPTION
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      PO#
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      COUNTRY OF ORIGIN
+                    </th>
+                    <th
+                      class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
+                    >
+                      QTY
+                    </th>
+                    <th
+                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      UNIT PRICE
+                    </th>
+                    <th
+                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      Total AMOUNT
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
+                >
+                  <tr
+                    *ngFor="
+                      let item of finalCommercialInvoiceData.items;
+                      let i = index
+                    "
+                    class=""
+                  >
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ i + 1 }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.partNumber }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.ui }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      <p class="font-medium">
+                        {{ item.description }}
+                      </p>
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.poNumber }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.countryOfOrigin }}
+                    </td>
+                    <td class="p-1 align-top text-right border border-gray-400">
+                      {{ item.quantity }}
+                    </td>
+                    <td class="p-1 align-top text-right border border-gray-400">
+                      {{
+                        item.unitPrice
+                          | currency
+                            : finalCommercialInvoiceData.totals.currency
+                            : "symbol"
+                            : "1.2-2"
+                      }}
+                    </td>
+                    <td
+                      class="p-1 align-top text-right font-semibold border border-gray-400"
+                    >
+                      {{
+                        item.totalPrice
+                          | currency
+                            : finalCommercialInvoiceData.totals.currency
+                            : "symbol"
+                            : "1.2-2"
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex gap-3 justify-between">
+              <div
+                class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+              >
+                <div class="bg-[#a5b98b] px-2 py-1">
+                  <p class="font-semibold bg text-white">
+                    Declaration Statement
+                  </p>
+                </div>
+                <div class="px-2">
+                  <p
+                    class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                  >
+                    I certify that the information on this invoice is true and
+                    correct, and the content and value of the shipment as stated
+                    above.
+                  </p>
+                </div>
+              </div>
+              <div class="w-1/3">
+                <table
+                  class="w-full border-collapse border border-gray-400 text-sm print:text-[8pt]"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        class="p-1 border border-gray-400 font-semibold w-1/2"
+                      >
+                        Subtotal
+                      </td>
+                      <td
+                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                      >
+                        {{
+                          finalCommercialInvoiceData.totals.subTotal
+                            | currency
+                              : finalCommercialInvoiceData.totals.currency
+                              : "symbol"
+                              : "1.2-2"
+                        }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="p-1 border border-gray-400 font-semibold w-1/2"
+                      >
+                        Taxable
+                      </td>
+                      <td
+                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                      >
+                        {{
+                          finalCommercialInvoiceData.totals.taxableAmount
+                            | currency
+                              : finalCommercialInvoiceData.totals.currency
+                              : "symbol"
+                              : "1.2-2"
+                        }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="p-1 border border-gray-400 font-semibold w-1/2"
+                      >
+                        Shipping Charge
+                      </td>
+                      <td
+                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                      >
+                        {{
+                          finalCommercialInvoiceData.totals.shippingCharge
+                            | currency
+                              : finalCommercialInvoiceData.totals.currency
+                              : "symbol"
+                              : "1.2-2"
+                        }}
+                      </td>
+                    </tr>
+                    <tr class="">
+                      <td
+                        class="p-1 border border-gray-400 font-bold text-white"
+                      >
+                        Grand Total
+                      </td>
+                      <td
+                        class="p-1 border border-gray-400 text-right font-bold w-1/2 text-white"
+                      >
+                        {{
+                          finalCommercialInvoiceData.totals.grandTotal
+                            | currency
+                              : finalCommercialInvoiceData.totals.currency
+                              : "symbol"
+                              : "1.2-2"
+                        }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="p-1 border border-gray-400 font-semibold">
+                        Currency
+                      </td>
+                      <td class="p-1 border border-gray-400 text-right">
+                        {{ finalCommercialInvoiceData.totals.currency }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="flex justify-end text-sm mt-8 print:mt-4">
+              <div class="w-1/3 text-center mr-8">
+                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                  {{ finalCommercialInvoiceData.signerName }}
+                </div>
+                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                  FAIRMOUNT INTERNATIONAL LLC
+                </div>
+              </div>
+              <div class="w-1/3 text-center">
+                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                  {{ finalCommercialInvoiceData.signDate | date }}
+                </div>
+                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                  Date
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="EXPORT PACKING LIST">
+          <div
+            *ngIf="finalCommercialInvoiceData"
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
+            style="font-size: 10pt"
+          >
+            <div
+              class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
+            >
+              <p>EXPORT PACKING LIST</p>
+            </div>
+            <div class="flex justify-between items-start mb-4 print:mb-2">
+              <div class="flex flex-col gap-x-3">
+                <span
+                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  REFERENCE DETAILS
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  DATE -
+                  {{
+                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                  }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  Bill OF LANDIND/AWB NO
+                  {{ finalCommercialInvoiceData.billOfLandingAwbNo }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  INVOICE NUMBER -
+                  {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  NO. BOXES -
+                  {{ finalCommercialInvoiceData.noOfBoxes }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  NO OF PALLETS - {{ finalCommercialInvoiceData.noOfPallets }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  GROSS WEIGHT -
+                  {{ finalCommercialInvoiceData.grossWeight }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  MARKS & NUMBERS -
+                  {{ finalCommercialInvoiceData.marksandNumbers }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  MODE OF TRANSPORT -
+                  {{ finalCommercialInvoiceData.modeOfTransport }}
+                </span>
+
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  PLACE OF RECEIPT -
+                  {{ finalCommercialInvoiceData.placeOfReceipt }}
+                </span>
+              </div>
+              <div>
+                <div class="w-96 h-60 flex-shrink-0">
+                  <img
+                    src="companyLogo.png"
+                    alt="FM Logo"
+                    class="h-full w-full"
+                  />
+                </div>
+              </div>
+
+              <div class="flex flex-col">
+                <span
+                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  SHIPPER INFORMATION
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  TAX ID - {{ finalCommercialInvoiceData.taxId }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  EIN - {{ finalCommercialInvoiceData.ein }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  COMPANY -{{ finalCommercialInvoiceData.sellerName }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  Contact Name - {{ finalCommercialInvoiceData.contactName }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  {{ finalCommercialInvoiceData.sellerAddress }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  Contact No - {{ finalCommercialInvoiceData.contactNo }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  E-mail - {{ finalCommercialInvoiceData.email }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  E-mail - {{ finalCommercialInvoiceData.email2 }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  K11 - {{ finalCommercialInvoiceData.k11 }}
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
+            >
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  CONSIGNEE
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </p>
+                  <p>
+                    {{ finalCommercialInvoiceData.customerAddress }}
+                  </p>
+                  <p>Phone#: {{ finalCommercialInvoiceData.customerPhone }}</p>
+                </div>
+              </div>
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  NOTIFY PARTY /OTHER REFERENCE
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </p>
+                  <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
+                </div>
+              </div>
+              <div>
+                <p
+                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                >
+                  FREIGHT INFO
+                </p>
+                <div class="whitespace-pre-wrap">
+                  <p>TOTAL NUMBER OF PACKAGES</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
+            >
+              <table
+                class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
+              >
+                <thead class="bg-[#a5b98b]">
+                  <tr>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
+                    >
+                      LN#
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      PART NUMBER
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      QTY
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      UI
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
+                    >
+                      DESCRIPTION
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      PO#
+                    </th>
+                    <th
+                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      COUNTRY OF ORIGIN
+                    </th>
+                    <th
+                      class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
+                    >
+                      HSC
+                    </th>
+                    <th
+                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                    >
+                      WEIGHT & DIM
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
+                >
+                  <tr
+                    *ngFor="
+                      let item of finalCommercialInvoiceData.items;
+                      let i = index
+                    "
+                    class=""
+                  >
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ i + 1 }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.partNumber }}
+                    </td>
+                    <td class="p-1 align-top text-right border border-gray-400">
+                      {{ item.quantity }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.ui }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      <p class="font-medium">
+                        {{ item.description }}
+                      </p>
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.poNumber }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.countryOfOrgin }}
+                    </td>
+
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.hsc }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex gap-3 justify-between">
+              <div
+                class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+              >
+                <div class="bg-[#a5b98b] px-2 py-1">
+                  <p class="font-semibold bg text-white">
+                    Declaration Statement
+                  </p>
+                </div>
+                <div class="px-2">
+                  <p
+                    class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                  >
+                    I certify that the information on this invoice is true and
+                    correct, and the content and value of the shipment as stated
+                    above.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end text-sm mt-8 print:mt-4">
+              <div class="w-1/3 text-center mr-8">
+                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                  {{ finalCommercialInvoiceData.signerName }}
+                </div>
+                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                  FAIRMOUNT INTERNATIONAL LLC
+                </div>
+              </div>
+              <div class="w-1/3 text-center">
+                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                  {{ finalCommercialInvoiceData.signDate | date }}
+                </div>
+                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                  Date
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
+          <div
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt]"
+            style="font-size: 10pt"
+          >
+            <div
+              class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
+            >
+              <div class="border border-black p-2 text-center bg-gray-100">
+                <p class="text-sm font-bold">
+                  Shipper's Letter of Instructions (SLI)
+                </p>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold">1. USPPI Name</span>
+                    <div class="font-semibold text-blue-700 mt-2">
+                      {{ finalCommercialInvoiceData.ein }}
+                    </div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >2. USPPI Address Including Zip Code:</span
+                    >
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData.sellerName }}
+                    </div>
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData.sellerAddress }}
+                    </div>
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >3. Freight Location Company Name:</span
+                    >
+                    <div class="font-semibold text-blue-700"></div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >4.Freight Location Address (if not box #2):</span
+                    >
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold">5. Forwarding Agent:</span>
+                    <div class="font-semibold text-blue-700"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    6. USPPI EIN (IRS) No:
+                  </div>
+                  <div class="block font-bold border-black p-2">
+                    {{ finalCommercialInvoiceData.ein }}
+                  </div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    7. Related Party Indicator (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Related
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Non-Related
+                  </label>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    8. USPPI Reference#:
+                  </div>
+                  <div class="block font-bold border-black p-2"></div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    9. Routed Export Transaction (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    Yes
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 border-b border-black">
+                <div class="p-2 border border-black">
+                  <div class="block font-bold">
+                    10. Ultimate Consignee Name & Address:
+                  </div>
+                  <div class="font-semibold mt-2">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </div>
+                  <div class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerAddress }}
+                  </div>
+
+                  <div class="font-semibold">
+                    Telephone (Office): +965-22055325, 22055326
+                  </div>
+                </div>
+                <div class="">
+                  <div class="font-bold border-b border-black p-2">
+                    11. Ultimate Consignee Type (select one):
+                  </div>
+                  <div class="text-left">
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Direct Consumer
+                      </label>
+                    </div>
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Government Entity
+                      </label>
+                    </div>
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Reseller
+                      </label>
+                    </div>
+                    <div class="font-semibold py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Other/Unknown
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-2 border border-black">
+                  <span class="block font-bold"
+                    >12. Intermediate Consignee Name & Address</span
+                  >
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                  <div class="font-semibold"></div>
+                </div>
+              </div>
+              <div class="grid grid-cols-3">
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      13. Sate of Origin:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      14. Country of Ultimate Destination:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      15. Hazardous Material:
+                    </div>
+                    <div class="grid grid-cols-2 w-fit">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Yes
+                      </label>
+
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      16. In-Bond Code:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      17. Entry Number:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      18. FTZ Identifier:
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                INSTRUCTIONS TO FORWARDER:
+              </div>
+
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-gray-100 border-b border-black">
+                    <th class="border-r border-black p-1 text-left w-12">
+                      20. Domestic or Foreign (D/F)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-20">
+                      21. Schedule B / HTS Number and Commercial Commodity<br />
+                      Description For Vehicles: VIN/Year, Make, Model and<br />
+                      Vehicle Title Number are required
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-16">
+                      22. Quantity in Schedule B / HTS Units
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-16">
+                      23. DDTC Quantity and DDTC Unit of Measure
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-20">
+                      24. Shipping Weight (in Kilos)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      25. ECCN, EAR99 or USML Category No.
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      26. SME (Y/ N)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      27. Export License No., License Exception Symbol, D D TC
+                      Exemption No., D D TC ACM No. o r NLR
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      28. Value at the Port of Export ( U S Dollars)
+                    </th>
+                    <th class="border-r border-black p-1 text-left w-24">
+                      28. License Value by item (if applicable) ( US Dollars)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-black align-top">
+                    <td
+                      class="border-r border-black p-2 font-semibold text-center"
+                    >
+                      D
+                    </td>
+                    <td class="border-r border-black p-2">
+                      <span class="font-bold">3923.90.9000</span> <br />
+                      HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
+                      MANUFACTURER:C-TECH INDUSTRIES<br />
+                      PART #:8.925-157.0 HOSE NONMETALLIC
+                    </td>
+                    <td class="border-r border-black p-2 font-semibold">EA</td>
+                    <td class="border-r border-black p-2 font-semibold">35</td>
+                    <td class="border-r border-black p-2 font-semibold"></td>
+                    <td class="border-r border-black p-2 font-semibold">
+                      EAR99
+                    </td>
+                    <td class="border-r border-black p-2 font-semibold"></td>
+                    <td class="border-r border-black p-2 font-semibold">NLR</td>
+                    <td class="p-2 font-bold text-left border-r border-black">
+                      $27,885.00
+                    </td>
+                    <td class="p-2 font-bold text-right"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="grid grid-cols-2 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    30. DDTC Applicant Registration Number:
+                  </div>
+                  <div class="block font-bold border-black p-2 w-16"></div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    31. Eligible Party Certification:
+                  </div>
+                  <div class="flex gap-2">
+                    <div class="block font-bold border-black p-2 border-r">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        Yes
+                      </label>
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                      >
+                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                32.<label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here if there are any remaining non-licensable Schedule
+                  B / HTS Numbers that are valued $2500.00 or less and that do
+                  not otherwise require AES filing.
+                </label>
+              </div>
+              <div class="border-b border-black block font-bold p-2">
+                33.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here if the USPPI authorizes the above named forwarder
+                  to act as its true and lawful agent for purposes of preparing
+                  and filing the Electronic Export Information ("EEI") in
+                  accordance with the laws and regulations of the United States.
+                </label>
+              </div>
+              <div class="grid grid-cols-2">
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  35. USPPI E-mail Address:
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  {{ finalCommercialInvoiceData.email }}
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  37. Printed Name of Duly authorized officer or employee:
+                </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  Tony Joseph
+                </div>
+              </div>
+              <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >38. Signature</span
+                  >
+                  <div class="p-2 text-sm italic font-serif"></div>
+                </div>
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >39. Title</span
+                  >
+                  <div class="p-2 font-semibold">CEO</div>
+                </div>
+                <div class="">
+                  <div class="block font-bold p-2 border-b border-black">
+                    40. Date
+                  </div>
+
+                  <div class="p-2 font-semibold">11/5/25</div>
+                </div>
+              </div>
+
+              <div class="border-b border-black block font-bold p-2">
+                33.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                >
+                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  Check here to validate Electronic Signature. Electronic
+                  signatures must be typed in all capital letters in Box 38 in
+                  order to be valid.
+                </label>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </section>
+
+    <div
+      class="flex justify-between pt-6 border-t border-gray-300 print:hidden"
+    >
+      <button
+        type="button"
+        (click)="prevStep()"
+        [disabled]="currentStep === 1"
+        class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-gray-500 disabled:opacity-50"
+      >
+        &larr; Previous
+      </button>
+
+      <div class="flex flex-col space-y-2 items-end">
+        <div class="flex space-x-4">
+          <button
+            *ngIf="currentStep === totalSteps"
+            (click)="postInvoice()"
+            type="button"
+            [disabled]="generateLoding"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!generateLoding">Generate Commercial Invoice</span>
+            <span *ngIf="generateLoding"> Generating... </span>
+          </button>
+          <button
+            *ngIf="currentStep === totalSteps"
+            (click)="printCommercialInvoice()"
+            type="button"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
+          >
+            Print
+          </button>
+        </div>
+
+        <button
+          *ngIf="currentStep < totalSteps"
+          type="button"
+          (click)="nextStep()"
+          [disabled]="currentStep === 1 && selection.selected.length === 0"
+          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-600 disabled:opacity-50"
+        >
+          {{
+            currentStep === 1
+              ? "Next: Enter Details →"
+              : "Review & Generate Invoice →"
+          }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

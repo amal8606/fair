@@ -26,11 +26,17 @@ export class SideNavComponent {
     this.onClick.emit();
   }
 
-  public showMenuInvoice: boolean = false;
+  public showProFormaMenu: boolean = false;
+  public showCommercialInvoiceMenu: boolean = false;
 
-  public toggleMenuReports(): void {
-    this.showMenuInvoice = !this.showMenuInvoice;
+  public toggleProFormaMenu(): void {
+    this.showProFormaMenu = !this.showProFormaMenu;
   }
+
+  public toggleCommercialInvoiceMenu(): void {
+    this.showCommercialInvoiceMenu = !this.showCommercialInvoiceMenu;
+  }
+
   // public toggleSideNavigation(): void {
   //   this.navigationService.toggleSideNavigation();
   // }
@@ -38,6 +44,4 @@ export class SideNavComponent {
     localStorage.clear();
     this.route.navigate(['/login']);
   }
-
-  public showDealSubmenu = false;
 }
