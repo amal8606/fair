@@ -69,10 +69,12 @@ export class InvoicedProFormaComponent {
   public sortedData = new MatTableDataSource<any>();
   public isLoading: boolean = false;
   public matHeaders: string[] = [
-    'invoiceNo',
-    'date',
-    'customer',
-    'amount',
+    'proformaNumber',
+    'customerId',
+    'freightType',
+    'createdAt',
+    'estimatedShipDate',
+    'totalAmount',
     'status',
   ];
   ngOnInit(): void {
@@ -89,8 +91,9 @@ export class InvoicedProFormaComponent {
     this.invoiceService.getProFormaInvoiceData(startDate, endDate).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.invoices.data = res;
+        this.sortedData.data = res;
         this.toastrService.success('Invoiced Pro Forma fetched successfully');
-        this.invoices = res;
       },
       error: (err) => {},
     });
@@ -107,18 +110,22 @@ export class InvoicedProFormaComponent {
     this.sortedData.data = data.sort((a: any, b: any) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'commercialInvoiceNumber':
-          return this.compare(
-            a.commercialInvoiceNumber,
-            b.commercialInvoiceNumber,
-            isAsc
-          );
+        case 'proformaNumber':
+          return this.compare(a.proformaNumber, b.proformaNumber, isAsc);
         case 'customerId':
           return this.compare(a.customerId, b.customerId, isAsc);
-        case 'finalDestination':
-          return this.compare(a.finalDestination, b.finalDestination, isAsc);
+        case 'freightType':
+          return this.compare(a.freightType, b.freightType, isAsc);
+
+        case 'createdAt':
+          return this.compare(a.createdAt, b.createdAt, isAsc);
+
+        case 'estimatedShipDate':
+          return this.compare(a.estimatedShipDate, b.estimatedShipDate, isAsc);
         case 'totalAmount':
           return this.compare(a.totalAmount, b.totalAmount, isAsc);
+        case 'status':
+          return this.compare(a.status, b.status, isAsc);
         default:
           return 0;
       }
@@ -136,5 +143,14 @@ export class InvoicedProFormaComponent {
       (c: any) => c.organizationId == customerId
     );
     return customer?.name || '';
+  }
+  public viewModel: boolean = false;
+  public proformaDetails: any;
+  public openModel(element: any) {
+    this.viewModel = true;
+    this.proformaDetails = element;
+  }
+  public closeModel() {
+    this.viewModel = false;
   }
 }

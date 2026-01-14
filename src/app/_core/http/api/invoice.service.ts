@@ -11,7 +11,7 @@ export class InvoiceService {
 
   public getProFormaInvoiceData(startDate: any, endDate: any): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/Invoice/proforma-invoices?startDate=${startDate}&endDate=${endDate}'`
+      `${environment.api}/Invoice/proforma-invoices?startDate=${startDate}&endDate=${endDate}`
     );
   }
   public getProFormaInvoicablePO(): Observable<any> {
@@ -24,5 +24,8 @@ export class InvoiceService {
       `${environment.api}/Invoice/proforma-invoices`,
       proForm
     );
+  }
+  public getProFormaInvoiceById(id: any): Observable<any> {
+    return this.http.get<any>(`${environment.api}/Invoice/proforma/${id}`);
   }
 }

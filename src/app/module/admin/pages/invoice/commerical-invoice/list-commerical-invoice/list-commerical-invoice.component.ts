@@ -75,7 +75,7 @@ export class ListCommericalInvoiceComponent {
       Validators.required
     ),
   });
-  ciNumber: any;
+  ciData: any;
   public showModel: boolean = false;
   ngOnInit(): void {
     this.orgainizationService.getOrganization().subscribe({
@@ -116,7 +116,8 @@ export class ListCommericalInvoiceComponent {
       });
   }
 
-  public openViewCIModel() {
+  public openViewCIModel(data: any) {
+    this.ciData = data;
     this.showModel = !this.showModel;
   }
 
@@ -155,7 +156,6 @@ export class ListCommericalInvoiceComponent {
     }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
-  // csv download
 
   public options = {
     fieldSeparator: ',',

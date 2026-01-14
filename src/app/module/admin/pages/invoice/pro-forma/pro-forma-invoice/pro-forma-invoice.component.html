@@ -773,8 +773,8 @@
             [disabled]="isLoading"
             class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
-            <span *ngIf="!isLoading">Generate Pro Forma</span>
-            <span *ngIf="isLoading"> Generating... </span>
+            <span *ngIf="!generateLoading">Generate Pro Forma</span>
+            <span *ngIf="generateLoading"> Generating... </span>
           </button>
           <button
             *ngIf="currentStep === totalSteps"

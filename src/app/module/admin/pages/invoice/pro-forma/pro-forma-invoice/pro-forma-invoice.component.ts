@@ -15,6 +15,7 @@ import { PoService } from '../../../../../../_core/http/api/po.service';
 import { InvoiceService } from '../../../../../../_core/http/api/invoice.service';
 import { OrgainizationService } from '../../../../../../_core/http/api/orginization.service';
 import { InvoicedProFormaComponent } from '../invoiced-pro-forma/invoiced-pro-forma.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pro-forma-invoice',
@@ -31,6 +32,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     purchaseOrderId: new FormControl(null),
     customerId: new FormControl(null, Validators.required),
     shipToId: new FormControl(0),
+    customerAddressId: new FormControl(0),
     freightType: new FormControl('PICK UP'),
     currencyCode: new FormControl('USD'),
     totalAmount: new FormControl(0, Validators.min(0)),
@@ -79,7 +81,8 @@ export class ProFormaInvoiceComponent implements OnInit {
   constructor(
     private readonly poService: PoService,
     private readonly invoiceService: InvoiceService,
-    private readonly orgService: OrgainizationService
+    private readonly orgService: OrgainizationService,
+    private readonly toastr: ToastrService
   ) {}
 
   public createProformaItemFormGroup(item?: any): FormGroup {
@@ -263,6 +266,9 @@ export class ProFormaInvoiceComponent implements OnInit {
       this.proFormaForm
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
+      this.proFormaForm
+        .get('customerAddressId')
+        ?.setValue(selectedAddress.addressId);
     }
   }
 
@@ -355,6 +361,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       purchaseOrderId: formValue.purchaseOrderId,
       customerId: formValue.customerId,
       shipToId: formValue.shipToId,
+      customerAddressId: formValue.customerAddressId,
       freightType: formValue.freightType,
       currencyCode: formValue.currencyCode,
       totalAmount: subTotal,
@@ -409,20 +416,28 @@ export class ProFormaInvoiceComponent implements OnInit {
 
     this.currentStep = 3;
   }
-  public generateLoding: boolean = false;
+  public generateLoading: boolean = false;
   postInvoice() {
-    this.generateLoding = true;
+    this.generateLoading = true;
     this.invoiceService
       .postProFormaInvoiceData(this.finalProFormaPostData)
       .subscribe({
         next: (res) => {
-          this.generateLoding = false;
-          this.currentStep = 3;
+          this.generateLoading = false;
+          this.currentStep = 1;
+          this.toastr.success('Pro Forma Invoice generated successfully.');
+          this.proFormaForm.reset();
+          this.itemsArray.clear();
+          this.finalInvoiceData = null;
+          this.getProFormaInvoicablePO();
+        },
+        error: (err) => {
+          this.generateLoading = false;
+          this.toastr.error('Error generating Pro Forma Invoice.');
         },
       });
   }
   printProForma() {
-    console.log(this.finalInvoiceData);
     window.print();
   }
 
