@@ -1,1097 +1,1211 @@
 <section
-  class="fixed flex items-center justify-center bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto sm:inset-0 h-[calc(100%-1rem)] md:h-full"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
   (click)="closeModel()"
 >
-  <div
+  <div 
+    class="relative w-full h-full p-4"
     (click)="$event.stopPropagation()"
-    class="relative w-full max-w-6xl max-h-[90vh]"
   >
-    <div class="relative bg-white rounded-lg shadow my-8">
-      <mat-tab-group class="hide-tab-header-on-print">
-        <mat-tab label="COMMERCIAL INVOICE">
-          <div
-            *ngIf="finalCommercialInvoiceData"
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
-            style="font-size: 10pt"
+    <!-- Modal Container -->
+    <div class="bg-white rounded-xl shadow-2xl h-full flex flex-col overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-blue-100 rounded-lg">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">Commercial Invoice Viewer</h2>
+            <p class="text-sm text-gray-500">Invoice #{{ ciNumber }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg">
+            <span class="text-sm text-gray-600">Tab:</span>
+            <span class="text-sm font-medium">{{ getCurrentTabName() }}</span>
+          </div>
+          
+          <button 
+            class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
+            (click)="printDocument()"
+            title="Print"
           >
-            <div
-              class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
-            >
-              <p>COMMERCIAL INVOICE</p>
-            </div>
-            <div class="flex justify-between items-start mb-4 print:mb-2">
-              <div class="flex flex-col gap-x-3">
-                <span
-                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  REFERENCE DETAILS
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  DATE -
-                  {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
-                  }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  INVOICE NUMBER -
-                  {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  TERMS OF SALE - {{ finalCommercialInvoiceData.termsOfSale }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  FINAL DESTINATION -
-                  {{ finalCommercialInvoiceData.finalDestination }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  CURRENCY OF SALE - {{ finalCommercialInvoiceData.currency }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  MODE OF TRANSPORT -
-                  {{ finalCommercialInvoiceData.modeOfTransport }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  TERMS OF SHIPPING -
-                  {{ finalCommercialInvoiceData.termsOfShipping }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  PLACE OF RECEIPT -
-                  {{ finalCommercialInvoiceData.placeOfReceipt }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  TERMS OF PAYMENT -
-                  {{ finalCommercialInvoiceData.termsOfPayment }}
-                </span>
-              </div>
-              <div>
-                <div class="w-96 h-60 flex-shrink-0">
-                  <img
-                    src="companyLogo.png"
-                    alt="FM Logo"
-                    class="h-full w-full"
-                  />
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <span
-                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  SHIPPER INFORMATION
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  TAX ID - {{ finalCommercialInvoiceData.taxId }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  EIN - {{ finalCommercialInvoiceData.ein }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  COMPANY -{{ finalCommercialInvoiceData.sellerName }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  Contact Name - {{ finalCommercialInvoiceData.contactName }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  {{ finalCommercialInvoiceData.sellerAddress }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  Contact No - {{ finalCommercialInvoiceData.contactNo }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  E-mail - {{ finalCommercialInvoiceData.email }}
-                </span>
-              </div>
-            </div>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+          </button>
+          
+          <button 
+            class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
+            (click)="closeModel()"
+            title="Close"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
 
+      <!-- Tab Navigation -->
+      <div class="border-b border-gray-200">
+        <mat-tab-group 
+          class="h-full"
+          animationDuration="0ms"
+          [selectedIndex]="selectedTabIndex"
+          (selectedIndexChange)="selectedTabIndex = $event"
+        >
+          <mat-tab label="COMMERCIAL INVOICE">
+            <!-- Keep existing COMMERCIAL INVOICE content exactly as is -->
             <div
-              class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
+              *ngIf="finalCommercialInvoiceData"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              style="font-size: 10pt"
             >
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  CUSTOMER
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p class="font-semibold">
-                    {{ finalCommercialInvoiceData.customerName }}
-                  </p>
-                  <p>
-                    {{ finalCommercialInvoiceData.customerAddress }}
-                  </p>
-                  <p>Phone#: {{ finalCommercialInvoiceData.contactNo }}</p>
-                </div>
-              </div>
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  SHIP TO
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p class="font-semibold">
-                    {{ finalCommercialInvoiceData.customerName }}
-                  </p>
-                  <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
-                </div>
-              </div>
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  FREIGHT INFO
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p>TOTAL NUMBER OF PACKAGES</p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
-            >
-              <table
-                class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
-              >
-                <thead class="bg-[#a5b98b]">
-                  <tr>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
-                    >
-                      LN#
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      PART NUMBER
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      UI
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
-                    >
-                      DESCRIPTION
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      PO#
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      COUNTRY OF ORIGIN
-                    </th>
-                    <th
-                      class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
-                    >
-                      QTY
-                    </th>
-                    <th
-                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      UNIT PRICE
-                    </th>
-                    <th
-                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      Total AMOUNT
-                    </th>
-                  </tr>
-                </thead>
-                <tbody
-                  class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
-                >
-                  <tr
-                    *ngFor="
-                      let item of finalCommercialInvoiceData.items;
-                      let i = index
-                    "
-                    class=""
-                  >
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ i + 1 }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.partNumber }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      <p class="font-medium">
-                        {{ item.description }}
-                      </p>
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.poNumber }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.countryOfOrgin }}
-                    </td>
-                    <td class="p-1 align-top text-right border border-gray-400">
-                      {{ item.quantity }}
-                    </td>
-                    <td class="p-1 align-top text-right border border-gray-400">
-                      {{
-                        item.unitPrice
-                          | currency
-                            : finalCommercialInvoiceData.totals.currency
-                            : "symbol"
-                            : "1.2-2"
-                      }}
-                    </td>
-                    <td
-                      class="p-1 align-top text-right font-semibold border border-gray-400"
-                    >
-                      {{
-                        item.totalPrice
-                          | currency
-                            : finalCommercialInvoiceData.totals.currency
-                            : "symbol"
-                            : "1.2-2"
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="flex gap-3 justify-between">
+              <!-- Original COMMERCIAL INVOICE content -->
               <div
-                class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+                class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
               >
-                <div class="bg-[#a5b98b] px-2 py-1">
-                  <p class="font-semibold bg text-white">
-                    Declaration Statement
-                  </p>
-                </div>
-                <div class="px-2">
-                  <p
-                    class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                <p>COMMERCIAL INVOICE</p>
+              </div>
+              <div class="flex justify-between items-start mb-4 print:mb-2">
+                <div class="flex flex-col gap-x-3">
+                  <span
+                    class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
                   >
-                    I certify that the information on this invoice is true and
-                    correct, and the content and value of the shipment as stated
-                    above.
-                  </p>
+                    REFERENCE DETAILS
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    DATE -
+                    {{
+                      finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    INVOICE NUMBER -
+                    {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    TERMS OF SALE - {{ finalCommercialInvoiceData.termsOfSale }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    FINAL DESTINATION -
+                    {{ finalCommercialInvoiceData.finalDestination }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    CURRENCY OF SALE - {{ finalCommercialInvoiceData.currency }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    MODE OF TRANSPORT -
+                    {{ finalCommercialInvoiceData.modeOfTransport }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    TERMS OF SHIPPING -
+                    {{ finalCommercialInvoiceData.termsOfShipping }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    PLACE OF RECEIPT -
+                    {{ finalCommercialInvoiceData.placeOfReceipt }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    TERMS OF PAYMENT -
+                    {{ finalCommercialInvoiceData.termsOfPayment }}
+                  </span>
+                </div>
+                <div>
+                  <div class="w-96 h-60 flex-shrink-0">
+                    <img
+                      src="companyLogo.png"
+                      alt="FM Logo"
+                      class="h-full w-full"
+                    />
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <span
+                    class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    SHIPPER INFORMATION
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    TAX ID - {{ finalCommercialInvoiceData.taxId }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    EIN - {{ finalCommercialInvoiceData.ein }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    COMPANY -{{ finalCommercialInvoiceData.sellerName }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    Contact Name - {{ finalCommercialInvoiceData.contactName }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    {{ finalCommercialInvoiceData.sellerAddress }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    Contact No - {{ finalCommercialInvoiceData.contactNo }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    E-mail - {{ finalCommercialInvoiceData.email }}
+                  </span>
                 </div>
               </div>
-              <div class="w-1/3">
+
+              <div
+                class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
+              >
+                <div>
+                  <p
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    CUSTOMER
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p class="font-semibold">
+                      {{ finalCommercialInvoiceData.customerName }}
+                    </p>
+                    <p>
+                      {{ finalCommercialInvoiceData.customerAddress }}
+                    </p>
+                    <p>Phone#: {{ finalCommercialInvoiceData.contactNo }}</p>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    SHIP TO
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p class="font-semibold">
+                      {{ finalCommercialInvoiceData.customerName }}
+                    </p>
+                    <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    FREIGHT INFO
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p>TOTAL NUMBER OF PACKAGES</p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
+              >
                 <table
-                  class="w-full border-collapse border border-gray-400 text-sm print:text-[8pt]"
+                  class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
                 >
-                  <tbody>
+                  <thead class="bg-[#a5b98b]">
                     <tr>
-                      <td
-                        class="p-1 border border-gray-400 font-semibold w-1/2"
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
                       >
-                        Subtotal
+                        LN#
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        PART NUMBER
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        UI
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
+                      >
+                        DESCRIPTION
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        PO#
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        COUNTRY OF ORIGIN
+                      </th>
+                      <th
+                        class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
+                      >
+                        QTY
+                      </th>
+                      <th
+                        class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        UNIT PRICE
+                      </th>
+                      <th
+                        class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        Total AMOUNT
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
+                  >
+                    <tr
+                      *ngFor="
+                        let item of finalCommercialInvoiceData.commercialInvoiceItems;
+                        let i = index
+                      "
+                      class=""
+                    >
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ i + 1 }}
                       </td>
-                      <td
-                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
-                      >
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.partNumber }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.ui }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        <p class="font-medium">
+                          {{ item.description }}
+                        </p>
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.poNumber }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.countryOfOrgin }}
+                      </td>
+                      <td class="p-1 align-top text-right border border-gray-400">
+                        {{ item.quantity }}
+                      </td>
+                      <td class="p-1 align-top text-right border border-gray-400">
                         {{
-                          finalCommercialInvoiceData.totals.subTotal
+                          item.unitPrice
                             | currency
-                              : finalCommercialInvoiceData.totals.currency
+                              : finalCommercialInvoiceData.currency
                               : "symbol"
                               : "1.2-2"
                         }}
                       </td>
-                    </tr>
-                    <tr>
                       <td
-                        class="p-1 border border-gray-400 font-semibold w-1/2"
-                      >
-                        Taxable
-                      </td>
-                      <td
-                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                        class="p-1 align-top text-right font-semibold border border-gray-400"
                       >
                         {{
-                          finalCommercialInvoiceData.totals.taxableAmount
+                          item.totalPrice
                             | currency
-                              : finalCommercialInvoiceData.totals.currency
+                              : finalCommercialInvoiceData.currency
                               : "symbol"
                               : "1.2-2"
                         }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        class="p-1 border border-gray-400 font-semibold w-1/2"
-                      >
-                        Shipping Charge
-                      </td>
-                      <td
-                        class="p-1 border border-gray-400 text-right font-bold w-1/2"
-                      >
-                        {{
-                          finalCommercialInvoiceData.totals.shippingCharge
-                            | currency
-                              : finalCommercialInvoiceData.totals.currency
-                              : "symbol"
-                              : "1.2-2"
-                        }}
-                      </td>
-                    </tr>
-                    <tr class="">
-                      <td
-                        class="p-1 border border-gray-400 font-bold text-white"
-                      >
-                        Grand Total
-                      </td>
-                      <td
-                        class="p-1 border border-gray-400 text-right font-bold w-1/2 text-white"
-                      >
-                        {{
-                          finalCommercialInvoiceData.totals.grandTotal
-                            | currency
-                              : finalCommercialInvoiceData.totals.currency
-                              : "symbol"
-                              : "1.2-2"
-                        }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="p-1 border border-gray-400 font-semibold">
-                        Currency
-                      </td>
-                      <td class="p-1 border border-gray-400 text-right">
-                        {{ finalCommercialInvoiceData.totals.currency }}
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
 
-            <div class="flex justify-end text-sm mt-8 print:mt-4">
-              <div class="w-1/3 text-center mr-8">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                  {{ finalCommercialInvoiceData.signerName }}
+              <div class="flex gap-3 justify-between">
+                <div
+                  class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+                >
+                  <div class="bg-[#a5b98b] px-2 py-1">
+                    <p class="font-semibold bg text-white">
+                      Declaration Statement
+                    </p>
+                  </div>
+                  <div class="px-2">
+                    <p
+                      class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                    >
+                      I certify that the information on this invoice is true and
+                      correct, and the content and value of the shipment as stated
+                      above.
+                    </p>
+                  </div>
                 </div>
-                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                  FAIRMOUNT INTERNATIONAL LLC
-                </div>
-              </div>
-              <div class="w-1/3 text-center">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                  {{ finalCommercialInvoiceData.signDate | date }}
-                </div>
-                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                  Date
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-        <mat-tab label="EXPORT PACKING LIST">
-          <div
-            *ngIf="finalCommercialInvoiceData"
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
-            style="font-size: 10pt"
-          >
-            <div
-              class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
-            >
-              <p>EXPORT PACKING LIST</p>
-            </div>
-            <div class="flex justify-between items-start mb-4 print:mb-2">
-              <div class="flex flex-col gap-x-3">
-                <span
-                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  REFERENCE DETAILS
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  DATE -
-                  {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
-                  }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  Bill OF LANDIND/AWB NO
-                  {{ finalCommercialInvoiceData.billOfLandingAwbNo }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  INVOICE NUMBER -
-                  {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  NO. BOXES -
-                  {{ finalCommercialInvoiceData.noOfBoxes }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  NO OF PALLETS - {{ finalCommercialInvoiceData.noOfPallets }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  GROSS WEIGHT -
-                  {{ finalCommercialInvoiceData.grossWeight }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  MARKS & NUMBERS -
-                  {{ finalCommercialInvoiceData.marksandNumbers }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  MODE OF TRANSPORT -
-                  {{ finalCommercialInvoiceData.modeOfTransport }}
-                </span>
-
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  PLACE OF RECEIPT -
-                  {{ finalCommercialInvoiceData.placeOfReceipt }}
-                </span>
-              </div>
-              <div>
-                <div class="w-96 h-60 flex-shrink-0">
-                  <img
-                    src="companyLogo.png"
-                    alt="FM Logo"
-                    class="h-full w-full"
-                  />
-                </div>
-              </div>
-
-              <div class="flex flex-col">
-                <span
-                  class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  SHIPPER INFORMATION
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  TAX ID - {{ finalCommercialInvoiceData.taxId }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  EIN - {{ finalCommercialInvoiceData.ein }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  COMPANY -{{ finalCommercialInvoiceData.sellerName }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  Contact Name - {{ finalCommercialInvoiceData.contactName }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  {{ finalCommercialInvoiceData.sellerAddress }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  Contact No - {{ finalCommercialInvoiceData.contactNo }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  E-mail - {{ finalCommercialInvoiceData.email }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  E-mail - {{ finalCommercialInvoiceData.email2 }}
-                </span>
-                <span
-                  class="font-semibold print:font-light text-sm print:text-xs px-1"
-                >
-                  K11 - {{ finalCommercialInvoiceData.k11 }}
-                </span>
-              </div>
-            </div>
-
-            <div
-              class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
-            >
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  CONSIGNEE
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p class="font-semibold">
-                    {{ finalCommercialInvoiceData.customerName }}
-                  </p>
-                  <p>
-                    {{ finalCommercialInvoiceData.customerAddress }}
-                  </p>
-                  <p>Phone#: {{ finalCommercialInvoiceData.contactNo }}</p>
-                </div>
-              </div>
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  NOTIFY PARTY /OTHER REFERENCE
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p class="font-semibold">
-                    {{ finalCommercialInvoiceData.customerName }}
-                  </p>
-                  <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
-                </div>
-              </div>
-              <div>
-                <p
-                  class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
-                >
-                  FREIGHT INFO
-                </p>
-                <div class="whitespace-pre-wrap">
-                  <p>TOTAL NUMBER OF PACKAGES</p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
-            >
-              <table
-                class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
-              >
-                <thead class="bg-[#a5b98b]">
-                  <tr>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
-                    >
-                      LN#
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      PART NUMBER
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      QTY
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      UI
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
-                    >
-                      DESCRIPTION
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      PO#
-                    </th>
-                    <th
-                      class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      COUNTRY OF ORIGIN
-                    </th>
-                    <th
-                      class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
-                    >
-                      HSC
-                    </th>
-                    <th
-                      class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
-                    >
-                      WEIGHT & DIM
-                    </th>
-                  </tr>
-                </thead>
-                <tbody
-                  class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
-                >
-                  <tr
-                    *ngFor="
-                      let item of finalCommercialInvoiceData.items;
-                      let i = index
-                    "
-                    class=""
+                <div class="w-1/3">
+                  <table
+                    class="w-full border-collapse border border-gray-400 text-sm print:text-[8pt]"
                   >
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ i + 1 }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.partNumber }}
-                    </td>
-                    <td class="p-1 align-top text-right border border-gray-400">
-                      {{ item.quantity }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      <p class="font-medium">
-                        {{ item.description }}
-                      </p>
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.poNumber }}
-                    </td>
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.countryOfOrgin }}
-                    </td>
+                    <tbody>
+                      <tr>
+                        <td
+                          class="p-1 border border-gray-400 font-semibold w-1/2"
+                        >
+                          Subtotal
+                        </td>
+                        <td
+                          class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                        >
+                          {{
+                            finalCommercialInvoiceData.totalAmount
+                              | currency
+                                : finalCommercialInvoiceData.currency
+                                : "symbol"
+                                : "1.2-2"
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="p-1 border border-gray-400 font-semibold w-1/2"
+                        >
+                          Taxable
+                        </td>
+                        <td
+                          class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                        >
+                          {{
+                            finalCommercialInvoiceData.totalAmount
+                              | currency
+                                : finalCommercialInvoiceData.currency
+                                : "symbol"
+                                : "1.2-2"
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="p-1 border border-gray-400 font-semibold w-1/2"
+                        >
+                          Shipping Charge
+                        </td>
+                        <td
+                          class="p-1 border border-gray-400 text-right font-bold w-1/2"
+                        >
+                          {{
+                            finalCommercialInvoiceData?.totals?.shippingCharge
+                              | currency
+                                : finalCommercialInvoiceData?.totals?.currency
+                                : "symbol"
+                                : "1.2-2"
+                          }}
+                        </td>
+                      </tr>
+                      <tr class="">
+                        <td
+                          class="p-1 border border-gray-400 font-bold text-white"
+                        >
+                          Grand Total
+                        </td>
+                        <td
+                          class="p-1 border border-gray-400 text-right font-bold w-1/2 text-white"
+                        >
+                          {{
+                            finalCommercialInvoiceData.totalAmount
+                              | currency
+                                : finalCommercialInvoiceData?.currency
+                                : "symbol"
+                                : "1.2-2"
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-1 border border-gray-400 font-semibold">
+                          Currency
+                        </td>
+                        <td class="p-1 border border-gray-400 text-right">
+                          {{ finalCommercialInvoiceData?.currency }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-                    <td class="p-1 align-top border border-gray-400">
-                      {{ item.hsc }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="flex justify-end text-sm mt-8 print:mt-4">
+                <div class="w-1/3 text-center mr-8">
+                  <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                    {{ finalCommercialInvoiceData?.contactName }}
+                  </div>
+                  <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                    FAIRMOUNT INTERNATIONAL LLC
+                  </div>
+                </div>
+                <div class="w-1/3 text-center">
+                  <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                    {{ finalCommercialInvoiceData?.CreatedAt | date }}
+                  </div>
+                  <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                    Date
+                  </div>
+                </div>
+              </div>
             </div>
+          </mat-tab>
 
-            <div class="flex gap-3 justify-between">
+          <mat-tab label="EXPORT PACKING LIST">
+            <div
+              *ngIf="finalCommercialInvoiceData"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              style="font-size: 10pt"
+            >
               <div
-                class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+                class="text-center text-2xl text-[#a5b98b] font-bold mb-4 print:text-[16pt]"
               >
-                <div class="bg-[#a5b98b] px-2 py-1">
-                  <p class="font-semibold bg text-white">
-                    Declaration Statement
-                  </p>
+                <p>EXPORT PACKING LIST</p>
+              </div>
+              <div class="flex justify-between items-start mb-4 print:mb-2">
+                <div class="flex flex-col gap-x-3">
+                  <span
+                    class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    REFERENCE DETAILS
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    DATE -
+                    {{
+                      finalCommercialInvoiceData.packingList[0]?.createdAt | date : "mediumDate"
+                    }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    Bill OF LANDIND/AWB NO
+                    {{ finalCommercialInvoiceData.packingList[0]?.billOfLandingAwbNo }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    INVOICE NUMBER -
+                    {{ finalCommercialInvoiceData.packingList[0]?.commercialInvoiceNumber }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    NO. BOXES -
+                    {{ finalCommercialInvoiceData.packingList[0]?.numberOfBoxes }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    NO OF PALLETS - {{ finalCommercialInvoiceData.packingList[0]?.numberOfPallets }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    GROSS WEIGHT -
+                    {{ finalCommercialInvoiceData.packingList[0]?.grossWeight }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    MARKS & NUMBERS -
+                    {{ finalCommercialInvoiceData.packingList[0]?.marksandNumbers }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    MODE OF TRANSPORT -
+                    {{ finalCommercialInvoiceData.packingList[0]?.modeOfTransport }}
+                  </span>
+
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    PLACE OF RECEIPT -
+                    {{ finalCommercialInvoiceData.packingList[0]?.placeOfReceipt }}
+                  </span>
                 </div>
-                <div class="px-2">
+                <div>
+                  <div class="w-96 h-60 flex-shrink-0">
+                    <img
+                      src="companyLogo.png"
+                      alt="FM Logo"
+                      class="h-full w-full"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <span
+                    class="text-lg print:text-base font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    SHIPPER INFORMATION
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    TAX ID - {{ finalCommercialInvoiceData.packingList[0]?.taxId }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    EIN - {{ finalCommercialInvoiceData.packingList[0]?.ein }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    COMPANY -{{ finalCommercialInvoiceData.packingList[0]?.sellerName }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    Contact Name - {{ finalCommercialInvoiceData.packingList[0]?.contactName }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    {{ finalCommercialInvoiceData.packingList[0]?.sellerAddress }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    Contact No - {{ finalCommercialInvoiceData.packingList[0]?.contactNo }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    E-mail - {{ finalCommercialInvoiceData.packingList[0]?.email }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    E-mail - {{ finalCommercialInvoiceData.packingList[0]?.email2 }}
+                  </span>
+                  <span
+                    class="font-semibold print:font-light text-sm print:text-xs px-1"
+                  >
+                    K11 - {{ finalCommercialInvoiceData.packingList[0]?.k11 }}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="grid grid-cols-3 gap-4 mb-4 text-sm print:border-gray-400 py-2 print:text-[8pt]"
+              >
+                <div>
                   <p
-                    class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
                   >
-                    I certify that the information on this invoice is true and
-                    correct, and the content and value of the shipment as stated
-                    above.
+                    CONSIGNEE
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p class="font-semibold">
+                      {{ finalCommercialInvoiceData.packingList[0]?.customerName }}
+                    </p>
+                    <p>
+                      {{ finalCommercialInvoiceData.packingList[0]?.customerAddress }}
+                    </p>
+                    <p>Phone#: {{ finalCommercialInvoiceData.packingList[0]?.contactNo }}</p>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    NOTIFY PARTY /OTHER REFERENCE
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p class="font-semibold">
+                      {{ finalCommercialInvoiceData.packingList[0]?.customerName }}
+                    </p>
+                    <p>{{ finalCommercialInvoiceData.packingList[0]?.shipToAddress }}</p>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="text-lg font-semibold px-1 print:text-white text-white bg-[#a5b98b]"
+                  >
+                    FREIGHT INFO
+                  </p>
+                  <div class="whitespace-pre-wrap">
+                    <p>TOTAL NUMBER OF PACKAGES</p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="border rounded-lg overflow-hidden mb-4 print:border-gray-400"
+              >
+                <table
+                  class="min-w-full divide-y print:divide-black text-sm print:text-[8pt]"
+                >
+                  <thead class="bg-[#a5b98b]">
+                    <tr>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-10 border-r print:border-gray-400"
+                      >
+                        LN#
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        PART NUMBER
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        QTY
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        UI
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase border-r border-gray-400"
+                      >
+                        DESCRIPTION
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        PO#
+                      </th>
+                      <th
+                        class="p-1 text-left font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        COUNTRY OF ORIGIN
+                      </th>
+                      <th
+                        class="p-1 text-right font-bold text-white uppercase w-12 border-r border-gray-400"
+                      >
+                        HSC
+                      </th>
+                      <th
+                        class="p-1 text-right font-bold text-white uppercase w-24 border-r border-gray-400"
+                      >
+                        WEIGHT & DIM
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="bg-white divide-y print:divide-[#a5b98b] print:border-[#a5b98b]"
+                  >
+                    <tr
+                      *ngFor="
+                        let item of finalCommercialInvoiceData?.packingList[0]?.packingListItems;
+                        let i = index
+                      "
+                      class=""
+                    >
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ i + 1 }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.partNumber }}
+                      </td>
+                      <td class="p-1 align-top text-right border border-gray-400">
+                        {{ item.quantity }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.ui }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        <p class="font-medium">
+                          {{ item.description }}
+                        </p>
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.poNumber }}
+                      </td>
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.countryOfOrgin }}
+                      </td>
+
+                      <td class="p-1 align-top border border-gray-400">
+                        {{ item.hsc }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="flex gap-3 justify-between">
+                <div
+                  class="border border-gray-400 print:border-gray-400 print:text-[8pt] h-24 print:h-16 w-3/5 flex flex-col"
+                >
+                  <div class="bg-[#a5b98b] px-2 py-1">
+                    <p class="font-semibold bg text-white">
+                      Declaration Statement
+                    </p>
+                  </div>
+                  <div class="px-2">
+                    <p
+                      class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
+                    >
+                      I certify that the information on this invoice is true and
+                      correct, and the content and value of the shipment as stated
+                      above.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end text-sm mt-8 print:mt-4">
+                <div class="w-1/3 text-center mr-8">
+                  <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                    {{ finalCommercialInvoiceData.signerName }}
+                  </div>
+                  <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                    FAIRMOUNT INTERNATIONAL LLC
+                  </div>
+                </div>
+                <div class="w-1/3 text-center">
+                  <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                    {{ finalCommercialInvoiceData.signDate | date }}
+                  </div>
+                  <div class="text-xs text-gray-500 print:text-[#a5b98b]">
+                    Date
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
+            <!-- Keep existing SHIPPER'S LETTER OF INSTRUCTIONS content exactly as is -->
+            <div
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] overflow-auto h-[calc(100vh-140px)]"
+              style="font-size: 10pt"
+            >
+              <!-- Original SHIPPER'S LETTER OF INSTRUCTIONS content -->
+              <div
+                class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
+              >
+                <div class="border border-black p-2 text-center bg-gray-100">
+                  <p class="text-sm font-bold">
+                    Shipper's Letter of Instructions (SLI)
                   </p>
                 </div>
-              </div>
-            </div>
 
-            <div class="flex justify-end text-sm mt-8 print:mt-4">
-              <div class="w-1/3 text-center mr-8">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                  {{ finalCommercialInvoiceData.signerName }}
-                </div>
-                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                  FAIRMOUNT INTERNATIONAL LLC
-                </div>
-              </div>
-              <div class="w-1/3 text-center">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                  {{ finalCommercialInvoiceData.signDate | date }}
-                </div>
-                <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                  Date
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-        <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
-          <div
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt]"
-            style="font-size: 10pt"
-          >
-            <div
-              class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
-            >
-              <div class="border border-black p-2 text-center bg-gray-100">
-                <p class="text-sm font-bold">
-                  Shipper's Letter of Instructions (SLI)
-                </p>
-              </div>
-
-              <div class="grid grid-cols-3">
-                <div class="grid">
-                  <div class="p-2 border border-black">
-                    <span class="block font-bold">1. USPPI Name</span>
-                    <div class="font-semibold text-blue-700">47-1177753</div>
-                  </div>
-                  <div class="p-2 border border-black">
-                    <span class="block font-bold"
-                      >2. USPPI Address Including Zip Code:</span
-                    >
-                    <div class="font-semibold">Fairmount International LLC</div>
-                    <div class="font-semibold">11877 91st Ave</div>
-                    <div class="font-semibold">SEMINOLE , FL 33772</div>
-                  </div>
-                </div>
-                <div class="grid">
-                  <div class="p-2 border border-black">
-                    <span class="block font-bold"
-                      >3. Freight Location Company Name:</span
-                    >
-                    <div class="font-semibold text-blue-700">47-1177753</div>
-                  </div>
-                  <div class="p-2 border border-black">
-                    <span class="block font-bold"
-                      >2.Freight Location Address (if not box #2):</span
-                    >
-                    <div class="font-semibold">Fairmount International LLC</div>
-                    <div class="font-semibold">11877 91st Ave</div>
-                    <div class="font-semibold">SEMINOLE , FL 33772</div>
-                  </div>
-                </div>
-                <div class="grid">
-                  <div class="p-2 border border-black">
-                    <span class="block font-bold"
-                      >3. Freight Location Company Name:</span
-                    >
-                    <div class="font-semibold text-blue-700">47-1177753</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-3 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    6. USPPI EIN (IRS) No:
-                  </div>
-                  <div class="block font-bold border-black p-2">47-1177753</div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2">
-                    7. Related Party Indicator (select one):
-                  </div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    ☑ Related
-                  </div>
-                  <div class="block font-bold border-black p-2">
-                    ☑ Non-Related
-                  </div>
-                </div>
-              </div>
-              <div class="grid grid-cols-3 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    8. USPPI Reference#:
-                  </div>
-                  <div class="block font-bold border-black p-2"></div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2">
-                    9. Routed Export Transaction (select one):
-                  </div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    ☑ Yes
-                  </div>
-                  <div class="block font-bold border-black p-2">☑ No</div>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-3 border-b border-black">
-                <div class="p-2 border border-black">
-                  <div class="block font-bold">
-                    10. Ultimate Consignee Name & Address:
-                  </div>
-                  <div class="font-semibold mt-2">
-                    Merit International General Trading Co. W.LL
-                  </div>
-                  <div class="font-semibold">Block # 2, Building # 233,</div>
-                  <div class="font-semibold">
-                    Ardiya Industrial Area, Kuwait
-                  </div>
-                  <div class="font-semibold">
-                    Telephone (Office): +965-22055325, 22055326
-                  </div>
-                </div>
-                <div class="">
-                  <div class="font-bold border-b border-black p-2">
-                    11. Ultimate Consignee Type (select one):
-                  </div>
-                  <div class="text-left">
-                    <div class="font-semibold border-b border-black py-2">
-                      ☑ Direct Consumer
+                <!-- Rest of the original SLI content -->
+                <div class="grid grid-cols-3">
+                  <div class="grid">
+                    <div class="p-2 border border-black">
+                      <span class="block font-bold">1. USPPI Name</span>
+                      <div class="font-semibold text-blue-700">47-1177753</div>
                     </div>
-                    <div class="font-semibold border-b border-black py-2">
-                      ☑ Government Entity
+                    <div class="p-2 border border-black">
+                      <span class="block font-bold"
+                        >2. USPPI Address Including Zip Code:</span
+                      >
+                      <div class="font-semibold">Fairmount International LLC</div>
+                      <div class="font-semibold">11877 91st Ave</div>
+                      <div class="font-semibold">SEMINOLE , FL 33772</div>
                     </div>
-                    <div class="font-semibold border-b border-black py-2">
-                      ☑ Reseller
+                  </div>
+                  <div class="grid">
+                    <div class="p-2 border border-black">
+                      <span class="block font-bold"
+                        >3. Freight Location Company Name:</span
+                      >
+                      <div class="font-semibold text-blue-700">47-1177753</div>
                     </div>
-                    <div class="font-semibold py-2">☑ Other/Unknown</div>
+                    <div class="p-2 border border-black">
+                      <span class="block font-bold"
+                        >2.Freight Location Address (if not box #2):</span
+                      >
+                      <div class="font-semibold">Fairmount International LLC</div>
+                      <div class="font-semibold">11877 91st Ave</div>
+                      <div class="font-semibold">SEMINOLE , FL 33772</div>
+                    </div>
+                  </div>
+                  <div class="grid">
+                    <div class="p-2 border border-black">
+                      <span class="block font-bold"
+                        >3. Freight Location Company Name:</span
+                      >
+                      <div class="font-semibold text-blue-700">47-1177753</div>
+                    </div>
                   </div>
                 </div>
-                <div class="p-2 border border-black">
-                  <span class="block font-bold"
-                    >12. Intermediate Consignee Name & Address</span
-                  >
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
-                </div>
-              </div>
-              <div class="grid grid-cols-3 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    13. Sate of Origin:
-                  </div>
-                  <div class="block font-bold border-black p-2"></div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2">
-                    16. In-Bond Code:
-                  </div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    ☑ Related
-                  </div>
-                  <div class="block font-bold border-black p-2">
-                    ☑ Non-Related
-                  </div>
-                </div>
-              </div>
-              <div class="grid grid-cols-3 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    14. Country of Ultimate Destination:
-                  </div>
-                  <div class="block font-bold border-black p-2"></div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2">
-                    17. Entry Number:
-                  </div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    ☑ Related
-                  </div>
-                  <div class="block font-bold border-black p-2">
-                    ☑ Non-Related
-                  </div>
-                </div>
-              </div>
-              <div class="grid grid-cols-3 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    15. Hazardous Material:
-                  </div>
-                  <div class="block font-bold border-black p-2">☑ Yes</div>
-                  <div class="block font-bold border-black p-2">☑ No</div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2">
-                    18. FTZ Identifier:
-                  </div>
-                </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    ☑ Related
-                  </div>
-                  <div class="block font-bold border-black p-2">
-                    ☑ Non-Related
-                  </div>
-                </div>
-              </div>
 
-              <div class="border-b border-black block font-bold p-2">
-                INSTRUCTIONS TO FORWARDER:
-              </div>
-
-              <table class="w-full border-collapse">
-                <thead>
-                  <tr class="bg-gray-100 border-b border-black">
-                    <th class="border-r border-black p-1 text-left w-12">
-                      20. Domestic or Foreign (D/F)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-20">
-                      21. Schedule B / HTS Number and Commercial Commodity<br />
-                      Description For Vehicles: VIN/Year, Make, Model and<br />
-                      Vehicle Title Number are required
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-16">
-                      22. Quantity in Schedule B / HTS Units
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-16">
-                      23. DDTC Quantity and DDTC Unit of Measure
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-20">
-                      24. Shipping Weight (in Kilos)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      25. ECCN, EAR99 or USML Category No.
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      26. SME (Y/ N)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      27. Export License No., License Exception Symbol, D D TC
-                      Exemption No., D D TC ACM No. o r NLR
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      28. Value at the Port of Export ( U S Dollars)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      28. License Value by item (if applicable) ( US Dollars)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="border-b border-black align-top">
-                    <td
-                      class="border-r border-black p-2 font-semibold text-center"
-                    >
-                      D
-                    </td>
-                    <td class="border-r border-black p-2">
-                      <span class="font-bold">3923.90.9000</span> <br />
-                      HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
-                      MANUFACTURER:C-TECH INDUSTRIES<br />
-                      PART #:8.925-157.0 HOSE NONMETALLIC
-                    </td>
-                    <td class="border-r border-black p-2 font-semibold">EA</td>
-                    <td class="border-r border-black p-2 font-semibold">35</td>
-                    <td class="border-r border-black p-2 font-semibold"></td>
-                    <td class="border-r border-black p-2 font-semibold">
-                      EAR99
-                    </td>
-                    <td class="border-r border-black p-2 font-semibold"></td>
-                    <td class="border-r border-black p-2 font-semibold">NLR</td>
-                    <td class="p-2 font-bold text-left border-r border-black">
-                      $27,885.00
-                    </td>
-                    <td class="p-2 font-bold text-right"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="grid grid-cols-2 border-b border-black text-center">
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    30. DDTC Applicant Registration Number:
+                <div class="grid grid-cols-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      6. USPPI EIN (IRS) No:
+                    </div>
+                    <div class="block font-bold border-black p-2">47-1177753</div>
                   </div>
-                  <div class="block font-bold border-black p-2 w-16"></div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      7. Related Party Indicator (select one):
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      ☑ Related
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      ☑ Non-Related
+                    </div>
+                  </div>
                 </div>
-                <div class="flex gap-2 border border-black">
-                  <div class="block font-bold border-black p-2 border-r">
-                    31. Eligible Party Certification:
+                <div class="grid grid-cols-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      8. USPPI Reference#:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
                   </div>
-                  <div class="flex gap-2">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      9. Routed Export Transaction (select one):
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2 border-r">
                       ☑ Yes
                     </div>
                     <div class="block font-bold border-black p-2">☑ No</div>
                   </div>
                 </div>
-              </div>
 
-              <div class="border-b border-black block font-bold p-2">
-                32. ☑ Check here if there are any remaining non-licensable
-                Schedule B / HTS Numbers that are valued $2500.00 or less and
-                that do not otherwise require AES filing.
-              </div>
-              <div class="border-b border-black block font-bold p-2">
-                33. ☑ Check here if the USPPI authorizes the above named
-                forwarder to act as its true and lawful agent for purposes of
-                preparing and filing the Electronic Export Information ("EEI")
-                in accordance with the laws and regulations of the United
-                States.
-              </div>
-              <div class="grid grid-cols-2">
-                <div class="block font-bold p-2 border-r border-b border-black">
-                  35. USPPI E-mail Address:
-                </div>
-                <div
-                  class="block font-bold p-2 border-r border-b border-black"
-                ></div>
-                <div class="block font-bold p-2 border-r border-b border-black">
-                  37. Printed Name of Duly authorized officer or employee:
-                </div>
-                <div class="block font-bold p-2 border-r border-b border-black">
-                  Tony Joseph
-                </div>
-              </div>
-              <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
-                <div class="border-r border-black">
-                  <span class="block font-bold p-2 border-b border-black"
-                    >38. Signature</span
-                  >
-                  <div class="p-2 text-sm italic font-serif"></div>
-                </div>
-                <div class="border-r border-black">
-                  <span class="block font-bold p-2 border-b border-black"
-                    >39. Title</span
-                  >
-                  <div class="p-2 font-semibold">CEO</div>
-                </div>
-                <div class="">
-                  <div class="block font-bold p-2 border-b border-black">
-                    40. Date
+                <div class="grid grid-cols-3 border-b border-black">
+                  <div class="p-2 border border-black">
+                    <div class="block font-bold">
+                      10. Ultimate Consignee Name & Address:
+                    </div>
+                    <div class="font-semibold mt-2">
+                      Merit International General Trading Co. W.LL
+                    </div>
+                    <div class="font-semibold">Block # 2, Building # 233,</div>
+                    <div class="font-semibold">
+                      Ardiya Industrial Area, Kuwait
+                    </div>
+                    <div class="font-semibold">
+                      Telephone (Office): +965-22055325, 22055326
+                    </div>
                   </div>
-
-                  <div class="p-2 font-semibold">11/5/25</div>
+                  <div class="">
+                    <div class="font-bold border-b border-black p-2">
+                      11. Ultimate Consignee Type (select one):
+                    </div>
+                    <div class="text-left">
+                      <div class="font-semibold border-b border-black py-2">
+                        ☑ Direct Consumer
+                      </div>
+                      <div class="font-semibold border-b border-black py-2">
+                        ☑ Government Entity
+                      </div>
+                      <div class="font-semibold border-b border-black py-2">
+                        ☑ Reseller
+                      </div>
+                      <div class="font-semibold py-2">☑ Other/Unknown</div>
+                    </div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >12. Intermediate Consignee Name & Address</span
+                    >
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                    <div class="font-semibold"></div>
+                  </div>
                 </div>
-              </div>
+                <div class="grid grid-cols-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      13. Sate of Origin:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      16. In-Bond Code:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      ☑ Related
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      ☑ Non-Related
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      14. Country of Ultimate Destination:
+                    </div>
+                    <div class="block font-bold border-black p-2"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      17. Entry Number:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      ☑ Related
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      ☑ Non-Related
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      15. Hazardous Material:
+                    </div>
+                    <div class="block font-bold border-black p-2">☑ Yes</div>
+                    <div class="block font-bold border-black p-2">☑ No</div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      18. FTZ Identifier:
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      ☑ Related
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      ☑ Non-Related
+                    </div>
+                  </div>
+                </div>
 
-              <div class="border-b border-black block font-bold p-2">
-                33. ☑ Check here to validate Electronic Signature. Electronic
-                signatures must be typed in all capital letters in Box 38 in
-                order to be valid.
+                <div class="border-b border-black block font-bold p-2">
+                  INSTRUCTIONS TO FORWARDER:
+                </div>
+
+                <table class="w-full border-collapse">
+                  <thead>
+                    <tr class="bg-gray-100 border-b border-black">
+                      <th class="border-r border-black p-1 text-left w-12">
+                        20. Domestic or Foreign (D/F)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-20">
+                        21. Schedule B / HTS Number and Commercial Commodity<br />
+                        Description For Vehicles: VIN/Year, Make, Model and<br />
+                        Vehicle Title Number are required
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-16">
+                        22. Quantity in Schedule B / HTS Units
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-16">
+                        23. DDTC Quantity and DDTC Unit of Measure
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-20">
+                        24. Shipping Weight (in Kilos)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        25. ECCN, EAR99 or USML Category No.
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        26. SME (Y/ N)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        27. Export License No., License Exception Symbol, D D TC
+                        Exemption No., D D TC ACM No. o r NLR
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        28. Value at the Port of Export ( U S Dollars)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        28. License Value by item (if applicable) ( US Dollars)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-black align-top">
+                      <td
+                        class="border-r border-black p-2 font-semibold text-center"
+                      >
+                        D
+                      </td>
+                      <td class="border-r border-black p-2">
+                        <span class="font-bold">3923.90.9000</span> <br />
+                        HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
+                        MANUFACTURER:C-TECH INDUSTRIES<br />
+                        PART #:8.925-157.0 HOSE NONMETALLIC
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">EA</td>
+                      <td class="border-r border-black p-2 font-semibold">35</td>
+                      <td class="border-r border-black p-2 font-semibold"></td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        EAR99
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold"></td>
+                      <td class="border-r border-black p-2 font-semibold">NLR</td>
+                      <td class="p-2 font-bold text-left border-r border-black">
+                        $27,885.00
+                      </td>
+                      <td class="p-2 font-bold text-right"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="grid grid-cols-2 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      30. DDTC Applicant Registration Number:
+                    </div>
+                    <div class="block font-bold border-black p-2 w-16"></div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      31. Eligible Party Certification:
+                    </div>
+                    <div class="flex gap-2">
+                      <div class="block font-bold border-black p-2 border-r">
+                        ☑ Yes
+                      </div>
+                      <div class="block font-bold border-black p-2">☑ No</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border-b border-black block font-bold p-2">
+                  32. ☑ Check here if there are any remaining non-licensable
+                  Schedule B / HTS Numbers that are valued $2500.00 or less and
+                  that do not otherwise require AES filing.
+                </div>
+                <div class="border-b border-black block font-bold p-2">
+                  33. ☑ Check here if the USPPI authorizes the above named
+                  forwarder to act as its true and lawful agent for purposes of
+                  preparing and filing the Electronic Export Information ("EEI")
+                  in accordance with the laws and regulations of the United
+                  States.
+                </div>
+                <div class="grid grid-cols-2">
+                  <div class="block font-bold p-2 border-r border-b border-black">
+                    35. USPPI E-mail Address:
+                  </div>
+                  <div
+                    class="block font-bold p-2 border-r border-b border-black"
+                  ></div>
+                  <div class="block font-bold p-2 border-r border-b border-black">
+                    37. Printed Name of Duly authorized officer or employee:
+                  </div>
+                  <div class="block font-bold p-2 border-r border-b border-black">
+                    Tony Joseph
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
+                  <div class="border-r border-black">
+                    <span class="block font-bold p-2 border-b border-black"
+                      >38. Signature</span
+                    >
+                    <div class="p-2 text-sm italic font-serif"></div>
+                  </div>
+                  <div class="border-r border-black">
+                    <span class="block font-bold p-2 border-b border-black"
+                      >39. Title</span
+                    >
+                    <div class="p-2 font-semibold">CEO</div>
+                  </div>
+                  <div class="">
+                    <div class="block font-bold p-2 border-b border-black">
+                      40. Date
+                    </div>
+
+                    <div class="p-2 font-semibold">11/5/25</div>
+                  </div>
+                </div>
+
+                <div class="border-b border-black block font-bold p-2">
+                  33. ☑ Check here to validate Electronic Signature. Electronic
+                  signatures must be typed in all capital letters in Box 38 in
+                  order to be valid.
+                </div>
               </div>
             </div>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+          </mat-tab>
+        </mat-tab-group>
+
+        <div *ngIf="isLoading" class="flex-1 flex items-center justify-center"> <div class="text-center"> <div class="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-2 border-t-[#a5b98b] mx-auto mb-4"></div> <p class="text-gray-600">Loading invoice data...</p> </div> </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <button 
+            class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            (click)="selectedTabIndex = 0"
+            [class.bg-blue-50]="selectedTabIndex === 0"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Invoice
+          </button>
+          <button 
+            class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            (click)="selectedTabIndex = 1"
+            [class.bg-blue-50]="selectedTabIndex === 1"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+            Packing List
+          </button>
+          <button 
+            class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            (click)="selectedTabIndex = 2"
+            [class.bg-blue-50]="selectedTabIndex === 2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            Instructions
+          </button>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <button 
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            (click)="closeModel()"
+          >
+            Close
+          </button>
+          <button 
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            (click)="printDocument()"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>

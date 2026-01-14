@@ -25,4 +25,12 @@ export class CommercialInvoiceService {
   public postCommercialInvoice(ciForm: any): Observable<any> {
     return this.http.post<any>(`${environment.api}/CommercialInvoice`, ciForm);
   }
+
+    public getCommercialInvoiceDetails(
+    invoiceId: number,
+  ): Observable<any> {
+    return this.http.get<any>(
+      `${environment.api}/CommercialInvoice/${invoiceId}`
+    );
+  }
 }
