@@ -26,7 +26,7 @@ export class CommercialInvoiceService {
     return this.http.post<any>(`${environment.api}/CommercialInvoice`, ciForm);
   }
 
-  public getCommercialInvoiceById(invoiceId: any): Observable<any> {
+  public getCommercialInvoiceDetails(invoiceId: number): Observable<any> {
     return this.http.get<any>(
       `${environment.api}/CommercialInvoice/${invoiceId}`
     );

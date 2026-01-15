@@ -102,6 +102,7 @@ export class ListCommericalInvoiceComponent {
       .getCommercialInvoicedPO(startDate, endDate)
       .subscribe({
         next: (result: any) => {
+          console.log(result);
           const data = result;
           this.sortedData.data = data;
           this.ciReport.data = data;
@@ -116,8 +117,8 @@ export class ListCommericalInvoiceComponent {
       });
   }
 
-  public openViewCIModel(data: any) {
-    this.ciData = data;
+  public openViewCIModel(ciNumber: number) {
+    this.ciNumber = ciNumber;
     this.showModel = !this.showModel;
   }
 
