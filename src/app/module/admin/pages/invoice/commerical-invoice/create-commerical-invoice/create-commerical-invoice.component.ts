@@ -844,7 +844,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
           unitPrice: item.unitPrice,
           totalPrice: item.totalPrice,
           poId: item.poId,
-          hsc: item.hsc,
+          hsc: item.hsc || '',
           ui: item.ui,
         };
       }),
