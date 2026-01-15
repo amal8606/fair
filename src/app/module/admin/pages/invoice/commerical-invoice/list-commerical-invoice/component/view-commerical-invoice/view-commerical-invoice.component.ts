@@ -30,10 +30,9 @@ import { CommercialInvoiceService } from '../../../../../../../../_core/http/api
   templateUrl: './view-commerical-invoice.component.html',
 })
 export class ViewCommericalInvoiceComponent implements OnInit {
-  constructor() {}
+  constructor(private readonly invoiceSrv: CommercialInvoiceService) {}
   @Input() public ciNumber: any;
   @Output() onClick = new EventEmitter();
-  public invoiceSrv = inject(CommercialInvoiceService);
   selectedTabIndex = 0;
   isLoading: boolean = false;
   tabNames = [
@@ -103,9 +102,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
 
   ngOnInit() {
     if (this.ciNumber) {
-      // Load invoice data based on ciNumber
       this.getInvoiceDetails();
-      console.log('Loading invoice:', this.ciNumber);
     }
   }
   closeModel() {
@@ -120,7 +117,6 @@ export class ViewCommericalInvoiceComponent implements OnInit {
     this.isLoading = true;
     this.invoiceSrv.getCommercialInvoiceDetails(this.ciNumber).subscribe({
       next: (result: any) => {
-        console.log(result);
         this.finalCommercialInvoiceData = result;
         this.isLoading = false;
       },

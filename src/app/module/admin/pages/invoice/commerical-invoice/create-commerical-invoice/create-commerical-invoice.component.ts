@@ -19,6 +19,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PackingListService } from '../../../../../../_core/http/api/packingList.service';
+import { SliService } from '../../../../../../_core/http/api/sli.service';
 
 @Component({
   selector: 'app-create-commerical-invoice',
@@ -150,7 +151,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     private readonly commercialInvoiceService: CommercialInvoiceService,
     private readonly orgService: OrgainizationService,
     private readonly packingListService: PackingListService,
-    private readonly toastr: ToastrService
+    private readonly toastr: ToastrService,
+    private readonly sliService: SliService
   ) {}
 
   public createCommercialInvoiceItemFormGroup(
@@ -196,16 +198,15 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     });
   }
   public sliForm: FormGroup = new FormGroup({
-    sliNumber: new FormControl(''),
     usppiNameId: new FormControl(0),
     usppiAddressId: new FormControl(0),
     flcName: new FormControl(''),
     flcAddress: new FormControl(''),
     forwardingAgent: new FormControl(''),
     usppiEin: new FormControl(''),
-    relatedPartyIndicator: new FormControl(null),
-    usppiReference: new FormControl(null),
-    routedExportTransaction: new FormControl(null),
+    relatedPartyIndicator: new FormControl(false),
+    usppiReference: new FormControl(''),
+    routedExportTransaction: new FormControl(false),
     ucName: new FormControl(0),
     ucAddressId: new FormControl(0),
     ucType: new FormControl(''),
@@ -213,44 +214,66 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     icAddress: new FormControl(''),
     stateOfOrigin: new FormControl(''),
     countryOfUltimateDestination: new FormControl(''),
-    hazardousMaterial: new FormControl(null),
+    hazardousMaterial: new FormControl(false),
     inBondCode: new FormControl(''),
     entryNumber: new FormControl(''),
     ftzIdentifier: new FormControl(''),
-    tibCarnet: new FormControl(''),
-    ddtcApplicantRegistrationNumber: new FormControl(null),
-    eligiblePartyCertification: new FormControl(null),
-    nonLicensableScheduleBHTSNumbers: new FormControl(null),
-    usppiAuthorize: new FormControl(null),
+    tibCarnet: new FormControl(),
+    ddtcApplicantRegistrationNumber: new FormControl(''),
+    eligiblePartyCertification: new FormControl(false),
+    nonLicensableScheduleBHTSNumbers: new FormControl(false),
+    usppiAuthorize: new FormControl(false),
     usppiEmailAddress: new FormControl(''),
     authorizedOfficerName: new FormControl(''),
     officerTitle: new FormControl(''),
-    validateElectronicSignature: new FormControl(null),
+    validateElectronicSignature: new FormControl(false),
     commercialInvoiceId: new FormControl(0),
     packingListId: new FormControl(0),
     createdAt: new FormControl(''),
     updatedAt: new FormControl(''),
-    item: new FormArray([this.itemGroup()]),
+    items: new FormArray([]),
   });
-  public itemGroup(): FormGroup {
-    return new FormGroup({
-      sliDocument: new FormControl(''),
-      itemId: new FormControl(0),
-      df: new FormControl(''),
-      shippingWeight: new FormControl(0),
-      eccnEar99Usml: new FormControl(''),
-      sme: new FormControl(''),
-      elNoNlr: new FormControl(''),
-      licenseValueByItem: new FormControl(''),
-      partNumber: new FormControl(''),
-      description: new FormControl(''),
-      quanity: new FormControl(0),
-      unitPrice: new FormControl(0),
-      totalPrice: new FormControl(0),
-      poId: new FormControl(0),
-      hsc: new FormControl(''),
-      ui: new FormControl(''),
-    });
+  public itemGroup(item?: any, lineNumber?: number): FormGroup {
+    {
+      const itemData: any = {
+        itemId: item?.itemId || 0,
+        df: '',
+        shippingWeight: 0,
+        eccnEar99Usml: '',
+        sme: '',
+        elNoNlr: '',
+        licenseValueByItem: '',
+        partNumber: item?.partNumber || '',
+        description: item?.description || '',
+        quantity: item?.quantity || 0,
+        unitPrice: item?.unitPrice || 0,
+        totalPrice: item?.totalPrice || 0,
+        poId: item?.poId || 0,
+        hsc: item?.hsc || '',
+        ui: item?.ui || '',
+      };
+
+      return new FormGroup({
+        itemId: new FormControl(itemData.itemId),
+        df: new FormControl(itemData.df),
+        shippingWeight: new FormControl(itemData.shippingWeight),
+        eccnEar99Usml: new FormControl(itemData.eccnEar99Usml),
+        sme: new FormControl(itemData.sme),
+        elNoNlr: new FormControl(itemData.elNoNlr),
+        licenseValueByItem: new FormControl(itemData.licenseValueByItem),
+        partNumber: new FormControl(itemData.partNumber),
+        description: new FormControl(itemData.description),
+        quantity: new FormControl(itemData.quantity),
+        unitPrice: new FormControl(itemData.unitPrice),
+        totalPrice: new FormControl(itemData.totalPrice),
+        poId: new FormControl(itemData.poId),
+        hsc: new FormControl(itemData.hsc),
+        ui: new FormControl(itemData.ui),
+      });
+    }
+  }
+  get sliItemsArray(): FormArray {
+    return this.sliForm.get('items') as FormArray;
   }
 
   ngOnInit(): void {
@@ -714,20 +737,59 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         currency: formValue.currency,
       },
     };
+
+    // Populate sliForm items array with FormGroups for each item
+    const sliItemsArray = this.sliForm.get('items') as FormArray;
+    sliItemsArray.clear();
+    this.finalPostData.commercialInvoiceItems.forEach(
+      (item: any, index: number) => {
+        sliItemsArray.push(this.itemGroup(item, index + 1));
+      }
+    );
+
     this.currentStep = 3;
   }
   public generateLoding: boolean = false;
   postInvoice() {
-    // this.generateLoding = true;
+    this.generateLoding = true;
+    this.commercialInvoiceService
+      .postCommercialInvoice(this.finalPostData)
+      .subscribe({
+        next: (res) => {
+          this.postPackingList(res.commercialInvoiceId);
 
-    console.log(this.sliData);
+          this.toastr.success('Commercial Invoice created successfully!');
+        },
+        error: (err) => {
+          this.generateLoding = false;
+          this.toastr.error('Failed to create Commercial Invoice.');
+        },
+      });
+  }
+  postPackingList(ciId: any) {
+    this.packingListData = {
+      ...this.packingListData,
+      commercialInvoiceId: ciId,
+    };
+    this.packingListService.postPackingList(this.packingListData).subscribe({
+      next: (res) => {
+        this.generateLoding = false;
+        this.postSLi(res.packingListId, ciId);
+        this.toastr.success('Packing List created successfully!');
+      },
+      error: (err) => {
+        this.generateLoding = false;
+        this.toastr.error('Failed to create Packing List.');
+      },
+    });
+  }
+
+  postSLi(packingListId: any, commercialInvoiceId: any) {
     const formValue = this.commercialInvoiceForm.getRawValue();
     const items = formValue.commercialInvoiceItems;
-
     this.sliData = {
-      sliNumber: this.sliForm.get('sliNumber')?.value,
-      usppiNameId: this.sliForm.get('usppiNameId')?.value,
-      usppiAddressId: this.sliForm.get('usppiAddressId')?.value,
+      usppiNameId: formValue.shipperId,
+      usppiAddressId: formValue.shipperId,
       flcName: this.sliForm.get('flcName')?.value,
       flcAddress: this.sliForm.get('flcAddress')?.value,
       forwardingAgent: this.sliForm.get('forwardingAgent')?.value,
@@ -737,7 +799,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       routedExportTransaction: this.sliForm.get('routedExportTransaction')
         ?.value,
       ucName: formValue.customerId,
-      ucAddressId: formValue,
+      ucAddressId: formValue.shipperId,
       ucType: this.sliForm.get('ucType')?.value,
       icName: this.sliForm.get('icName')?.value,
       icAddress: this.sliForm.get('icAddress')?.value,
@@ -747,7 +809,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       )?.value,
       hazardousMaterial: this.sliForm.get('hazardousMaterial')?.value,
       inBondCode: this.sliForm.get('inBondCode')?.value,
-      fdzIdentifier: this.sliForm.get('ftzIdentifier')?.value,
+      ftzIdentifier: this.sliForm.get('ftzIdentifier')?.value,
       entryNumber: this.sliForm.get('entryNumber')?.value,
       tibCarnet: this.sliForm.get('tibCarnet')?.value,
       ddtcApplicantRegistrationNumber: this.sliForm.get(
@@ -765,57 +827,36 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       validateElectronicSignature: this.sliForm.get(
         'validateElectronicSignature'
       )?.value,
-      commercialInvoiceId: this.sliForm.get('commercialInvoiceId')?.value,
-      packingListId: this.sliForm.get('packingListId')?.value,
       createdAt: formValue.createdAt,
-      items: items.map((item: any) => ({
-        itemId: item.itemId,
-        df: this.itemGroup().get('df')?.value,
-        eccnEar99Usml: this.itemGroup().get('eccnEar99Usml')?.value,
-        sme: this.itemGroup().get('sme')?.value,
-        elNoNlr: this.itemGroup().get('elNoNlr')?.value,
-        shippingWeight: this.itemGroup().get('shippingWeight')?.value,
-        licenseValueByItem: this.itemGroup().get('licenseValueByItem')?.value,
-        partNumber: item.partNumber,
-        description: item.description,
-        quanity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.totalPrice,
-        poId: item.poId,
-        hsc: item.hsc,
-        ui: item.ui,
-      })),
+      items: items.map((item: any, index: number) => {
+        const sliItem = this.sliItemsArray.at(index);
+        return {
+          itemId: item.itemId,
+          df: sliItem?.get('df')?.value,
+          eccnEar99Usml: sliItem?.get('eccnEar99Usml')?.value,
+          sme: sliItem?.get('sme')?.value,
+          elNoNlr: sliItem?.get('elNoNlr')?.value,
+          shippingWeight: sliItem?.get('shippingWeight')?.value,
+          licenseValueByItem: sliItem?.get('licenseValueByItem')?.value,
+          partNumber: item.partNumber,
+          description: item.description,
+          quanity: item.quantity,
+          unitPrice: item.unitPrice,
+          totalPrice: item.totalPrice,
+          poId: item.poId,
+          hsc: item.hsc,
+          ui: item.ui,
+        };
+      }),
       usppiEmail: this.seller?.email,
       signatureDate: formValue.createdAt,
+      commercialInvoiceNumber: formValue.commercialInvoiceNumber,
+      commercialInvoiceId: commercialInvoiceId,
+      packingListId: packingListId,
     };
-    // this.commercialInvoiceService
-    //   .postCommercialInvoice(this.finalPostData)
-    //   .subscribe({
-    //     next: (res) => {
-    //       this.postPackingList(res.commercialInvoiceId);
-
-    //       this.toastr.success('Commercial Invoice created successfully!');
-    //     },
-    //     error: (err) => {
-    //       this.generateLoding = false;
-    //       this.toastr.error('Failed to create Commercial Invoice.');
-    //     },
-    //   });
-  }
-  postPackingList(ciId: any) {
-    this.packingListData = {
-      ...this.packingListData,
-      commercialInvoiceId: ciId,
-    };
-    this.packingListService.postPackingList(this.packingListData).subscribe({
-      next: (res) => {
-        this.generateLoding = false;
-
-        this.toastr.success('Packing List created successfully!');
-      },
-      error: (err) => {
-        this.generateLoding = false;
-        this.toastr.error('Failed to create Packing List.');
+    this.sliService.postSliList(this.sliData).subscribe({
+      next: (res: any) => {
+        this.toastr.success('SLI created successfully!');
       },
     });
   }

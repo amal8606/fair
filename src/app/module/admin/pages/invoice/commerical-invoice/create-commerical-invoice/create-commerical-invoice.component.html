@@ -839,14 +839,14 @@
                     formControlName="partNumber"
                     type="text"
                     placeholder="Part Number"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
                   <input
                     formControlName="ui"
                     type="text"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -862,7 +862,7 @@
                   <textarea
                     formControlName="description"
                     rows="2"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   ></textarea>
                   <div
                     *ngIf="
@@ -878,7 +878,7 @@
                   <input
                     formControlName="poNumber"
                     type="text"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -895,7 +895,7 @@
                   <input
                     formControlName="countryOfOrigin"
                     type="text"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -914,7 +914,7 @@
                     type="number"
                     min="1"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -933,7 +933,7 @@
                     type="number"
                     min="0"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -952,7 +952,7 @@
                     formControlName="totalPrice"
                     type="text"
                     [disabled]="true"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right bg-gray-100"
                   />
                 </td>
                 <td class="px-3 py-2">
@@ -1807,421 +1807,348 @@
             style="font-size: 10pt"
           >
             <div
+              [formGroup]="sliForm"
               class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
             >
-              <form [formGroup]="sliForm">
-                <div class="border border-black p-2 text-center bg-gray-100">
-                  <p class="text-sm font-bold">
-                    Shipper's Letter of Instructions (SLI)
-                  </p>
-                </div>
+              <div class="border border-black p-2 text-center bg-gray-100">
+                <p class="text-sm font-bold">
+                  Shipper's Letter of Instructions (SLI)
+                </p>
+              </div>
 
-                <div class="grid grid-cols-3">
-                  <div class="grid">
-                    <div class="p-2 border border-black">
-                      <span class="block font-bold">1. USPPI Name</span>
-                      <div class="font-semibold text-blue-700 mt-2">
-                        {{ finalCommercialInvoiceData.ein }}
-                      </div>
-                    </div>
-                    <div class="p-2 border border-black">
-                      <span class="block font-bold"
-                        >2. USPPI Address Including Zip Code:</span
-                      >
-                      <div class="font-semibold">
-                        {{ finalCommercialInvoiceData.sellerName }}
-                      </div>
-                      <div class="font-semibold">
-                        {{ finalCommercialInvoiceData.sellerAddress }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="grid">
-                    <div class="p-2 border border-black">
-                      <span class="block font-bold"
-                        >3. Freight Location Company Name:</span
-                      >
-                      <div class="font-semibold text-blue-700">
-                        <input
-                          formControlName="flcName"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter Freight Location Company Name"
-                        />
-                      </div>
-                    </div>
-                    <div class="p-2 border border-black">
-                      <span class="block font-bold"
-                        >4.Freight Location Address (if not box #2):</span
-                      >
-                      <div class="font-semibold">
-                        <input
-                          formControlName="flcAddress"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter Freight Location Company Name"
-                        />
-                      </div>
-                      \
-                    </div>
-                  </div>
-                  <div class="grid">
-                    <div class="p-2 border border-black">
-                      <span class="block font-bold">5. Forwarding Agent:</span>
-                      <div class="font-semibold text-blue-700">
-                        <input
-                          formControlName="forwardingAgent"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter Freight Location Company Name"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      6. USPPI EIN (IRS) No:
-                    </div>
-                    <div class="block font-bold border-black p-2">
-                      {{ finalCommercialInvoiceData.ein }}
-                    </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2">
-                      7. Related Party Indicator (select one):
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-2 w-fit">
-                    <label
-                      class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        class="h-4 w-4 accent-black"
-                        formControlName="relatedPartyIndicator"
-                        [value]="true"
-                      />
-                      Related
-                    </label>
-
-                    <label
-                      class="flex items-center gap-2 font-bold p-2 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        class="h-4 w-4 accent-black"
-                        formControlName="relatedPartyIndicator"
-                        [value]="false"
-                      />
-                      Non-Related
-                    </label>
-                  </div>
-                </div>
-                <div class="grid grid-cols-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      8. USPPI Reference#:
-                    </div>
-                    <div class="block font-bold border-black p-2">
-                      <input
-                        formControlName="usppiReference"
-                        type="text"
-                        class="w-full border border-black p-1 font-semibold"
-                        placeholder="Enter USPPI Reference"
-                      />
-                      <div
-                        *ngIf="
-                          sliForm.get('usppiReference')?.invalid &&
-                          sliForm.get('usppiReference')?.touched
-                        "
-                        class="text-red-600 text-xs mt-1"
-                      >
-                        USPPI Reference is required.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2">
-                      9. Routed Export Transaction (select one):
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-2 w-fit">
-                    <label
-                      class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        class="h-4 w-4 accent-black"
-                        formControlName="routedExportTransaction"
-                        [value]="true"
-                      />
-                      Yes
-                    </label>
-
-                    <label
-                      class="flex items-center gap-2 font-bold p-2 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        class="h-4 w-4 accent-black"
-                        formControlName="routedExportTransaction"
-                        [value]="false"
-                      />
-                      No
-                    </label>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-3 border-b border-black">
+              <div class="grid grid-cols-3">
+                <div class="grid">
                   <div class="p-2 border border-black">
-                    <div class="block font-bold">
-                      10. Ultimate Consignee Name & Address:
-                    </div>
-                    <div class="font-semibold mt-2">
-                      {{ finalCommercialInvoiceData.customerName }}
-                    </div>
-                    <div class="font-semibold">
-                      {{ finalCommercialInvoiceData.customerAddress }}
-                    </div>
-
-                    <div class="font-semibold">
-                      Telephone (Office):
-                      {{ finalCommercialInvoiceData.customerPhone }}
-                    </div>
-                  </div>
-                  <div class="">
-                    <div class="font-bold border-b border-black p-2">
-                      11. Ultimate Consignee Type (select one):
-                    </div>
-                    <div class="text-left">
-                      <div class="font-semibold border-b border-black py-2">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="ucType"
-                            value="Direct Consumer"
-                          />
-                          Direct Consumer
-                        </label>
-                      </div>
-                      <div class="font-semibold border-b border-black py-2">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="ucType"
-                            value="Government Entity"
-                          />
-                          Government Entity
-                        </label>
-                      </div>
-                      <div class="font-semibold border-b border-black py-2">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="ucType"
-                            value="Reseller"
-                          />
-                          Reseller
-                        </label>
-                      </div>
-                      <div class="font-semibold py-2">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="ucType"
-                            value="Other/Unknown"
-                          />
-                          Other/Unknown
-                        </label>
-                      </div>
+                    <span class="block font-bold">1. USPPI Name</span>
+                    <div class="font-semibold text-blue-700 mt-2">
+                      {{ finalCommercialInvoiceData.ein }}
                     </div>
                   </div>
                   <div class="p-2 border border-black">
                     <span class="block font-bold"
-                      >12. Intermediate Consignee Name & Address</span
+                      >2. USPPI Address Including Zip Code:</span
                     >
                     <div class="font-semibold">
-                      <input
-                        formControlName="icName"
-                        type="text"
-                        class="w-full border border-black p-1 font-semibold"
-                        placeholder="Enter Intermediate Consignee Name"
-                      />
-                      <div
-                        *ngIf="
-                          sliForm.get('icName')?.invalid &&
-                          sliForm.get('icName')?.touched
-                        "
-                        class="text-red-600 text-xs mt-1"
-                      >
-                        Intermediate Consignee Name is required.
-                      </div>
+                      {{ finalCommercialInvoiceData.sellerName }}
                     </div>
                     <div class="font-semibold">
-                      <input
-                        formControlName="icAddress"
-                        type="text"
-                        class="w-full border border-black p-1 font-semibold"
-                        placeholder="Enter Intermediate Consignee Address"
-                      />
-                      <div
-                        *ngIf="
-                          sliForm.get('icAddress')?.invalid &&
-                          sliForm.get('icAddress')?.touched
-                        "
-                        class="text-red-600 text-xs mt-1"
-                      >
-                        Intermediate Consignee Address is required.
-                      </div>
+                      {{ finalCommercialInvoiceData.sellerAddress }}
                     </div>
                   </div>
                 </div>
-                <div class="grid grid-cols-3">
-                  <div
-                    class="grid grid-row-3 border-b border-black text-center"
-                  >
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2 border-r">
-                        13. Sate of Origin:
-                      </div>
-                      <div class="block font-bold border-black p-2">
-                        <input
-                          formControlName="stateOfOrigin"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter State of Origin"
-                        />
-                      </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >3. Freight Location Company Name:</span
+                    >
+                    <div class="font-semibold text-blue-700">
+                      <input
+                        formControlName="flcName"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2 border-r">
-                        14. Country of Ultimate Destination:
-                      </div>
-                      <div class="block font-bold border-black p-2">
-                        <input
-                          formControlName="countryOfUltimateDestination"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter Country of Ultimate Destination"
-                        />
-                      </div>
+                  </div>
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold"
+                      >4.Freight Location Address (if not box #2):</span
+                    >
+                    <div class="font-semibold">
+                      <input
+                        formControlName="flcAddress"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2 border-r">
-                        15. Hazardous Material:
-                      </div>
-                      <div class="block font-bold border-black p-2">
-                        <div class="grid grid-cols-2 w-fit">
-                          <label
-                            class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              class="h-4 w-4 accent-black"
-                              formControlName="hazardousMaterial"
-                              [value]="true"
-                            />
-                            Yes
-                          </label>
+                    \
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="p-2 border border-black">
+                    <span class="block font-bold">5. Forwarding Agent:</span>
+                    <div class="font-semibold text-blue-700">
+                      <input
+                        formControlName="forwardingAgent"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                          <label
-                            class="flex items-center gap-2 font-bold p-2 cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              class="h-4 w-4 accent-black"
-                              formControlName="hazardousMaterial"
-                              [value]="false"
-                            />
-                            No
-                          </label>
-                        </div>
-                      </div>
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    6. USPPI EIN (IRS) No:
+                  </div>
+                  <div class="block font-bold border-black p-2">
+                    {{ finalCommercialInvoiceData.ein }}
+                  </div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    7. Related Party Indicator (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="relatedPartyIndicator"
+                      [value]="true"
+                    />
+                    Related
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="relatedPartyIndicator"
+                      [value]="false"
+                    />
+                    Non-Related
+                  </label>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    8. USPPI Reference#:
+                  </div>
+                  <div class="block font-bold border-black p-2">
+                    <input
+                      formControlName="usppiReference"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter USPPI Reference"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('usppiReference')?.invalid &&
+                        sliForm.get('usppiReference')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      USPPI Reference is required.
                     </div>
                   </div>
-                  <div
-                    class="grid grid-row-3 border-b border-black text-center"
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2">
+                    9. Routed Export Transaction (select one):
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 w-fit">
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                   >
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2">
-                        16. In-Bond Code:
-                      </div>
-                      <div class="block font-bold border-black p-2">
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="routedExportTransaction"
+                      [value]="true"
+                    />
+                    Yes
+                  </label>
+
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="routedExportTransaction"
+                      [value]="false"
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 border-b border-black">
+                <div class="p-2 border border-black">
+                  <div class="block font-bold">
+                    10. Ultimate Consignee Name & Address:
+                  </div>
+                  <div class="font-semibold mt-2">
+                    {{ finalCommercialInvoiceData.customerName }}
+                  </div>
+                  <div class="font-semibold">
+                    {{ finalCommercialInvoiceData.customerAddress }}
+                  </div>
+
+                  <div class="font-semibold">
+                    Telephone (Office):
+                    {{ finalCommercialInvoiceData.customerPhone }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="font-bold border-b border-black p-2">
+                    11. Ultimate Consignee Type (select one):
+                  </div>
+                  <div class="text-left">
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
                         <input
-                          formControlName="inBondCode"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter In-Bond Code"
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Direct Consumer"
                         />
-                      </div>
+                        Direct Consumer
+                      </label>
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2">
-                        17. Entry Number:
-                      </div>
-                      <div class="block font-bold border-black p-2">
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
                         <input
-                          formControlName="entryNumber"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter Entry Number"
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Government Entity"
                         />
-                      </div>
+                        Government Entity
+                      </label>
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black p-2">
-                        18. FTZ Identifier:
-                      </div>
-                      <div class="block font-bold border-black p-2">
+                    <div class="font-semibold border-b border-black py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
                         <input
-                          formControlName="ftzIdentifier"
-                          type="text"
-                          class="w-full border border-black p-1 font-semibold"
-                          placeholder="Enter FTZ Identifier"
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Reseller"
                         />
-                      </div>
+                        Reseller
+                      </label>
+                    </div>
+                    <div class="font-semibold py-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Other/Unknown"
+                        />
+                        Other/Unknown
+                      </label>
                     </div>
                   </div>
-                  <div
-                    class="grid grid-row-3 border-b border-black text-center"
+                </div>
+                <div class="p-2 border border-black">
+                  <span class="block font-bold"
+                    >12. Intermediate Consignee Name & Address</span
                   >
+                  <div class="font-semibold">
+                    <input
+                      formControlName="icName"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter Intermediate Consignee Name"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('icName')?.invalid &&
+                        sliForm.get('icName')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      Intermediate Consignee Name is required.
+                    </div>
+                  </div>
+                  <div class="font-semibold">
+                    <input
+                      formControlName="icAddress"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter Intermediate Consignee Address"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('icAddress')?.invalid &&
+                        sliForm.get('icAddress')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      Intermediate Consignee Address is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-3">
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      13. Sate of Origin:
+                    </div>
                     <div class="block font-bold border-black p-2">
-                      19. TIB / Carnet?
+                      <input
+                        formControlName="stateOfOrigin"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter State of Origin"
+                      />
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input type="checkbox" class="h-4 w-4 accent-black" />
-                          Yes
-                        </label>
-                      </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      14. Country of Ultimate Destination:
                     </div>
-                    <div class="flex gap-2 border border-black">
-                      <div class="block font-bold border-black">
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="countryOfUltimateDestination"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Country of Ultimate Destination"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2 border-r">
+                      15. Hazardous Material:
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <div class="grid grid-cols-2 w-fit">
                         <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                          class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                         >
                           <input
                             type="checkbox"
                             class="h-4 w-4 accent-black"
-                            value="false"
+                            formControlName="hazardousMaterial"
+                            [value]="true"
+                          />
+                          Yes
+                        </label>
+
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            class="h-4 w-4 accent-black"
+                            formControlName="hazardousMaterial"
+                            [value]="false"
                           />
                           No
                         </label>
@@ -2229,11 +2156,90 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="border-b border-black block font-bold p-2">
-                  INSTRUCTIONS TO FORWARDER:
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      16. In-Bond Code:
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="inBondCode"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter In-Bond Code"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      17. Entry Number:
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="entryNumber"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Entry Number"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black p-2">
+                      18. FTZ Identifier:
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="ftzIdentifier"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter FTZ Identifier"
+                      />
+                    </div>
+                  </div>
                 </div>
+                <div class="grid grid-row-3 border-b border-black text-center">
+                  <div class="block font-bold border-black p-2">
+                    19. TIB / Carnet?
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="tibCarnet"
+                          formControlName="tibCarnet"
+                          [value]="true"
+                          class="h-4 w-4 accent-black"
+                        />
+                        Yes
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 border border-black">
+                    <div class="block font-bold border-black">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="tibCarnet"
+                          formControlName="tibCarnet"
+                          [value]="false"
+                          class="h-4 w-4 accent-black"
+                        />
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+              <div class="border-b border-black block font-bold p-2">
+                INSTRUCTIONS TO FORWARDER:
+              </div>
+              <div>
                 <table class="w-full border-collapse">
                   <thead>
                     <tr class="bg-gray-100 border-b border-black">
@@ -2272,10 +2278,14 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody formArrayName="items">
                     <tr
                       class="border-b border-black align-top"
-                      *ngFor="let item of finalCommercialInvoiceData.items"
+                      *ngFor="
+                        let itemGroup of sliItemsArray.controls;
+                        let i = index
+                      "
+                      [formGroupName]="i"
                     >
                       <td
                         class="border-r border-black p-2 font-semibold text-center"
@@ -2287,20 +2297,23 @@
                         />
                       </td>
                       <td class="border-r border-black p-2">
-                        <span class="font-bold">3923.90.9000</span> <br />
-                        {{ item.description }} <br />
+                        <span class="font-bold">
+                          {{ itemGroup.get("hsc")?.value }}</span
+                        >
                         <br />
-                        PART #: {{ item.partNumber }} <br />
+                        {{ itemGroup.get("description")?.value }} <br />
+                        <br />
+                        PART #: {{ itemGroup.get("partNumber")?.value }} <br />
                       </td>
                       <td class="border-r border-black p-2 font-semibold">
-                        EA
+                        {{ itemGroup.get("ui")?.value }}
                       </td>
                       <td class="border-r border-black p-2 font-semibold">
-                        {{ item.quantity }}
+                        {{ itemGroup.get("quantity")?.value }}
                       </td>
                       <td class="border-r border-black p-2 font-semibold">
                         <input
-                          type="text"
+                          type="number"
                           formControlName="shippingWeight"
                           class="w-full border border-black p-1 font-semibold"
                         />
@@ -2327,7 +2340,10 @@
                         />
                       </td>
                       <td class="p-2 font-bold text-left border-r border-black">
-                        {{ item.unitPrice * item.quantity }}
+                        {{
+                          (itemGroup.get("unitPrice")?.value || 0) *
+                            (itemGroup.get("quanity")?.value || 0)
+                        }}
                       </td>
                       <td class="p-2 font-bold text-right">
                         <input
@@ -2339,163 +2355,154 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="grid grid-cols-2 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      30. DDTC Applicant Registration Number:
+              </div>
+              <div class="grid grid-cols-2 border-b border-black text-center">
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    30. DDTC Applicant Registration Number:
+                  </div>
+                  <div class="block font-bold border-black p-2 w-48">
+                    <input
+                      formControlName="ddtcApplicantRegistrationNumber"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter DDTC Applicant Registration Number"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('ddtcApplicantRegistrationNumber')
+                          ?.invalid &&
+                        sliForm.get('ddtcApplicantRegistrationNumber')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      DDTC Applicant Registration Number is required.
                     </div>
-                    <div class="block font-bold border-black p-2 w-48">
-                      <input
-                        formControlName="ddtcApplicantRegistrationNumber"
-                        type="text"
-                        class="w-full border border-black p-1 font-semibold"
-                        placeholder="Enter DDTC Applicant Registration Number"
-                      />
-                      <div
-                        *ngIf="
-                          sliForm.get('ddtcApplicantRegistrationNumber')
-                            ?.invalid &&
-                          sliForm.get('ddtcApplicantRegistrationNumber')
-                            ?.touched
-                        "
-                        class="text-red-600 text-xs mt-1"
+                  </div>
+                </div>
+                <div class="flex gap-2 border border-black">
+                  <div class="block font-bold border-black p-2 border-r">
+                    31. Eligible Party Certification:
+                  </div>
+                  <div class="flex gap-2">
+                    <div class="block font-bold border-black p-2 border-r">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        DDTC Applicant Registration Number is required.
-                      </div>
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4 accent-black"
+                          formControlName="eligiblePartyCertification"
+                          [value]="true"
+                        />
+                        Yes
+                      </label>
                     </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      31. Eligible Party Certification:
-                    </div>
-                    <div class="flex gap-2">
-                      <div class="block font-bold border-black p-2 border-r">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="eligiblePartyCertification"
-                            [value]="true"
-                          />
-                          Yes
-                        </label>
-                      </div>
-                      <div class="block font-bold border-black p-2">
-                        <label
-                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            class="h-4 w-4 accent-black"
-                            formControlName="eligiblePartyCertification"
-                            [value]="false"
-                          />
-                          No
-                        </label>
-                      </div>
+                    <div class="block font-bold border-black p-2">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4 accent-black"
+                          formControlName="eligiblePartyCertification"
+                          [value]="false"
+                        />
+                        No
+                      </label>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="border-b border-black block font-bold p-2">
-                  32.<label
-                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-4 w-4 accent-black"
-                      formControlName="nonLicensableScheduleBHTSNumbers"
-                      [value]="true"
-                    />
-                    Check here if there are any remaining non-licensable
-                    Schedule B / HTS Numbers that are valued $2500.00 or less
-                    and that do not otherwise require AES filing.
-                  </label>
+              <div class="border-b border-black block font-bold p-2">
+                32.<label
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="nonLicensableScheduleBHTSNumbers"
+                    [value]="true"
+                  />
+                  Check here if there are any remaining non-licensable Schedule
+                  B / HTS Numbers that are valued $2500.00 or less and that do
+                  not otherwise require AES filing.
+                </label>
+              </div>
+              <div class="border-b border-black block font-bold p-2">
+                33.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="usppiAuthorize"
+                    [value]="true"
+                  />
+                  Check here if the USPPI authorizes the above named forwarder
+                  to act as its true and lawful agent for purposes of preparing
+                  and filing the Electronic Export Information ("EEI") in
+                  accordance with the laws and regulations of the United States.
+                </label>
+              </div>
+              <div class="grid grid-cols-2">
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  35. USPPI E-mail Address:
                 </div>
-                <div class="border-b border-black block font-bold p-2">
-                  33.
-                  <label
-                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-4 w-4 accent-black"
-                      formControlName="usppiAuthorize"
-                      [value]="true"
-                    />
-                    Check here if the USPPI authorizes the above named forwarder
-                    to act as its true and lawful agent for purposes of
-                    preparing and filing the Electronic Export Information
-                    ("EEI") in accordance with the laws and regulations of the
-                    United States.
-                  </label>
+                <div class="font-bold p-2 border-r border-b border-black">
+                  {{ finalCommercialInvoiceData.sellerEmail }}
                 </div>
-                <div class="grid grid-cols-2">
-                  <div
-                    class="block font-bold p-2 border-r border-b border-black"
-                  >
-                    35. USPPI E-mail Address:
-                  </div>
-                  <div class="font-bold p-2 border-r border-b border-black">
-                    {{ finalCommercialInvoiceData.sellerEmail }}
-                  </div>
-                  <div
-                    class="block font-bold p-2 border-r border-b border-black"
-                  >
-                    37. Printed Name of Duly authorized officer or employee:
-                  </div>
-                  <div
-                    class="block font-bold p-2 border-r border-b border-black"
-                  >
-                    {{ finalCommercialInvoiceData.signerName }}
-                  </div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  37. Printed Name of Duly authorized officer or employee:
                 </div>
-                <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
-                  <div class="border-r border-black">
-                    <span class="block font-bold p-2 border-b border-black"
-                      >38. Signature</span
-                    >
-                    <div class="p-2 text-sm italic font-serif"></div>
+                <div class="block font-bold p-2 border-r border-b border-black">
+                  {{ finalCommercialInvoiceData.signerName }}
+                </div>
+              </div>
+              <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >38. Signature</span
+                  >
+                  <div class="p-2 text-sm italic font-serif"></div>
+                </div>
+                <div class="border-r border-black">
+                  <span class="block font-bold p-2 border-b border-black"
+                    >39. Title</span
+                  >
+                  <div class="p-2 font-semibold">CEO</div>
+                </div>
+                <div class="">
+                  <div class="block font-bold p-2 border-b border-black">
+                    40. Date
                   </div>
-                  <div class="border-r border-black">
-                    <span class="block font-bold p-2 border-b border-black"
-                      >39. Title</span
-                    >
-                    <div class="p-2 font-semibold">CEO</div>
-                  </div>
-                  <div class="">
-                    <div class="block font-bold p-2 border-b border-black">
-                      40. Date
-                    </div>
 
-                    <div class="p-2 font-semibold">
-                      {{
-                        finalCommercialInvoiceData.createdA
-                          | date : "mediumDate"
-                      }}
-                    </div>
+                  <div class="p-2 font-semibold">
+                    {{
+                      finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    }}
                   </div>
                 </div>
+              </div>
 
-                <div class="border-b border-black block font-bold p-2">
-                  41.
-                  <label
-                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-4 w-4 accent-black"
-                      formControlName="validateElectronicSignature"
-                      [value]="true"
-                    />
-                    Check here to validate Electronic Signature. Electronic
-                    signatures must be typed in all capital letters in Box 38 in
-                    order to be valid.
-                  </label>
-                </div>
-              </form>
+              <div class="border-b border-black block font-bold p-2">
+                41.
+                <label
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="validateElectronicSignature"
+                    [value]="true"
+                  />
+                  Check here to validate Electronic Signature. Electronic
+                  signatures must be typed in all capital letters in Box 38 in
+                  order to be valid.
+                </label>
+              </div>
             </div>
           </div>
         </mat-tab>

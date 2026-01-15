@@ -75,7 +75,7 @@ export class ListCommericalInvoiceComponent {
       Validators.required
     ),
   });
-  ciData: any;
+  ciNumber: any;
   public showModel: boolean = false;
   ngOnInit(): void {
     this.orgainizationService.getOrganization().subscribe({
@@ -102,7 +102,6 @@ export class ListCommericalInvoiceComponent {
       .getCommercialInvoicedPO(startDate, endDate)
       .subscribe({
         next: (result: any) => {
-          console.log(result);
           const data = result;
           this.sortedData.data = data;
           this.ciReport.data = data;

@@ -99,13 +99,11 @@
           mat-row
           *matRowDef="let row; columns: matHeaders"
           class="cursor-pointer hover:bg-gray-200 h-8"
-          (click)="openViewCIModel()"
+          (click)="openViewCIModel(row.commercialInvoiceId)"
         ></tr>
       </table>
     </div>
   </div>
-
-  <!-- no data found -->
 
   <div
     *ngIf="loadingReport == false && ciReport.data.length == 0"
@@ -113,7 +111,6 @@
   >
     No Data Found
   </div>
-  <!-- loading -->
   <div
     *ngIf="loadingReport"
     class="flex items-center justify-center py-10 px-5 mr-2 shadow-md font-medium text-gray-900"
@@ -147,6 +144,7 @@
   ></mat-paginator>
 </section>
 <app-view-commerical-invoice
+  *ngIf="showModel"
   [ciNumber]="ciNumber"
   (onClick)="showModel = false"
 >
