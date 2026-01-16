@@ -15,6 +15,11 @@ export class PackingListService {
   public getPackingListById(id: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/PackingList/${id}`);
   }
+  public getPackingListByCommericalInvoiceId(id: any): Observable<any> {
+    return this.http.get<any>(
+      `${environment.api}/PackingList/Commercial/${id}`
+    );
+  }
   public postPackingList(pkList: any): Observable<any> {
     return this.http.post<any>(`${environment.api}/PackingList`, pkList);
   }

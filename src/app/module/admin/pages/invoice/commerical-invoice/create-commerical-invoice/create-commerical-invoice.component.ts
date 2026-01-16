@@ -48,6 +48,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     customerId: new FormControl(null, Validators.required),
     shipperId: new FormControl(1, Validators.required),
     shipToId: new FormControl(0),
+    customerAddressesId: new FormControl(0),
     createdAt: new FormControl(
       new Date().toISOString().substring(0, 19),
       Validators.required
@@ -218,7 +219,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     inBondCode: new FormControl(''),
     entryNumber: new FormControl(''),
     ftzIdentifier: new FormControl(''),
-    tibCarnet: new FormControl(),
+    tibCarnet: new FormControl(false),
     ddtcApplicantRegistrationNumber: new FormControl(''),
     eligiblePartyCertification: new FormControl(false),
     nonLicensableScheduleBHTSNumbers: new FormControl(false),
@@ -494,6 +495,9 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       this.commercialInvoiceForm
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
+      this.commercialInvoiceForm
+        .get('shipToId')
+        ?.setValue(selectedAddress.addressId);
     }
   }
 
@@ -609,6 +613,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       purchaseOrderId: formValue.purchaseOrderId,
       customerId: formValue.customerId,
       shipperId: formValue.shipperId,
+      customerAddressesId: formValue.customerAddressesId,
       shipToId: formValue.shipToId,
       createdAt: formValue.createdAt,
       createdBy: formValue.createdBy,
@@ -738,7 +743,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       },
     };
 
-    // Populate sliForm items array with FormGroups for each item
     const sliItemsArray = this.sliForm.get('items') as FormArray;
     sliItemsArray.clear();
     this.finalPostData.commercialInvoiceItems.forEach(
@@ -773,7 +777,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     };
     this.packingListService.postPackingList(this.packingListData).subscribe({
       next: (res) => {
-        this.generateLoding = false;
         this.postSLi(res.packingListId, ciId);
         this.toastr.success('Packing List created successfully!');
       },
@@ -788,8 +791,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const formValue = this.commercialInvoiceForm.getRawValue();
     const items = formValue.commercialInvoiceItems;
     this.sliData = {
-      usppiNameId: formValue.shipperId,
-      usppiAddressId: formValue.shipperId,
+      usppiNameId: Number(formValue.shipperId),
+      usppiAddressId: Number(formValue.shipperId),
       flcName: this.sliForm.get('flcName')?.value,
       flcAddress: this.sliForm.get('flcAddress')?.value,
       forwardingAgent: this.sliForm.get('forwardingAgent')?.value,
@@ -798,8 +801,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       usppiReference: this.sliForm.get('usppiReference')?.value,
       routedExportTransaction: this.sliForm.get('routedExportTransaction')
         ?.value,
-      ucName: formValue.customerId,
-      ucAddressId: formValue.shipperId,
+      ucName: Number(formValue.customerId),
+      ucAddressId: Number(formValue.shipperId),
       ucType: this.sliForm.get('ucType')?.value,
       icName: this.sliForm.get('icName')?.value,
       icAddress: this.sliForm.get('icAddress')?.value,
@@ -821,7 +824,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         'nonLicensableScheduleBHTSNumbers'
       )?.value,
       usppiAuthorize: this.sliForm.get('usppiAuthorize')?.value,
-      usppiEmailAddress: this.sliForm.get('usppiEmailAddress')?.value,
+      usppiEmailAddress: this.seller?.email,
       authorizedOfficerName: 'Tony Jospeh',
       officerTitle: 'CEO',
       validateElectronicSignature: this.sliForm.get(
@@ -831,31 +834,37 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       items: items.map((item: any, index: number) => {
         const sliItem = this.sliItemsArray.at(index);
         return {
-          itemId: item.itemId,
+          itemId: Number(item.itemId),
           df: sliItem?.get('df')?.value,
           eccnEar99Usml: sliItem?.get('eccnEar99Usml')?.value,
           sme: sliItem?.get('sme')?.value,
           elNoNlr: sliItem?.get('elNoNlr')?.value,
-          shippingWeight: sliItem?.get('shippingWeight')?.value,
+          shippingWeight: Number(sliItem?.get('shippingWeight')?.value),
           licenseValueByItem: sliItem?.get('licenseValueByItem')?.value,
           partNumber: item.partNumber,
           description: item.description,
-          quanity: item.quantity,
-          unitPrice: item.unitPrice,
-          totalPrice: item.totalPrice,
-          poId: item.poId,
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unitPrice),
+          totalPrice: Number(item.totalPrice),
+          poId: Number(item.poId),
           hsc: item.hsc || '',
           ui: item.ui,
         };
       }),
-      usppiEmail: this.seller?.email,
       signatureDate: formValue.createdAt,
       commercialInvoiceNumber: formValue.commercialInvoiceNumber,
-      commercialInvoiceId: commercialInvoiceId,
-      packingListId: packingListId,
+      commercialInvoiceId: Number(commercialInvoiceId),
+      packingListId: Number(packingListId),
     };
     this.sliService.postSliList(this.sliData).subscribe({
       next: (res: any) => {
+        this.generateLoding = false;
+        this.currentStep = 1;
+        this.sortedData1.data = [];
+        this.sortedData2.data = [];
+        this.selection.clear();
+        this.commercialInvoiceForm.reset();
+        this.sliForm.reset();
         this.toastr.success('SLI created successfully!');
       },
     });
