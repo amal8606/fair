@@ -1,13 +1,18 @@
 <section
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto"
   (click)="closeModel()"
 >
-  <div class="relative w-full h-full p-4" (click)="$event.stopPropagation()">
+  <div
+    class="relative w-full h-full p-4 flex items-center justify-center"
+    (click)="$event.stopPropagation()"
+  >
     <!-- Modal Container -->
-    <div class="bg-white rounded-xl shadow-2xl h flex flex-col overflow-hidden">
+    <div
+      class="bg-white rounded-xl shadow-2xl w-full flex flex-col mt-5 h-[95vh] print:h-auto print:rounded-none print:shadow-none print:w-full print:mt-0"
+    >
       <!-- Modal Header -->
       <div
-        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50"
+        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 print:hidden"
       >
         <div class="flex items-center gap-3">
           <div class="p-2 bg-blue-100 rounded-lg">
@@ -26,9 +31,9 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-lg font-semibold text-gray-800">
+            <p class="text-lg font-semibold text-gray-800">
               Commercial Invoice Viewer
-            </h2>
+            </p>
             <p class="text-sm text-gray-500">
               Invoice #{{ ciNumber.commercialInvoiceNumber }}
             </p>
@@ -86,7 +91,7 @@
       </div>
 
       <!-- Tab Navigation -->
-      <div class="border-b border-gray-200">
+      <div class="border-b border-gray-200 overflow-y-auto flex-1">
         <mat-tab-group
           class="h-full"
           animationDuration="0ms"
@@ -97,7 +102,7 @@
             <!-- Keep existing COMMERCIAL INVOICE content exactly as is -->
             <div
               *ngIf="finalCommercialInvoiceData"
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
               <!-- Original COMMERCIAL INVOICE content -->
@@ -172,7 +177,7 @@
                   </span>
                 </div>
                 <div>
-                  <div class="w-96 h-60 flex-shrink-0">
+                  <div class="w-96 h-60 print:w-48 print:h-32 flex-shrink-0">
                     <img
                       src="companyLogo.png"
                       alt="FM Logo"
@@ -199,7 +204,7 @@
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    COMPANY -{{ finalCommercialInvoiceData?.shipperId }}
+                    COMPANY - {{ sellerDetails.sellerName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
@@ -270,12 +275,14 @@
                   >
                     FREIGHT INFO
                   </p>
-                  <div class="whitespace-pre-wrap">
+                  <div
+                    class="whitespace-pre-wrap"
+                    *ngIf="finalCommercialInvoiceData?.packingList?.length"
+                  >
                     <p>
-                      TOTAL NUMBER OF PACKAGES :
+                      TOTAL NUMBER OF PACKAGES:
                       {{
-                        finalCommercialInvoiceData?.packingList[0]
-                          ?.numberOfBoxes
+                        finalCommercialInvoiceData.packingList[0].numberOfBoxes
                       }}
                     </p>
                   </div>
@@ -514,7 +521,7 @@
                     Tony Joseph
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                    FAIRMOUNT INTERNATIONAL LLC
+                    {{ sellerDetails.sellerName }}
                   </div>
                 </div>
                 <div class="w-1/3 text-center">
@@ -532,7 +539,7 @@
           <mat-tab label="EXPORT PACKING LIST">
             <div
               *ngIf="finalCommercialInvoiceData"
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
               <div
@@ -625,7 +632,7 @@
                   </span>
                 </div>
                 <div>
-                  <div class="w-96 h-60 flex-shrink-0">
+                  <div class="w-96 h-60 print:w-48 print:h-32 flex-shrink-0">
                     <img
                       src="companyLogo.png"
                       alt="FM Logo"
@@ -654,9 +661,7 @@
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    COMPANY -{{
-                      finalCommercialInvoiceData?.packingList[0]?.sellerName
-                    }}
+                    COMPANY - {{ sellerDetails.sellerName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
@@ -885,7 +890,7 @@
                     {{ finalCommercialInvoiceData?.signerName }}
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                    FAIRMOUNT INTERNATIONAL LLC
+                    {{ sellerDetails.sellerName }}
                   </div>
                 </div>
                 <div class="w-1/3 text-center">
@@ -902,12 +907,12 @@
 
           <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
             <div
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
               <div
                 [formGroup]="sliForm"
-                class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
+                class="max-w-full mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900 print:break-inside-avoid"
               >
                 <div class="border border-black p-2 text-center bg-gray-100">
                   <p class="text-sm font-bold">
@@ -927,11 +932,11 @@
                       <span class="block font-bold"
                         >2. USPPI Address Including Zip Code:</span
                       >
-                      <div class="font-semibold">
-                        {{ finalCommercialInvoiceData?.shipperId }}
+                      <div class="font-bold">
+                        {{ sellerDetails.sellerName }}
                       </div>
                       <div class="font-semibold">
-                        {{ finalCommercialInvoiceData?.sellerAddress }}
+                        {{ sellerDetails.sellerAddress }}
                       </div>
                     </div>
                   </div>
@@ -982,7 +987,8 @@
                       class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
+                        name="relatedPartyIndicator"
                         class="h-4 w-4 accent-black"
                         formControlName="relatedPartyIndicator"
                         [value]="true"
@@ -994,7 +1000,8 @@
                       class="flex items-center gap-2 font-bold p-2 cursor-pointer"
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
+                        name="relatedPartyIndicator"
                         class="h-4 w-4 accent-black"
                         formControlName="relatedPartyIndicator"
                         [value]="false"
@@ -1022,7 +1029,8 @@
                       class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
+                        name="routedExportTransaction"
                         class="h-4 w-4 accent-black"
                         formControlName="routedExportTransaction"
                         [value]="true"
@@ -1034,7 +1042,8 @@
                       class="flex items-center gap-2 font-bold p-2 cursor-pointer"
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
+                        name="routedExportTransaction"
                         class="h-4 w-4 accent-black"
                         formControlName="routedExportTransaction"
                         [value]="false"
@@ -1044,21 +1053,27 @@
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 border-b border-black">
+                <div
+                  class="grid grid-cols-3 border-b border-black print:break-after-page"
+                >
                   <div class="p-2 border border-black">
                     <div class="block font-bold">
                       10. Ultimate Consignee Name & Address:
                     </div>
-                    <div class="font-semibold mt-2">
-                      {{ finalCommercialInvoiceData?.customerName }}
+                    <div class="font-bold mt-2">
+                      {{ customerDetails?.name }}
                     </div>
                     <div class="font-semibold">
-                      {{ finalCommercialInvoiceData?.customerAddress }}
+                      {{
+                        getCustomerAddress(
+                          finalCommercialInvoiceData?.customerAddressesId
+                        )
+                      }}
                     </div>
 
                     <div class="font-semibold">
                       Telephone (Office):
-                      {{ finalCommercialInvoiceData?.customerPhone }}
+                      {{ customerDetails?.phone }}
                     </div>
                   </div>
                   <div class="">
@@ -1066,7 +1081,7 @@
                       11. Ultimate Consignee Type (select one):
                     </div>
                     <div class="text-left">
-                      <div class="font-semibold border-b border-black py-2">
+                      <div class="font-semibold border-b border-black">
                         <label
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
@@ -1075,12 +1090,12 @@
                             name="ucType"
                             class="h-4 w-4 accent-black"
                             formControlName="ucType"
-                            value="Direct Consumer"
+                            [value]="'Direct Consumer'"
                           />
                           Direct Consumer
                         </label>
                       </div>
-                      <div class="font-semibold border-b border-black py-2">
+                      <div class="font-semibold border-b border-black">
                         <label
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
@@ -1089,12 +1104,12 @@
                             name="ucType"
                             class="h-4 w-4 accent-black"
                             formControlName="ucType"
-                            value="Government Entity"
+                            [value]="'Government Entity'"
                           />
                           Government Entity
                         </label>
                       </div>
-                      <div class="font-semibold border-b border-black py-2">
+                      <div class="font-semibold border-b border-black">
                         <label
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
@@ -1103,12 +1118,12 @@
                             name="ucType"
                             class="h-4 w-4 accent-black"
                             formControlName="ucType"
-                            value="Reseller"
+                            [value]="'Reseller'"
                           />
                           Reseller
                         </label>
                       </div>
-                      <div class="font-semibold py-2">
+                      <div class="font-semibold">
                         <label
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
@@ -1117,7 +1132,7 @@
                             name="ucType"
                             class="h-4 w-4 accent-black"
                             formControlName="ucType"
-                            value="Other/Unknown"
+                            [value]="'Other/Unknown'"
                           />
                           Other/Unknown
                         </label>
@@ -1168,7 +1183,8 @@
                             class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                           >
                             <input
-                              type="checkbox"
+                              type="radio"
+                              name="hazardousMaterial"
                               class="h-4 w-4 accent-black"
                               formControlName="hazardousMaterial"
                               [value]="true"
@@ -1180,7 +1196,8 @@
                             class="flex items-center gap-2 font-bold p-2 cursor-pointer"
                           >
                             <input
-                              type="checkbox"
+                              type="radio"
+                              name="hazardousMaterial"
                               class="h-4 w-4 accent-black"
                               formControlName="hazardousMaterial"
                               [value]="false"
@@ -1308,7 +1325,7 @@
                       <tr
                         class="border-b border-black align-top"
                         *ngFor="
-                          let item of finalCommercialInvoiceData?.items;
+                          let item of sliItemsArray.controls;
                           let i = index
                         "
                         [formGroupName]="i"
@@ -1316,41 +1333,46 @@
                         <td
                           class="border-r border-black p-2 font-semibold text-center"
                         >
-                          {{ item?.df }}
+                          {{ item.get("df")?.value }}
                         </td>
                         <td class="border-r border-black p-2">
-                          <span class="font-bold"> {{ item?.hsc }}</span>
+                          <span class="font-bold">
+                            {{ item.get("hsc")?.value }}</span
+                          >
                           <br />
-                          {{ item?.description }} <br />
+                          {{ item.get("description")?.value }} <br />
                           <br />
-                          PART #: {{ item?.partNumber }}
+                          PART #: {{ item.get("partNumber")?.value }}
                           <br />
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.ui }}
+                          {{ item.get("ui")?.value }}
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.quantity }}
+                          {{ item.get("quantity")?.value }}
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.shippingWeight }}
+                          {{ item.get("shippingWeight")?.value }}
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.eccnEar99Usml }}
+                          {{ item.get("eccnEar99Usml")?.value }}
                         </td>
 
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.sme }}
+                          {{ item.get("sme")?.value }}
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ item?.elNoNlr }}
+                          {{ item.get("elNoNlr")?.value }}
                         </td>
                         <td class="border-r border-black p-2 font-semibold">
-                          {{ (item?.unitPrice || 0) * (item?.quantity || 0) }}
+                          {{
+                            (item.get("unitPrice")?.value || 0) *
+                              (item.get("quantity")?.value || 0)
+                          }}
                         </td>
 
                         <td class="p-2 font-bold text-right">
-                          {{ item?.licenseValueByItem }}
+                          {{ item.get("licenseValueByItem")?.value }}
                         </td>
                       </tr>
                     </tbody>
@@ -1377,7 +1399,8 @@
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
                           <input
-                            type="checkbox"
+                            type="radio"
+                            name="eligiblePartyCertification"
                             class="h-4 w-4 accent-black"
                             formControlName="eligiblePartyCertification"
                             [value]="true"
@@ -1390,7 +1413,8 @@
                           class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                         >
                           <input
-                            type="checkbox"
+                            type="radio"
+                            name="eligiblePartyCertification"
                             class="h-4 w-4 accent-black"
                             formControlName="eligiblePartyCertification"
                             [value]="false"
@@ -1504,20 +1528,18 @@
             </div>
           </mat-tab>
         </mat-tab-group>
-
-        <div *ngIf="isLoading" class="flex-1 flex items-center justify-center">
-          <div class="text-center">
-            <div
-              class="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-2 border-t-[#a5b98b] mx-auto mb-4"
-            ></div>
-            <p class="text-gray-600">Loading invoice data...</p>
-          </div>
+      </div>
+      <div *ngIf="isLoading" class="flex-1 flex items-center justify-center">
+        <div class="text-center">
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-2 border-t-[#a5b98b] mx-auto mb-4"
+          ></div>
+          <p class="text-gray-600">Loading invoice data...</p>
         </div>
       </div>
-
       <!-- Modal Footer -->
       <div
-        class="px-6 py-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center"
+        class="px-6 py-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center print:hidden"
       >
         <div class="flex items-center gap-4">
           <button

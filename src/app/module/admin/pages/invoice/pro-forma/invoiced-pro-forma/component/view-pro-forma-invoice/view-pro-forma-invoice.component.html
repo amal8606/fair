@@ -11,13 +11,35 @@
       class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight"
       style="font-size: 10pt"
     >
-      <div>
+      <div class="flex gap-2">
         <button
           (click)="printCommercialInvoice()"
           type="button"
           class="px-6 py-2 print:hidden mb-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
         >
           Print
+        </button>
+
+        <button
+          *ngIf="!isUpdating"
+          disabled="{{ finalInvoiceData.status === 'Complete' }}"
+          (click)="
+            updateStatus(
+              finalInvoiceData.proformaId,
+              finalInvoiceData.purchaseOrderId
+            )
+          "
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Update Status -> Complete
+        </button>
+        <button
+          *ngIf="isUpdating"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
+        >
+          Updating ...
         </button>
       </div>
       <!-- HEADER -->

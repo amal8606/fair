@@ -28,4 +28,11 @@ export class InvoiceService {
   public getProFormaInvoiceById(id: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/Invoice/proforma/${id}`);
   }
+
+  public updateProFormaInvoice(id: any, poId: any): Observable<any> {
+    return this.http.post<any>(
+      `${environment.api}/Invoice/updateStatus?id=${id}&poId=${poId}`,
+      {}
+    );
+  }
 }

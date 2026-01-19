@@ -64,64 +64,6 @@ export class ViewCommericalInvoiceComponent implements OnInit {
   public commercialInvoiceItems: any;
   public packetListing: any;
   public sli: any;
-  // public finalCommercialInvoiceData = {
-  //   sellerName: 'FAIRMOUNT INTERNATIONAL LLC',
-  //   sellerAddress: '11877 91st Ave, SEMINOLE, FL. 33772',
-  //   sellerPhone: '727-460-6757',
-  //   signerName: 'Tony Jospeh',
-  //   signDate: '2025-12-20',
-  //   commercialInvoiceNumber: 'CI-8754',
-  //   createdAt: '2025-12-20',
-  //   poNumber: null,
-  //   customerId: '2',
-  //   contactName: 'TEST',
-  //   contactNo: '7845120963',
-  //   taxId: 'TEST',
-  //   ein: 'Test',
-  //   email: 'fairmount@gmail.com',
-  //   note: '',
-  //   customerName: 'BlueWave Construction Supplies',
-  //   customerAddress: 'Plot 45 Industrial Area, Near Metro Station, Pune, Maharashtra, 411001, India',
-  //   shipToAddress: 'Warehouse No. 9, Hinjewadi Phase 2, Pune, Maharashtra, 411057, India',
-  //   freightType: '',
-  //   termsOfSale: 'TEST',
-  //   termsOfPayment: 'TEST',
-  //   termsOfShipping: 'TEST',
-  //   modeOfTransport: 'TEST',
-  //   finalDestination: 'USA',
-  //   placeOfReceipt: 'TEST',
-  //   currency: 'USD',
-  //   email2: 'fairmount@gmail.com',
-  //   k11: 'TEST',
-  //   noOfBoxes: 10,
-  //   billOfLandingAwbNo: 'TEST',
-  //   noOfPallets: 10,
-  //   grossWeight: 10,
-  //   marksandNumbers: 'TEST',
-  //   items: [
-  //     {
-  //       commercialInvoiceNumber: 'CI-8754',
-  //       itemId: 36,
-  //       partNumber: 'PT-784512',
-  //       poNumber: 'fr-98778',
-  //       countryOfOrgin: '',
-  //       ui: '',
-  //       poId: 10,
-  //       hsc: '62034290',
-  //       description: 'Test',
-  //       quantity: 10,
-  //       unitPrice: 1000,
-  //       totalPrice: 10000,
-  //     },
-  //   ],
-  //   totals: {
-  //     subTotal: 10000,
-  //     taxableAmount: 0,
-  //     shippingCharge: 0,
-  //     grandTotal: 10000,
-  //     currency: 'USD',
-  //   },
-  // };
   public customerDetails: any;
   ngOnInit() {
     if (this.ciNumber) {
@@ -188,18 +130,52 @@ export class ViewCommericalInvoiceComponent implements OnInit {
             ...this.finalCommercialInvoiceData,
             ...res,
           };
+
+          // Populate form controls
+          this.sliForm.controls['relatedPartyIndicator'].setValue(
+            res.relatedPartyIndicator
+          );
+          this.sliForm.controls['routedExportTransaction'].setValue(
+            res.routedExportTransaction
+          );
+          this.sliForm.controls['ucType'].setValue(res.ucType);
+          this.sliForm.controls['hazardousMaterial'].setValue(
+            res.hazardousMaterial
+          );
+          this.sliForm.controls['tibCarnet'].setValue(res.tibCarnet);
+          this.sliForm.controls['eligiblePartyCertification'].setValue(
+            res.eligiblePartyCertification
+          );
+          this.sliForm.controls['nonLicensableScheduleBHTSNumbers'].setValue(
+            res.nonLicensableScheduleBHTSNumbers
+          );
+          this.sliForm.controls['usppiAuthorize'].setValue(res.usppiAuthorize);
+          this.sliForm.controls['validateElectronicSignature'].setValue(
+            res.validateElectronicSignature
+          );
+
+          // Populate items FormArray
+          const itemsArray = this.sliForm.get('items') as FormArray;
+          itemsArray.clear();
+          if (res.items && res.items.length > 0) {
+            res.items.forEach((item: any) => {
+              itemsArray.push(this.itemGroup(item));
+            });
+          }
+
           this.isLoading = false;
-          console.log(this.finalCommercialInvoiceData);
         },
       });
   }
 
   public getOrgName(orgId: any) {
-    this.orgainizationService.getOrganizationById(orgId).subscribe({
-      next: (orgData) => {
-        return orgData.name;
-      },
-    });
+    if (orgId) {
+      this.orgainizationService.getOrganizationById(orgId).subscribe({
+        next: (orgData) => {
+          return orgData.name;
+        },
+      });
+    }
   }
   public getCustomerAddress(addressId: any) {
     if (!this.customerDetails?.addresses) {

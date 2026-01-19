@@ -68,6 +68,16 @@ export class ViewProFormaInvoiceComponent {
     );
   }
 
+  isUpdating: boolean = false;
+  updateStatus(id: any, poId: any) {
+    this.isUpdating = true;
+    this.invoiceService.updateProFormaInvoice(id, poId).subscribe({
+      next: (res) => {
+        this.isUpdating = false;
+        this.closeModel();
+      },
+    });
+  }
   printCommercialInvoice() {
     const invoiceNumber = this.finalInvoiceData?.proformaNumber;
 
