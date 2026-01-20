@@ -126,7 +126,7 @@
               Actual Cost
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
+              {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -135,7 +135,7 @@
               Unit Price
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
+              {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -144,7 +144,7 @@
               Total Price
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
+              {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -247,20 +247,20 @@
           <ng-container matColumnDef="actualCostPerUnit">
             <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
+              {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
             <th mat-header-cell *matHeaderCellDef>Unit Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
+              {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
             <th mat-header-cell *matHeaderCellDef>Total Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
+              {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
@@ -1096,7 +1096,7 @@
                 >
                   DATE -
                   {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    finalCommercialInvoiceData.createdAt | date: "mediumDate"
                   }}
                 </span>
                 <span
@@ -1310,7 +1310,7 @@
                       {{ item.partNumber }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
+                      {{ item.unit }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
                       <p class="font-medium">
@@ -1503,7 +1503,7 @@
                 >
                   DATE -
                   {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    finalCommercialInvoiceData.createdAt | date: "mediumDate"
                   }}
                 </span>
                 <span
@@ -1738,7 +1738,7 @@
                       {{ item.quantity }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
+                      {{ item.unit }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
                       <p class="font-medium">
@@ -1749,7 +1749,7 @@
                       {{ item.poNumber }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.countryOfOrgin }}
+                      {{ item.countryOfOrigin }}
                     </td>
 
                     <td class="p-1 align-top border border-gray-400">
@@ -2481,7 +2481,7 @@
 
                   <div class="p-2 font-semibold">
                     {{
-                      finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                      finalCommercialInvoiceData.createdAt | date: "mediumDate"
                     }}
                   </div>
                 </div>

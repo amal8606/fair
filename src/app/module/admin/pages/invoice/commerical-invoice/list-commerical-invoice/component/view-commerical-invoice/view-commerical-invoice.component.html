@@ -123,8 +123,7 @@
                   >
                     DATE -
                     {{
-                      finalCommercialInvoiceData?.createdAt
-                        | date : "mediumDate"
+                      finalCommercialInvoiceData?.createdAt | date: "mediumDate"
                     }}
                   </span>
                   <span
@@ -361,7 +360,7 @@
                         {{ item?.partNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item?.ui }}
+                        {{ item?.unit }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         <p class="font-medium">
@@ -372,7 +371,7 @@
                         {{ item?.poNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item?.countryOfOrgin }}
+                        {{ item?.countryOfOrigin }}
                       </td>
                       <td
                         class="p-1 align-top text-right border border-gray-400"
@@ -559,8 +558,7 @@
                   >
                     DATE -
                     {{
-                      finalCommercialInvoiceData?.createdAt
-                        | date : "mediumDate"
+                      finalCommercialInvoiceData?.createdAt | date: "mediumDate"
                     }}
                   </span>
                   <span
@@ -841,7 +839,7 @@
                         {{ item?.quantity }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item?.ui }}
+                        {{ item?.unit }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         <p class="font-medium">
@@ -852,7 +850,7 @@
                         {{ item?.poNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item?.countryOfOrgin }}
+                        {{ item?.countryOfOrigin }}
                       </td>
 
                       <td class="p-1 align-top border border-gray-400">
@@ -1502,7 +1500,7 @@
                     <div class="p-2 font-semibold">
                       {{
                         finalCommercialInvoiceData?.createdAt
-                          | date : "mediumDate"
+                          | date: "mediumDate"
                       }}
                     </div>
                   </div>

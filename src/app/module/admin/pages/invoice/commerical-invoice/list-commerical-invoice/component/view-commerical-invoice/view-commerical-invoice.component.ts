@@ -43,7 +43,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
     private readonly invoiceSrv: CommercialInvoiceService,
     private readonly orgainizationService: OrgainizationService,
     private readonly packingListService: PackingListService,
-    private readonly sliService: SliService
+    private readonly sliService: SliService,
   ) {}
   @Input() public ciNumber: any;
   @Output() onClick = new EventEmitter();
@@ -133,25 +133,25 @@ export class ViewCommericalInvoiceComponent implements OnInit {
 
           // Populate form controls
           this.sliForm.controls['relatedPartyIndicator'].setValue(
-            res.relatedPartyIndicator
+            res.relatedPartyIndicator,
           );
           this.sliForm.controls['routedExportTransaction'].setValue(
-            res.routedExportTransaction
+            res.routedExportTransaction,
           );
           this.sliForm.controls['ucType'].setValue(res.ucType);
           this.sliForm.controls['hazardousMaterial'].setValue(
-            res.hazardousMaterial
+            res.hazardousMaterial,
           );
           this.sliForm.controls['tibCarnet'].setValue(res.tibCarnet);
           this.sliForm.controls['eligiblePartyCertification'].setValue(
-            res.eligiblePartyCertification
+            res.eligiblePartyCertification,
           );
           this.sliForm.controls['nonLicensableScheduleBHTSNumbers'].setValue(
-            res.nonLicensableScheduleBHTSNumbers
+            res.nonLicensableScheduleBHTSNumbers,
           );
           this.sliForm.controls['usppiAuthorize'].setValue(res.usppiAuthorize);
           this.sliForm.controls['validateElectronicSignature'].setValue(
-            res.validateElectronicSignature
+            res.validateElectronicSignature,
           );
 
           // Populate items FormArray
@@ -182,7 +182,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
       return '';
     }
     const address = this.customerDetails.addresses.find(
-      (addr: any) => addr.addressId === addressId
+      (addr: any) => addr.addressId === addressId,
     );
     return (
       (address?.addressLine1 ? address.addressLine1 + '\n' : '') +
@@ -248,7 +248,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
         totalPrice: item?.totalPrice || 0,
         poId: item?.poId || 0,
         hsc: item?.hsc || '',
-        ui: item?.ui || '',
+        unit: item?.unit || '',
       };
 
       return new FormGroup({
@@ -266,7 +266,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
         totalPrice: new FormControl(itemData.totalPrice),
         poId: new FormControl(itemData.poId),
         hsc: new FormControl(itemData.hsc),
-        ui: new FormControl(itemData.ui),
+        unit: new FormControl(itemData.unit),
       });
     }
   }

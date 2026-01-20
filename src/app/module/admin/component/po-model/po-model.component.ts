@@ -17,7 +17,6 @@ import { MatRadioModule } from '@angular/material/radio';
   imports: [
     CommonModule,
     FormsModule,
-    MatButton,
     ReactiveFormsModule,
     MatProgressBarModule,
     MatRadioModule,
@@ -28,12 +27,12 @@ export class PoModelComponent {
   public showModel = false;
   public newTagName = '';
 
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<boolean>();
   @Input() public po: any;
 
   constructor(
     private readonly poService: PoService,
-    private readonly toaster: ToastrService
+    private readonly toaster: ToastrService,
   ) {}
   public addItemModel: boolean = false;
   public productItems: any;
@@ -54,7 +53,30 @@ export class PoModelComponent {
     totalPrice: new FormControl(''),
     actualCostPerUnit: new FormControl(null, Validators.required),
     terms: new FormControl(''),
+    countryOfOrigin: new FormControl(''),
+    hsc: new FormControl(''),
+    weightDim: new FormControl(''),
   });
+
+  public statusForm: FormGroup = new FormGroup({
+    statusId: new FormControl('', Validators.required),
+  });
+
+  poStatusesIncoming = [
+    { id: 1, name: 'Created' },
+    { id: 2, name: 'Pro-Forma' },
+    { id: 4, name: 'Ready For Outgoing PO' },
+  ];
+
+  poStatusesOutgoing = [
+    { id: 6, name: 'Created' },
+    { id: 7, name: 'Sent To Supplier' },
+    { id: 8, name: 'Supplier Confirmed' },
+    { id: 9, name: 'Received' },
+    { id: 11, name: 'Closed' },
+  ];
+  statuses: any[] = [];
+
   editItem(index: number) {
     this.editingIndex = index;
   }
@@ -104,10 +126,17 @@ export class PoModelComponent {
     //   }
     // });
   }
+
   ngOnInit() {
     this.getPO();
+    if (this.po.poType === 'Outgoing') {
+      this.statuses = this.poStatusesOutgoing;
+    } else {
+      this.statuses = this.poStatusesIncoming;
+    }
   }
 
+  newVlaue: number = 0;
   public getPO() {
     this.loading = true;
     this.poService.getPO(this.po.id).subscribe({
@@ -116,9 +145,11 @@ export class PoModelComponent {
         this.productItems = response;
         this.subTotal = this.productItems.reduce(
           (acc: number, item: any) => acc + item.totalPrice,
-          0
+          0,
         );
-        this.total = this.subTotal;
+        this.newVlaue = this.subTotal - this.po.discount;
+        this.newVlaue = this.newVlaue + this.po.shippingCharges;
+        this.total = this.newVlaue;
       },
       error: (error) => {
         if (error.status === 404) {
@@ -130,7 +161,7 @@ export class PoModelComponent {
   }
 
   public closeModel() {
-    this.onClick.emit();
+    this.onClick.emit(false);
   }
 
   public isAdding: boolean = false;
@@ -161,6 +192,27 @@ export class PoModelComponent {
       },
     });
   }
+
+  public updateStatusModel: boolean = false;
+  closeStatusModel() {
+    this.updateStatusModel = !this.updateStatusModel;
+    this.onClick.emit(true);
+  }
+  updateStatus() {
+    this.updateStatusModel = true;
+    const statusId = this.statusForm.get('statusId')?.value;
+    this.poService.updatePoStatus(statusId, this.po.id).subscribe({
+      next: () => {
+        this.updateStatusModel = false;
+        this.toaster.success('PO Status updated successfully', 'Success');
+        this.closeModel();
+      },
+      error: () => {
+        this.toaster.error('Failed to update PO Status', 'Error');
+      },
+    });
+  }
+
   closeItemModel() {
     this.addItemModel = !this.addItemModel;
     this.addPOItemForm.reset();
