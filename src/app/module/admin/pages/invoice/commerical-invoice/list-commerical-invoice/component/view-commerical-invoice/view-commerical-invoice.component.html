@@ -15,26 +15,24 @@
         class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 print:hidden"
       >
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-blue-100 rounded-lg">
-            <svg
-              class="w-5 h-5 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-          </div>
           <div>
             <p class="text-lg font-semibold text-gray-800">
               Commercial Invoice Viewer
             </p>
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-500 flex gap-1">
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
               Invoice #{{ ciNumber.commercialInvoiceNumber }}
             </p>
           </div>
@@ -281,7 +279,8 @@
                     <p>
                       TOTAL NUMBER OF PACKAGES:
                       {{
-                        finalCommercialInvoiceData.packingList[0].numberOfBoxes
+                        finalCommercialInvoiceData.packingList?.[0]
+                          .numberOfBoxes
                       }}
                     </p>
                   </div>
@@ -566,7 +565,7 @@
                   >
                     Bill OF LANDIND/AWB NO
                     {{
-                      finalCommercialInvoiceData?.packingList[0]
+                      finalCommercialInvoiceData?.packingList?.[0]
                         ?.billOfLadingOrAWBNo
                     }}
                   </span>
@@ -581,7 +580,8 @@
                   >
                     NO. BOXES -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]?.numberOfBoxes
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        ?.numberOfBoxes
                     }}
                   </span>
                   <span
@@ -589,8 +589,8 @@
                   >
                     NO OF PALLETS -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]
-                        ?.numberOfPallets
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .numberOfPallets
                     }}
                   </span>
                   <span
@@ -598,7 +598,7 @@
                   >
                     GROSS WEIGHT -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]?.grossWeight
+                      finalCommercialInvoiceData?.packingList?.[0].grossWeight
                     }}
                   </span>
                   <span
@@ -606,8 +606,8 @@
                   >
                     MARKS & NUMBERS -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]
-                        ?.marksandNumbers
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .marksandNumbers
                     }}
                   </span>
                   <span
@@ -615,8 +615,8 @@
                   >
                     MODE OF TRANSPORT -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]
-                        ?.modeOfTransport
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .modeOfTransport
                     }}
                   </span>
 
@@ -625,7 +625,8 @@
                   >
                     PLACE OF RECEIPT -
                     {{
-                      finalCommercialInvoiceData?.packingList[0]?.placeOfReceipt
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .placeOfReceipt
                     }}
                   </span>
                 </div>
@@ -671,7 +672,7 @@
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     {{
-                      finalCommercialInvoiceData?.packingList[0]?.sellerAddress
+                      finalCommercialInvoiceData?.packingList?.[0].sellerAddress
                     }}
                   </span>
                   <span
@@ -684,18 +685,18 @@
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     E-mail -
-                    {{ finalCommercialInvoiceData?.packingList[0]?.email }}
+                    {{ finalCommercialInvoiceData?.packingList?.[0].email }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     E-mail -
-                    {{ finalCommercialInvoiceData?.packingList[0]?.email2 }}
+                    {{ finalCommercialInvoiceData?.packingList?.[0].email2 }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    K11 - {{ finalCommercialInvoiceData?.packingList[0]?.k11 }}
+                    K11 - {{ finalCommercialInvoiceData?.packingList?.[0].k11 }}
                   </span>
                 </div>
               </div>
@@ -753,8 +754,8 @@
                     <p>
                       TOTAL NUMBER OF PACKAGES :
                       {{
-                        finalCommercialInvoiceData?.packingList[0]
-                          ?.numberOfBoxes
+                        finalCommercialInvoiceData?.packingList?.[0]
+                          .numberOfBoxes
                       }}
                     </p>
                   </div>
@@ -821,8 +822,8 @@
                   >
                     <tr
                       *ngFor="
-                        let item of finalCommercialInvoiceData?.packingList[0]
-                          ?.packingListItems;
+                        let item of finalCommercialInvoiceData?.packingList?.[0]
+                          .packingListItems;
                         let i = index
                       "
                       class=""
@@ -1604,12 +1605,6 @@
 
         <div class="flex items-center gap-3">
           <button
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            (click)="closeModel()"
-          >
-            Close
-          </button>
-          <button
             class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             (click)="printDocument()"
           >
@@ -1628,7 +1623,62 @@
             </svg>
             Print
           </button>
+          <!-- <button
+            (click)="deleteInvoiceButton = !deleteInvoiceButton"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            Delete
+          </button> -->
+          <button
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            (click)="closeModel()"
+          >
+            Close
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- DELETE CONFIRMATION MODAL -->
+<section
+  *ngIf="deleteInvoiceButton"
+  class="fixed flex items-center justify-center print:bg-white bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 print:p-0 overflow-hidden sm:inset-0 h-[calc(100%-1rem)] md:h-full print:hidden"
+  (click)="deleteInvoiceButton = false"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="relative w-full max-w-3xl max-h-56 print:w-full overflow-y-auto"
+  >
+    <div
+      class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight items-center"
+    >
+      <div>
+        <p>Are you sure you want to delete this Invoice</p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          *ngIf="!isDeleting"
+          (click)="deleteInvoice()"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-red-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Delete
+        </button>
+        <button
+          *ngIf="isDeleting"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-red-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-red-700"
+        >
+          Deleting ...
+        </button>
+        <button
+          (click)="deleteInvoiceButton = false"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>

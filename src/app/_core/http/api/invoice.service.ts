@@ -11,18 +11,18 @@ export class InvoiceService {
 
   public getProFormaInvoiceData(startDate: any, endDate: any): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/Invoice/proforma-invoices?startDate=${startDate}&endDate=${endDate}`
+      `${environment.api}/Invoice/proforma-invoices?startDate=${startDate}&endDate=${endDate}`,
     );
   }
   public getProFormaInvoicablePO(): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/Invoice/proforma-invoiceable-pos`
+      `${environment.api}/Invoice/proforma-invoiceable-pos`,
     );
   }
   public postProFormaInvoiceData(proForm: any): Observable<any> {
     return this.http.post<any>(
       `${environment.api}/Invoice/proforma-invoices`,
-      proForm
+      proForm,
     );
   }
   public getProFormaInvoiceById(id: any): Observable<any> {
@@ -32,7 +32,12 @@ export class InvoiceService {
   public updateProFormaInvoice(id: any, poId: any): Observable<any> {
     return this.http.post<any>(
       `${environment.api}/Invoice/updateStatus?id=${id}&poId=${poId}`,
-      {}
+      {},
+    );
+  }
+  public deleteProforma(id: any, poId: any): Observable<any> {
+    return this.http.delete<any>(
+      `${environment.api}/Invoice?id=${id}&poId=${poId}`,
     );
   }
 }

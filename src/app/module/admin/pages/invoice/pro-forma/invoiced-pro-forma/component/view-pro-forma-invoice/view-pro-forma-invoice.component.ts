@@ -13,11 +13,11 @@ import { PoService } from '../../../../../../../../_core/http/api/po.service';
 })
 export class ViewProFormaInvoiceComponent {
   @Input() public proformaDetails: any;
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<boolean>();
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly orgainizationService: OrgainizationService,
-    private readonly poService: PoService
+    private readonly poService: PoService,
   ) {}
   public sellerDetails = {
     sellerName: 'FAIRMOUNT INTERNATIONAL LLC',
@@ -56,7 +56,7 @@ export class ViewProFormaInvoiceComponent {
       return '';
     }
     const address = this.customerDetails.addresses.find(
-      (addr: any) => addr.addressId === addressId
+      (addr: any) => addr.addressId === addressId,
     );
 
     return (
@@ -74,7 +74,7 @@ export class ViewProFormaInvoiceComponent {
     this.invoiceService.updateProFormaInvoice(id, poId).subscribe({
       next: (res) => {
         this.isUpdating = false;
-        this.closeModel();
+        this.onClick.emit(true);
       },
     });
   }
@@ -97,5 +97,22 @@ export class ViewProFormaInvoiceComponent {
 
   closeModel() {
     this.onClick.emit();
+  }
+
+  deleteProformaButton: boolean = false;
+  isDeleting: boolean = false;
+  deleteProforma() {
+    this.isDeleting = true;
+    this.invoiceService
+      .deleteProforma(
+        this.proformaDetails.proformaId,
+        this.proformaDetails.purchaseOrderId,
+      )
+      .subscribe({
+        next: (res) => {
+          this.isDeleting = false;
+          this.onClick.emit(true);
+        },
+      });
   }
 }

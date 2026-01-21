@@ -495,7 +495,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
       this.commercialInvoiceForm
-        .get('shipToId')
+        .get('customerAddressesId')
         ?.setValue(selectedAddress.addressId);
     }
   }
@@ -866,6 +866,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         this.selection.clear();
         this.commercialInvoiceForm.reset();
         this.sliForm.reset();
+        this.getCommercialInvoicablePO();
         this.toastr.success('SLI created successfully!');
       },
     });

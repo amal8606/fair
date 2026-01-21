@@ -7,17 +7,15 @@
     class="relative h-full w-full max-w-7xl max-h-[650px] overflow-y-scroll rounded-lg no-scrollbar"
   >
     <div class="relative bg-white rounded-lg shadow mt-50">
-      <div class="p-6 border-b rounded-t bg-blue-200">
+      <div class="p-5 border-b rounded-t bg-gray-600 text-white">
         <div class="flex justify-between">
-          <p
-            class="text-[1rem] flex mb-0 items-center font-semibold text-gray-900"
-          >
+          <p class="text-xl flex mb-0 items-center font-semibold">
             Fairmount LLC
           </p>
 
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            class="text-gray-200 bg-transparent rounded-3xl text-sm p-1 ml-auto inline-flex items-center"
             (click)="closeModel()"
           >
             <svg
@@ -36,15 +34,14 @@
             <span class="sr-only">Close modal</span>
           </button>
         </div>
-
         <p class="">
           PO Status : <span class="font-semibold">{{ po.poStatus }}</span>
         </p>
       </div>
-      <div class="px-6 mt-4">
+      <div class="px-6 mt-2">
         <div class="space-y-4 text-sm text-gray-700">
           <div class="flex flex-col justify-between gap-8">
-            <div class="flex mb-4">
+            <div class="flex mb-2">
               <div>
                 <button
                   (click)="addItemModel = !addItemModel"
@@ -62,7 +59,6 @@
                 </button>
               </div>
             </div>
-
             <form [formGroup]="addPOItemForm">
               <div *ngIf="addItemModel">
                 <div class="grid grid-cols-4 gap-4 mb-4">
@@ -217,14 +213,14 @@
                 <div class="w-[20%] flex gap-2 items-end">
                   <button
                     (click)="updateStatus()"
-                    [disabled]="updateStatusModel || statusForm.invalid"
+                    [disabled]="isUpdating || statusForm.invalid"
                     class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
                   >
-                    <ng-container *ngIf="!updateStatusModel">
+                    <ng-container *ngIf="!isUpdating">
                       Update Status
                     </ng-container>
 
-                    <ng-container *ngIf="updateStatusModel">
+                    <ng-container *ngIf="isUpdating">
                       <span>Updating </span>
                       <span class="loading-dots">
                         <span class="dot">.</span>

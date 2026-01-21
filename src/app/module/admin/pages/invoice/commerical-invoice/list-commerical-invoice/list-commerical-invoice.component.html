@@ -146,6 +146,6 @@
 <app-view-commerical-invoice
   *ngIf="showModel"
   [ciNumber]="ciNumber"
-  (onClick)="showModel = false"
+  (onClick)="closeModel($event)"
 >
 </app-view-commerical-invoice>

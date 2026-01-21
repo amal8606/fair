@@ -194,18 +194,19 @@ export class PoModelComponent {
   }
 
   public updateStatusModel: boolean = false;
+  public isUpdating: boolean = false;
   closeStatusModel() {
     this.updateStatusModel = !this.updateStatusModel;
     this.onClick.emit(true);
   }
   updateStatus() {
-    this.updateStatusModel = true;
+    this.isUpdating = true;
     const statusId = this.statusForm.get('statusId')?.value;
     this.poService.updatePoStatus(statusId, this.po.id).subscribe({
       next: () => {
-        this.updateStatusModel = false;
+        this.isUpdating = false;
         this.toaster.success('PO Status updated successfully', 'Success');
-        this.closeModel();
+        this.onClick.emit(false);
       },
       error: () => {
         this.toaster.error('Failed to update PO Status', 'Error');

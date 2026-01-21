@@ -78,7 +78,7 @@
             Date
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.createdAt | date : "mediumDate" }}
+            {{ element.createdAt | date: "mediumDate" }}
           </td>
         </ng-container>
         <ng-container matColumnDef="estimatedShipDate">
@@ -90,7 +90,7 @@
             Estimated Ship Date
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.estimatedShipDate | date : "mediumDate" }}
+            {{ element.estimatedShipDate | date: "mediumDate" }}
           </td>
         </ng-container>
         <ng-container matColumnDef="totalAmount">
@@ -99,7 +99,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <ng-container>
-              {{ element.totalAmount | currency : "USD" }}
+              {{ element.totalAmount | currency: "USD" }}
             </ng-container>
 
             <ng-template #documentTitle>Not Set</ng-template>
@@ -176,5 +176,5 @@
 <app-view-pro-forma-invoice
   *ngIf="viewModel"
   [proformaDetails]="proformaDetails"
-  (onClick)="closeModel()"
+  (onClick)="closeModel($event)"
 ></app-view-pro-forma-invoice>

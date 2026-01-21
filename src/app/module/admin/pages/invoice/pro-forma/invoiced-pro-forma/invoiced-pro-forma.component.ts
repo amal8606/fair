@@ -40,7 +40,7 @@ export class InvoicedProFormaComponent {
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly toastrService: ToastrService,
-    private readonly orgainizationService: OrgainizationService
+    private readonly orgainizationService: OrgainizationService,
   ) {}
 
   public endDate = new Date();
@@ -57,11 +57,11 @@ export class InvoicedProFormaComponent {
   proFormaForm: FormGroup = new FormGroup({
     startDate: new FormControl(
       this.formatDate(this.startDate),
-      Validators.required
+      Validators.required,
     ),
     endDate: new FormControl(
       this.formatDate(this.endDate),
-      Validators.required
+      Validators.required,
     ),
   });
   public orgList: any;
@@ -140,7 +140,7 @@ export class InvoicedProFormaComponent {
   }
   public getCustomerName(customerId: any) {
     const customer = this.orgList.find(
-      (c: any) => c.organizationId == customerId
+      (c: any) => c.organizationId == customerId,
     );
     return customer?.name || '';
   }
@@ -150,7 +150,12 @@ export class InvoicedProFormaComponent {
     this.viewModel = true;
     this.proformaDetails = element;
   }
-  public closeModel() {
-    this.viewModel = false;
+  public closeModel(event: any) {
+    if (event == true) {
+      this.viewModel = false;
+      this.getInoicedProForma();
+    } else {
+      this.viewModel = false;
+    }
   }
 }

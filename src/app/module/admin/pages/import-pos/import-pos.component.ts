@@ -90,14 +90,15 @@ export class ImportPosComponent {
             };
           }
           acc[po].items.push({
-            quantity: +row['Quantity'],
+            quantity: row['Quantity'],
             unit: row['Unit'],
             description: row['ItemDescription'],
             partNumber: row['PartNumber'],
-            unitPrice: +row['UnitPrice'],
-            countryOfOrigin: +row['CountryOfOrigin'],
-            hsc: +row['HSC'],
-            weightDim: +row['WeightDim'],
+            manufacturerModel: row['PartNumber'],
+            unitPrice: row['UnitPrice'],
+            countryOfOrigin: row['CountryOfOrigin'],
+            hsc: row['HSC'],
+            weightDim: row['WeightDim'],
             totalPrice: +row['TotalPrice'],
           });
           return acc;

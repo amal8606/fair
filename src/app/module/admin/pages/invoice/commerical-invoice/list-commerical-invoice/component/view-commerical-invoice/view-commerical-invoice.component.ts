@@ -46,7 +46,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
     private readonly sliService: SliService,
   ) {}
   @Input() public ciNumber: any;
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<boolean>();
   selectedTabIndex = 0;
   isLoading: boolean = false;
   tabNames = [
@@ -272,5 +272,17 @@ export class ViewCommericalInvoiceComponent implements OnInit {
   }
   get sliItemsArray(): FormArray {
     return this.sliForm.get('items') as FormArray;
+  }
+
+  public deleteInvoiceButton: boolean = false;
+  public isDeleting: boolean = false;
+  public deleteInvoice() {
+    //     this.invoiceSrv.deleteInvoice(this.ciNumber.commercialInvoiceId,this.ciNumber.).subscribe({
+    //       next:(res)=>{
+    // this.isDeleting=false
+    // this.deleteInvoiceButton=false
+    //     this.onClick.emit(true);
+    //       }
+    //     })
   }
 }
