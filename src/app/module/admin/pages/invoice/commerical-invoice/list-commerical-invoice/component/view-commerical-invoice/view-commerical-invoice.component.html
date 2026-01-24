@@ -1,58 +1,96 @@
 <section
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto"
   (click)="closeModel()"
 >
-  <div 
-    class="relative w-full h-full p-4"
+  <div
+    class="relative w-full h-full p-4 flex items-center justify-center"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Container -->
-    <div class="bg-white rounded-xl shadow-2xl h-full flex flex-col overflow-hidden">
+    <div
+      class="bg-white rounded-xl shadow-2xl w-full flex flex-col mt-5 h-[95vh] print:h-auto print:rounded-none print:shadow-none print:w-full print:mt-0"
+    >
       <!-- Modal Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 print:hidden"
+      >
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-blue-100 rounded-lg">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
           <div>
-            <h2 class="text-lg font-semibold text-gray-800">Commercial Invoice Viewer</h2>
-            <p class="text-sm text-gray-500">Invoice #{{ ciNumber }}</p>
+            <p class="text-lg font-semibold text-gray-800">
+              Commercial Invoice Viewer
+            </p>
+            <p class="text-sm text-gray-500 flex gap-1">
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
+              Invoice #{{ ciNumber.commercialInvoiceNumber }}
+            </p>
           </div>
         </div>
-        
+
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg">
+          <div
+            class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg"
+          >
             <span class="text-sm text-gray-600">Tab:</span>
             <span class="text-sm font-medium">{{ getCurrentTabName() }}</span>
           </div>
-          
-          <button 
+
+          <button
             class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
             (click)="printDocument()"
             title="Print"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+              ></path>
             </svg>
           </button>
-          
-          <button 
+
+          <button
             class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
             (click)="closeModel()"
             title="Close"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
         </div>
       </div>
 
       <!-- Tab Navigation -->
-      <div class="border-b border-gray-200">
-        <mat-tab-group 
+      <div class="border-b border-gray-200 overflow-y-auto flex-1">
+        <mat-tab-group
           class="h-full"
           animationDuration="0ms"
           [selectedIndex]="selectedTabIndex"
@@ -62,7 +100,7 @@
             <!-- Keep existing COMMERCIAL INVOICE content exactly as is -->
             <div
               *ngIf="finalCommercialInvoiceData"
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
               <!-- Original COMMERCIAL INVOICE content -->
@@ -83,58 +121,60 @@
                   >
                     DATE -
                     {{
-                      finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                      finalCommercialInvoiceData?.createdAt | date: "mediumDate"
                     }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     INVOICE NUMBER -
-                    {{ finalCommercialInvoiceData.commercialInvoiceNumber }}
+                    {{ finalCommercialInvoiceData?.commercialInvoiceNumber }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    TERMS OF SALE - {{ finalCommercialInvoiceData.termsOfSale }}
+                    TERMS OF SALE -
+                    {{ finalCommercialInvoiceData?.termsOfSale }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     FINAL DESTINATION -
-                    {{ finalCommercialInvoiceData.finalDestination }}
+                    {{ finalCommercialInvoiceData?.finalDestination }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    CURRENCY OF SALE - {{ finalCommercialInvoiceData.currency }}
+                    CURRENCY OF SALE -
+                    {{ finalCommercialInvoiceData?.currency }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     MODE OF TRANSPORT -
-                    {{ finalCommercialInvoiceData.modeOfTransport }}
+                    {{ finalCommercialInvoiceData?.modeOfTransport }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     TERMS OF SHIPPING -
-                    {{ finalCommercialInvoiceData.termsOfShipping }}
+                    {{ finalCommercialInvoiceData?.termsOfShipping }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     PLACE OF RECEIPT -
-                    {{ finalCommercialInvoiceData.placeOfReceipt }}
+                    {{ finalCommercialInvoiceData?.placeOfReceipt }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     TERMS OF PAYMENT -
-                    {{ finalCommercialInvoiceData.termsOfPayment }}
+                    {{ finalCommercialInvoiceData?.termsOfPayment }}
                   </span>
                 </div>
                 <div>
-                  <div class="w-96 h-60 flex-shrink-0">
+                  <div class="w-96 h-60 print:w-48 print:h-32 flex-shrink-0">
                     <img
                       src="companyLogo.png"
                       alt="FM Logo"
@@ -151,37 +191,37 @@
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    TAX ID - {{ finalCommercialInvoiceData.taxId }}
+                    TAX ID - {{ finalCommercialInvoiceData?.taxId }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    EIN - {{ finalCommercialInvoiceData.ein }}
+                    EIN - {{ finalCommercialInvoiceData?.ein }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    COMPANY -{{ finalCommercialInvoiceData.sellerName }}
+                    COMPANY - {{ sellerDetails.sellerName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    Contact Name - {{ finalCommercialInvoiceData.contactName }}
+                    Contact Name - {{ finalCommercialInvoiceData?.contactName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    {{ finalCommercialInvoiceData.sellerAddress }}
+                    {{ sellerDetails.sellerAddress }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    Contact No - {{ finalCommercialInvoiceData.contactNo }}
+                    Contact No - {{ finalCommercialInvoiceData?.contactNo }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    E-mail - {{ finalCommercialInvoiceData.email }}
+                    E-mail - {{ finalCommercialInvoiceData?.email }}
                   </span>
                 </div>
               </div>
@@ -197,12 +237,16 @@
                   </p>
                   <div class="whitespace-pre-wrap">
                     <p class="font-semibold">
-                      {{ finalCommercialInvoiceData.customerName }}
+                      {{ customerDetails?.name }}
                     </p>
                     <p>
-                      {{ finalCommercialInvoiceData.customerAddress }}
+                      {{
+                        getCustomerAddress(
+                          finalCommercialInvoiceData?.customerAddressesId
+                        )
+                      }}
                     </p>
-                    <p>Phone#: {{ finalCommercialInvoiceData.contactNo }}</p>
+                    <p>Phone#: {{ customerDetails?.phone }}</p>
                   </div>
                 </div>
                 <div>
@@ -213,9 +257,13 @@
                   </p>
                   <div class="whitespace-pre-wrap">
                     <p class="font-semibold">
-                      {{ finalCommercialInvoiceData.customerName }}
+                      {{ customerDetails?.name }}
                     </p>
-                    <p>{{ finalCommercialInvoiceData.shipToAddress }}</p>
+                    <p>
+                      {{
+                        getCustomerAddress(finalCommercialInvoiceData?.shipToId)
+                      }}
+                    </p>
                   </div>
                 </div>
                 <div>
@@ -224,8 +272,17 @@
                   >
                     FREIGHT INFO
                   </p>
-                  <div class="whitespace-pre-wrap">
-                    <p>TOTAL NUMBER OF PACKAGES</p>
+                  <div
+                    class="whitespace-pre-wrap"
+                    *ngIf="finalCommercialInvoiceData?.packingList?.length"
+                  >
+                    <p>
+                      TOTAL NUMBER OF PACKAGES:
+                      {{
+                        finalCommercialInvoiceData.packingList?.[0]
+                          .numberOfBoxes
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -290,7 +347,7 @@
                   >
                     <tr
                       *ngFor="
-                        let item of finalCommercialInvoiceData.commercialInvoiceItems;
+                        let item of finalCommercialInvoiceData?.commercialInvoiceItems;
                         let i = index
                       "
                       class=""
@@ -299,30 +356,34 @@
                         {{ i + 1 }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.partNumber }}
+                        {{ item?.partNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.ui }}
+                        {{ item?.unit }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         <p class="font-medium">
-                          {{ item.description }}
+                          {{ item?.description }}
                         </p>
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.poNumber }}
+                        {{ item?.poNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.countryOfOrgin }}
+                        {{ item?.countryOfOrigin }}
                       </td>
-                      <td class="p-1 align-top text-right border border-gray-400">
-                        {{ item.quantity }}
+                      <td
+                        class="p-1 align-top text-right border border-gray-400"
+                      >
+                        {{ item?.quantity }}
                       </td>
-                      <td class="p-1 align-top text-right border border-gray-400">
+                      <td
+                        class="p-1 align-top text-right border border-gray-400"
+                      >
                         {{
-                          item.unitPrice
+                          item?.unitPrice
                             | currency
-                              : finalCommercialInvoiceData.currency
+                              : finalCommercialInvoiceData?.currency
                               : "symbol"
                               : "1.2-2"
                         }}
@@ -331,9 +392,9 @@
                         class="p-1 align-top text-right font-semibold border border-gray-400"
                       >
                         {{
-                          item.totalPrice
+                          item?.totalPrice
                             | currency
-                              : finalCommercialInvoiceData.currency
+                              : finalCommercialInvoiceData?.currency
                               : "symbol"
                               : "1.2-2"
                         }}
@@ -357,8 +418,8 @@
                       class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
                     >
                       I certify that the information on this invoice is true and
-                      correct, and the content and value of the shipment as stated
-                      above.
+                      correct, and the content and value of the shipment as
+                      stated above.
                     </p>
                   </div>
                 </div>
@@ -377,9 +438,9 @@
                           class="p-1 border border-gray-400 text-right font-bold w-1/2"
                         >
                           {{
-                            finalCommercialInvoiceData.totalAmount
+                            finalCommercialInvoiceData?.totalAmount
                               | currency
-                                : finalCommercialInvoiceData.currency
+                                : finalCommercialInvoiceData?.currency
                                 : "symbol"
                                 : "1.2-2"
                           }}
@@ -395,9 +456,9 @@
                           class="p-1 border border-gray-400 text-right font-bold w-1/2"
                         >
                           {{
-                            finalCommercialInvoiceData.totalAmount
+                            finalCommercialInvoiceData?.totalAmount
                               | currency
-                                : finalCommercialInvoiceData.currency
+                                : finalCommercialInvoiceData?.currency
                                 : "symbol"
                                 : "1.2-2"
                           }}
@@ -431,7 +492,7 @@
                           class="p-1 border border-gray-400 text-right font-bold w-1/2 text-white"
                         >
                           {{
-                            finalCommercialInvoiceData.totalAmount
+                            finalCommercialInvoiceData?.totalAmount
                               | currency
                                 : finalCommercialInvoiceData?.currency
                                 : "symbol"
@@ -455,15 +516,15 @@
               <div class="flex justify-end text-sm mt-8 print:mt-4">
                 <div class="w-1/3 text-center mr-8">
                   <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                    {{ finalCommercialInvoiceData?.contactName }}
+                    Tony Joseph
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                    FAIRMOUNT INTERNATIONAL LLC
+                    {{ sellerDetails.sellerName }}
                   </div>
                 </div>
                 <div class="w-1/3 text-center">
                   <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                    {{ finalCommercialInvoiceData?.CreatedAt | date }}
+                    {{ finalCommercialInvoiceData?.createdAt | date }}
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
                     Date
@@ -476,7 +537,7 @@
           <mat-tab label="EXPORT PACKING LIST">
             <div
               *ngIf="finalCommercialInvoiceData"
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
               <div
@@ -496,60 +557,81 @@
                   >
                     DATE -
                     {{
-                      finalCommercialInvoiceData.packingList[0]?.createdAt | date : "mediumDate"
+                      finalCommercialInvoiceData?.createdAt | date: "mediumDate"
                     }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     Bill OF LANDIND/AWB NO
-                    {{ finalCommercialInvoiceData.packingList[0]?.billOfLandingAwbNo }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        ?.billOfLadingOrAWBNo
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     INVOICE NUMBER -
-                    {{ finalCommercialInvoiceData.packingList[0]?.commercialInvoiceNumber }}
+                    {{ finalCommercialInvoiceData?.commercialInvoiceNumber }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     NO. BOXES -
-                    {{ finalCommercialInvoiceData.packingList[0]?.numberOfBoxes }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        ?.numberOfBoxes
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    NO OF PALLETS - {{ finalCommercialInvoiceData.packingList[0]?.numberOfPallets }}
+                    NO OF PALLETS -
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .numberOfPallets
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     GROSS WEIGHT -
-                    {{ finalCommercialInvoiceData.packingList[0]?.grossWeight }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0].grossWeight
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     MARKS & NUMBERS -
-                    {{ finalCommercialInvoiceData.packingList[0]?.marksandNumbers }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .marksandNumbers
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     MODE OF TRANSPORT -
-                    {{ finalCommercialInvoiceData.packingList[0]?.modeOfTransport }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .modeOfTransport
+                    }}
                   </span>
 
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
                     PLACE OF RECEIPT -
-                    {{ finalCommercialInvoiceData.packingList[0]?.placeOfReceipt }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0]
+                        .placeOfReceipt
+                    }}
                   </span>
                 </div>
                 <div>
-                  <div class="w-96 h-60 flex-shrink-0">
+                  <div class="w-96 h-60 print:w-48 print:h-32 flex-shrink-0">
                     <img
                       src="companyLogo.png"
                       alt="FM Logo"
@@ -567,47 +649,54 @@
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    TAX ID - {{ finalCommercialInvoiceData.packingList[0]?.taxId }}
+                    TAX ID -
+                    {{ finalCommercialInvoiceData?.taxId }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    EIN - {{ finalCommercialInvoiceData.packingList[0]?.ein }}
+                    EIN - {{ finalCommercialInvoiceData?.ein }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    COMPANY -{{ finalCommercialInvoiceData.packingList[0]?.sellerName }}
+                    COMPANY - {{ sellerDetails.sellerName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    Contact Name - {{ finalCommercialInvoiceData.packingList[0]?.contactName }}
+                    Contact Name -
+                    {{ finalCommercialInvoiceData?.contactName }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    {{ finalCommercialInvoiceData.packingList[0]?.sellerAddress }}
+                    {{
+                      finalCommercialInvoiceData?.packingList?.[0].sellerAddress
+                    }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    Contact No - {{ finalCommercialInvoiceData.packingList[0]?.contactNo }}
+                    Contact No -
+                    {{ finalCommercialInvoiceData?.contactNo }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    E-mail - {{ finalCommercialInvoiceData.packingList[0]?.email }}
+                    E-mail -
+                    {{ finalCommercialInvoiceData?.packingList?.[0].email }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    E-mail - {{ finalCommercialInvoiceData.packingList[0]?.email2 }}
+                    E-mail -
+                    {{ finalCommercialInvoiceData?.packingList?.[0].email2 }}
                   </span>
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    K11 - {{ finalCommercialInvoiceData.packingList[0]?.k11 }}
+                    K11 - {{ finalCommercialInvoiceData?.packingList?.[0].k11 }}
                   </span>
                 </div>
               </div>
@@ -623,12 +712,19 @@
                   </p>
                   <div class="whitespace-pre-wrap">
                     <p class="font-semibold">
-                      {{ finalCommercialInvoiceData.packingList[0]?.customerName }}
+                      {{ customerDetails?.name }}
                     </p>
                     <p>
-                      {{ finalCommercialInvoiceData.packingList[0]?.customerAddress }}
+                      {{
+                        getCustomerAddress(
+                          finalCommercialInvoiceData?.customerAddressesId
+                        )
+                      }}
                     </p>
-                    <p>Phone#: {{ finalCommercialInvoiceData.packingList[0]?.contactNo }}</p>
+                    <p>
+                      Phone#:
+                      {{ customerDetails?.phone }}
+                    </p>
                   </div>
                 </div>
                 <div>
@@ -639,9 +735,13 @@
                   </p>
                   <div class="whitespace-pre-wrap">
                     <p class="font-semibold">
-                      {{ finalCommercialInvoiceData.packingList[0]?.customerName }}
+                      {{ customerDetails?.name }}
                     </p>
-                    <p>{{ finalCommercialInvoiceData.packingList[0]?.shipToAddress }}</p>
+                    <p>
+                      {{
+                        getCustomerAddress(finalCommercialInvoiceData?.shipToId)
+                      }}
+                    </p>
                   </div>
                 </div>
                 <div>
@@ -651,7 +751,13 @@
                     FREIGHT INFO
                   </p>
                   <div class="whitespace-pre-wrap">
-                    <p>TOTAL NUMBER OF PACKAGES</p>
+                    <p>
+                      TOTAL NUMBER OF PACKAGES :
+                      {{
+                        finalCommercialInvoiceData?.packingList?.[0]
+                          .numberOfBoxes
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -716,7 +822,8 @@
                   >
                     <tr
                       *ngFor="
-                        let item of finalCommercialInvoiceData?.packingList[0]?.packingListItems;
+                        let item of finalCommercialInvoiceData?.packingList?.[0]
+                          .packingListItems;
                         let i = index
                       "
                       class=""
@@ -725,28 +832,30 @@
                         {{ i + 1 }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.partNumber }}
+                        {{ item?.partNumber }}
                       </td>
-                      <td class="p-1 align-top text-right border border-gray-400">
-                        {{ item.quantity }}
+                      <td
+                        class="p-1 align-top text-right border border-gray-400"
+                      >
+                        {{ item?.quantity }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.ui }}
+                        {{ item?.unit }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         <p class="font-medium">
-                          {{ item.description }}
+                          {{ item?.description }}
                         </p>
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.poNumber }}
+                        {{ item?.poNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.countryOfOrgin }}
+                        {{ item?.countryOfOrigin }}
                       </td>
 
                       <td class="p-1 align-top border border-gray-400">
-                        {{ item.hsc }}
+                        {{ item?.hsc }}
                       </td>
                     </tr>
                   </tbody>
@@ -767,8 +876,8 @@
                       class="print:text-xs text-sm text-gray-600 print:text-black mt-5"
                     >
                       I certify that the information on this invoice is true and
-                      correct, and the content and value of the shipment as stated
-                      above.
+                      correct, and the content and value of the shipment as
+                      stated above.
                     </p>
                   </div>
                 </div>
@@ -777,15 +886,15 @@
               <div class="flex justify-end text-sm mt-8 print:mt-4">
                 <div class="w-1/3 text-center mr-8">
                   <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                    {{ finalCommercialInvoiceData.signerName }}
+                    {{ finalCommercialInvoiceData?.signerName }}
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
-                    FAIRMOUNT INTERNATIONAL LLC
+                    {{ sellerDetails.sellerName }}
                   </div>
                 </div>
                 <div class="w-1/3 text-center">
                   <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
-                    {{ finalCommercialInvoiceData.signDate | date }}
+                    {{ finalCommercialInvoiceData?.createdAt | date }}
                   </div>
                   <div class="text-xs text-gray-500 print:text-[#a5b98b]">
                     Date
@@ -796,14 +905,13 @@
           </mat-tab>
 
           <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
-            <!-- Keep existing SHIPPER'S LETTER OF INSTRUCTIONS content exactly as is -->
             <div
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] overflow-auto h-[calc(100vh-140px)]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] overflow-auto h-[calc(100vh-140px)] no-scrollbar"
               style="font-size: 10pt"
             >
-              <!-- Original SHIPPER'S LETTER OF INSTRUCTIONS content -->
               <div
-                class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
+                [formGroup]="sliForm"
+                class="max-w-full mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900 print:break-inside-avoid"
               >
                 <div class="border border-black p-2 text-center bg-gray-100">
                   <p class="text-sm font-bold">
@@ -811,20 +919,24 @@
                   </p>
                 </div>
 
-                <!-- Rest of the original SLI content -->
                 <div class="grid grid-cols-3">
                   <div class="grid">
                     <div class="p-2 border border-black">
                       <span class="block font-bold">1. USPPI Name</span>
-                      <div class="font-semibold text-blue-700">47-1177753</div>
+                      <div class="font-semibold text-blue-700 mt-2">
+                        {{ finalCommercialInvoiceData?.ein }}
+                      </div>
                     </div>
                     <div class="p-2 border border-black">
                       <span class="block font-bold"
                         >2. USPPI Address Including Zip Code:</span
                       >
-                      <div class="font-semibold">Fairmount International LLC</div>
-                      <div class="font-semibold">11877 91st Ave</div>
-                      <div class="font-semibold">SEMINOLE , FL 33772</div>
+                      <div class="font-bold">
+                        {{ sellerDetails.sellerName }}
+                      </div>
+                      <div class="font-semibold">
+                        {{ sellerDetails.sellerAddress }}
+                      </div>
                     </div>
                   </div>
                   <div class="grid">
@@ -832,23 +944,25 @@
                       <span class="block font-bold"
                         >3. Freight Location Company Name:</span
                       >
-                      <div class="font-semibold text-blue-700">47-1177753</div>
+                      <div class="font-semibold text-blue-700">
+                        {{ finalCommercialInvoiceData?.flcName }}
+                      </div>
                     </div>
                     <div class="p-2 border border-black">
                       <span class="block font-bold"
-                        >2.Freight Location Address (if not box #2):</span
+                        >4.Freight Location Address (if not box #2):</span
                       >
-                      <div class="font-semibold">Fairmount International LLC</div>
-                      <div class="font-semibold">11877 91st Ave</div>
-                      <div class="font-semibold">SEMINOLE , FL 33772</div>
+                      <div class="font-semibold">
+                        {{ finalCommercialInvoiceData?.flcAddress }}
+                      </div>
                     </div>
                   </div>
                   <div class="grid">
                     <div class="p-2 border border-black">
-                      <span class="block font-bold"
-                        >3. Freight Location Company Name:</span
-                      >
-                      <div class="font-semibold text-blue-700">47-1177753</div>
+                      <span class="block font-bold">5. Forwarding Agent:</span>
+                      <div class="font-semibold text-blue-700">
+                        {{ finalCommercialInvoiceData?.forwardingAgent }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -858,20 +972,41 @@
                     <div class="block font-bold border-black p-2 border-r">
                       6. USPPI EIN (IRS) No:
                     </div>
-                    <div class="block font-bold border-black p-2">47-1177753</div>
+                    <div class="block font-bold border-black p-2">
+                      {{ finalCommercialInvoiceData?.ein }}
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2">
                       7. Related Party Indicator (select one):
                     </div>
                   </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      ☑ Related
-                    </div>
-                    <div class="block font-bold border-black p-2">
-                      ☑ Non-Related
-                    </div>
+                  <div class="grid grid-cols-2 w-fit">
+                    <label
+                      class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="relatedPartyIndicator"
+                        class="h-4 w-4 accent-black"
+                        formControlName="relatedPartyIndicator"
+                        [value]="true"
+                      />
+                      Related
+                    </label>
+
+                    <label
+                      class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="relatedPartyIndicator"
+                        class="h-4 w-4 accent-black"
+                        formControlName="relatedPartyIndicator"
+                        [value]="false"
+                      />
+                      Non-Related
+                    </label>
                   </div>
                 </div>
                 <div class="grid grid-cols-3 border-b border-black text-center">
@@ -879,35 +1014,65 @@
                     <div class="block font-bold border-black p-2 border-r">
                       8. USPPI Reference#:
                     </div>
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="block font-bold border-black p-2">
+                      {{ finalCommercialInvoiceData?.usppiReference }}
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2">
                       9. Routed Export Transaction (select one):
                     </div>
                   </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      ☑ Yes
-                    </div>
-                    <div class="block font-bold border-black p-2">☑ No</div>
+                  <div class="grid grid-cols-2 w-fit">
+                    <label
+                      class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="routedExportTransaction"
+                        class="h-4 w-4 accent-black"
+                        formControlName="routedExportTransaction"
+                        [value]="true"
+                      />
+                      Yes
+                    </label>
+
+                    <label
+                      class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="routedExportTransaction"
+                        class="h-4 w-4 accent-black"
+                        formControlName="routedExportTransaction"
+                        [value]="false"
+                      />
+                      No
+                    </label>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 border-b border-black">
+                <div
+                  class="grid grid-cols-3 border-b border-black print:break-after-page"
+                >
                   <div class="p-2 border border-black">
                     <div class="block font-bold">
                       10. Ultimate Consignee Name & Address:
                     </div>
-                    <div class="font-semibold mt-2">
-                      Merit International General Trading Co. W.LL
-                    </div>
-                    <div class="font-semibold">Block # 2, Building # 233,</div>
-                    <div class="font-semibold">
-                      Ardiya Industrial Area, Kuwait
+                    <div class="font-bold mt-2">
+                      {{ customerDetails?.name }}
                     </div>
                     <div class="font-semibold">
-                      Telephone (Office): +965-22055325, 22055326
+                      {{
+                        getCustomerAddress(
+                          finalCommercialInvoiceData?.customerAddressesId
+                        )
+                      }}
+                    </div>
+
+                    <div class="font-semibold">
+                      Telephone (Office):
+                      {{ customerDetails?.phone }}
                     </div>
                   </div>
                   <div class="">
@@ -915,89 +1080,198 @@
                       11. Ultimate Consignee Type (select one):
                     </div>
                     <div class="text-left">
-                      <div class="font-semibold border-b border-black py-2">
-                        ☑ Direct Consumer
+                      <div class="font-semibold border-b border-black">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="ucType"
+                            class="h-4 w-4 accent-black"
+                            formControlName="ucType"
+                            [value]="'Direct Consumer'"
+                          />
+                          Direct Consumer
+                        </label>
                       </div>
-                      <div class="font-semibold border-b border-black py-2">
-                        ☑ Government Entity
+                      <div class="font-semibold border-b border-black">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="ucType"
+                            class="h-4 w-4 accent-black"
+                            formControlName="ucType"
+                            [value]="'Government Entity'"
+                          />
+                          Government Entity
+                        </label>
                       </div>
-                      <div class="font-semibold border-b border-black py-2">
-                        ☑ Reseller
+                      <div class="font-semibold border-b border-black">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="ucType"
+                            class="h-4 w-4 accent-black"
+                            formControlName="ucType"
+                            [value]="'Reseller'"
+                          />
+                          Reseller
+                        </label>
                       </div>
-                      <div class="font-semibold py-2">☑ Other/Unknown</div>
+                      <div class="font-semibold">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="ucType"
+                            class="h-4 w-4 accent-black"
+                            formControlName="ucType"
+                            [value]="'Other/Unknown'"
+                          />
+                          Other/Unknown
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <div class="p-2 border border-black">
                     <span class="block font-bold"
                       >12. Intermediate Consignee Name & Address</span
                     >
-                    <div class="font-semibold"></div>
-                    <div class="font-semibold"></div>
-                    <div class="font-semibold"></div>
-                    <div class="font-semibold"></div>
-                  </div>
-                </div>
-                <div class="grid grid-cols-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      13. Sate of Origin:
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData?.icName }}
                     </div>
-                    <div class="block font-bold border-black p-2"></div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2">
-                      16. In-Bond Code:
-                    </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      ☑ Related
-                    </div>
-                    <div class="block font-bold border-black p-2">
-                      ☑ Non-Related
+                    <div class="font-semibold">
+                      {{ finalCommercialInvoiceData?.icAddress }}
                     </div>
                   </div>
                 </div>
-                <div class="grid grid-cols-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      14. Country of Ultimate Destination:
+                <div class="grid grid-cols-3">
+                  <div
+                    class="grid grid-row-3 border-b border-black text-center"
+                  >
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2 border-r">
+                        13. Sate of Origin:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        {{ finalCommercialInvoiceData?.stateOfOrigin }}
+                      </div>
                     </div>
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2 border-r">
+                        14. Country of Ultimate Destination:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        {{
+                          finalCommercialInvoiceData?.countryOfUltimateDestination
+                        }}
+                      </div>
+                    </div>
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2 border-r">
+                        15. Hazardous Material:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        <div class="grid grid-cols-2 w-fit">
+                          <label
+                            class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="hazardousMaterial"
+                              class="h-4 w-4 accent-black"
+                              formControlName="hazardousMaterial"
+                              [value]="true"
+                            />
+                            Yes
+                          </label>
+
+                          <label
+                            class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="hazardousMaterial"
+                              class="h-4 w-4 accent-black"
+                              formControlName="hazardousMaterial"
+                              [value]="false"
+                            />
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="flex gap-2 border border-black">
+                  <div
+                    class="grid grid-row-3 border-b border-black text-center"
+                  >
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2">
+                        16. In-Bond Code:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        {{ finalCommercialInvoiceData?.inBondCode }}
+                      </div>
+                    </div>
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2">
+                        17. Entry Number:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        {{ finalCommercialInvoiceData?.entryNumber }}
+                      </div>
+                    </div>
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black p-2">
+                        18. FTZ Identifier:
+                      </div>
+                      <div class="block font-bold border-black p-2">
+                        {{ finalCommercialInvoiceData?.ftzIdentifier }}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="grid grid-row-3 border-b border-black text-center"
+                  >
                     <div class="block font-bold border-black p-2">
-                      17. Entry Number:
+                      19. TIB / Carnet?
                     </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      ☑ Related
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="tibCarnet"
+                            formControlName="tibCarnet"
+                            [value]="true"
+                            class="h-4 w-4 accent-black"
+                          />
+                          Yes
+                        </label>
+                      </div>
                     </div>
-                    <div class="block font-bold border-black p-2">
-                      ☑ Non-Related
-                    </div>
-                  </div>
-                </div>
-                <div class="grid grid-cols-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      15. Hazardous Material:
-                    </div>
-                    <div class="block font-bold border-black p-2">☑ Yes</div>
-                    <div class="block font-bold border-black p-2">☑ No</div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2">
-                      18. FTZ Identifier:
-                    </div>
-                  </div>
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2 border-r">
-                      ☑ Related
-                    </div>
-                    <div class="block font-bold border-black p-2">
-                      ☑ Non-Related
+                    <div class="flex gap-2 border border-black">
+                      <div class="block font-bold border-black">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="tibCarnet"
+                            formControlName="tibCarnet"
+                            [value]="false"
+                            class="h-4 w-4 accent-black"
+                          />
+                          No
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1005,79 +1279,114 @@
                 <div class="border-b border-black block font-bold p-2">
                   INSTRUCTIONS TO FORWARDER:
                 </div>
-
-                <table class="w-full border-collapse">
-                  <thead>
-                    <tr class="bg-gray-100 border-b border-black">
-                      <th class="border-r border-black p-1 text-left w-12">
-                        20. Domestic or Foreign (D/F)
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-20">
-                        21. Schedule B / HTS Number and Commercial Commodity<br />
-                        Description For Vehicles: VIN/Year, Make, Model and<br />
-                        Vehicle Title Number are required
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-16">
-                        22. Quantity in Schedule B / HTS Units
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-16">
-                        23. DDTC Quantity and DDTC Unit of Measure
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-20">
-                        24. Shipping Weight (in Kilos)
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-24">
-                        25. ECCN, EAR99 or USML Category No.
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-24">
-                        26. SME (Y/ N)
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-24">
-                        27. Export License No., License Exception Symbol, D D TC
-                        Exemption No., D D TC ACM No. o r NLR
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-24">
-                        28. Value at the Port of Export ( U S Dollars)
-                      </th>
-                      <th class="border-r border-black p-1 text-left w-24">
-                        28. License Value by item (if applicable) ( US Dollars)
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-b border-black align-top">
-                      <td
-                        class="border-r border-black p-2 font-semibold text-center"
+                <div>
+                  <table class="w-full border-collapse">
+                    <thead>
+                      <tr class="bg-gray-100 border-b border-black">
+                        <th class="border-r border-black p-1 text-left w-12">
+                          20. Domestic or Foreign (D/F)
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-20">
+                          21. Schedule B / HTS Number and Commercial
+                          Commodity<br />
+                          Description For Vehicles: VIN/Year, Make, Model and<br />
+                          Vehicle Title Number are required
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-16">
+                          22. Quantity in Schedule B / HTS Units
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-16">
+                          23. DDTC Quantity and DDTC Unit of Measure
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-20">
+                          24. Shipping Weight (in Kilos)
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-24">
+                          25. ECCN, EAR99 or USML Category No.
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-24">
+                          26. SME (Y/ N)
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-24">
+                          27. Export License No., License Exception Symbol, D D
+                          TC Exemption No., D D TC ACM No. o r NLR
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-24">
+                          28. Value at the Port of Export ( U S Dollars)
+                        </th>
+                        <th class="border-r border-black p-1 text-left w-24">
+                          28. License Value by item (if applicable) ( US
+                          Dollars)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="items">
+                      <tr
+                        class="border-b border-black align-top"
+                        *ngFor="
+                          let item of sliItemsArray.controls;
+                          let i = index
+                        "
+                        [formGroupName]="i"
                       >
-                        D
-                      </td>
-                      <td class="border-r border-black p-2">
-                        <span class="font-bold">3923.90.9000</span> <br />
-                        HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
-                        MANUFACTURER:C-TECH INDUSTRIES<br />
-                        PART #:8.925-157.0 HOSE NONMETALLIC
-                      </td>
-                      <td class="border-r border-black p-2 font-semibold">EA</td>
-                      <td class="border-r border-black p-2 font-semibold">35</td>
-                      <td class="border-r border-black p-2 font-semibold"></td>
-                      <td class="border-r border-black p-2 font-semibold">
-                        EAR99
-                      </td>
-                      <td class="border-r border-black p-2 font-semibold"></td>
-                      <td class="border-r border-black p-2 font-semibold">NLR</td>
-                      <td class="p-2 font-bold text-left border-r border-black">
-                        $27,885.00
-                      </td>
-                      <td class="p-2 font-bold text-right"></td>
-                    </tr>
-                  </tbody>
-                </table>
+                        <td
+                          class="border-r border-black p-2 font-semibold text-center"
+                        >
+                          {{ item.get("df")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2">
+                          <span class="font-bold">
+                            {{ item.get("hsc")?.value }}</span
+                          >
+                          <br />
+                          {{ item.get("description")?.value }} <br />
+                          <br />
+                          PART #: {{ item.get("partNumber")?.value }}
+                          <br />
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("ui")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("quantity")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("shippingWeight")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("eccnEar99Usml")?.value }}
+                        </td>
+
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("sme")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{ item.get("elNoNlr")?.value }}
+                        </td>
+                        <td class="border-r border-black p-2 font-semibold">
+                          {{
+                            (item.get("unitPrice")?.value || 0) *
+                              (item.get("quantity")?.value || 0)
+                          }}
+                        </td>
+
+                        <td class="p-2 font-bold text-right">
+                          {{ item.get("licenseValueByItem")?.value }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
                 <div class="grid grid-cols-2 border-b border-black text-center">
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2 border-r">
                       30. DDTC Applicant Registration Number:
                     </div>
-                    <div class="block font-bold border-black p-2 w-16"></div>
+                    <div class="block font-bold border-black p-2 w-48">
+                      {{
+                        finalCommercialInvoiceData?.ddtcApplicantRegistrationNumber
+                      }}
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2 border-r">
@@ -1085,37 +1394,88 @@
                     </div>
                     <div class="flex gap-2">
                       <div class="block font-bold border-black p-2 border-r">
-                        ☑ Yes
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="eligiblePartyCertification"
+                            class="h-4 w-4 accent-black"
+                            formControlName="eligiblePartyCertification"
+                            [value]="true"
+                          />
+                          Yes
+                        </label>
                       </div>
-                      <div class="block font-bold border-black p-2">☑ No</div>
+                      <div class="block font-bold border-black p-2">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="eligiblePartyCertification"
+                            class="h-4 w-4 accent-black"
+                            formControlName="eligiblePartyCertification"
+                            [value]="false"
+                          />
+                          No
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="border-b border-black block font-bold p-2">
-                  32. ☑ Check here if there are any remaining non-licensable
-                  Schedule B / HTS Numbers that are valued $2500.00 or less and
-                  that do not otherwise require AES filing.
+                  32.<label
+                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="nonLicensableScheduleBHTSNumbers"
+                      [value]="true"
+                    />
+                    Check here if there are any remaining non-licensable
+                    Schedule B / HTS Numbers that are valued $2500.00 or less
+                    and that do not otherwise require AES filing.
+                  </label>
                 </div>
                 <div class="border-b border-black block font-bold p-2">
-                  33. ☑ Check here if the USPPI authorizes the above named
-                  forwarder to act as its true and lawful agent for purposes of
-                  preparing and filing the Electronic Export Information ("EEI")
-                  in accordance with the laws and regulations of the United
-                  States.
+                  33.
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="usppiAuthorize"
+                      [value]="true"
+                    />
+                    Check here if the USPPI authorizes the above named forwarder
+                    to act as its true and lawful agent for purposes of
+                    preparing and filing the Electronic Export Information
+                    ("EEI") in accordance with the laws and regulations of the
+                    United States.
+                  </label>
                 </div>
                 <div class="grid grid-cols-2">
-                  <div class="block font-bold p-2 border-r border-b border-black">
+                  <div
+                    class="block font-bold p-2 border-r border-b border-black"
+                  >
                     35. USPPI E-mail Address:
+                  </div>
+                  <div class="font-bold p-2 border-r border-b border-black">
+                    {{ finalCommercialInvoiceData?.sellerEmail }}
                   </div>
                   <div
                     class="block font-bold p-2 border-r border-b border-black"
-                  ></div>
-                  <div class="block font-bold p-2 border-r border-b border-black">
+                  >
                     37. Printed Name of Duly authorized officer or employee:
                   </div>
-                  <div class="block font-bold p-2 border-r border-b border-black">
-                    Tony Joseph
+                  <div
+                    class="block font-bold p-2 border-r border-b border-black"
+                  >
+                    {{ finalCommercialInvoiceData?.authorizedOfficerName }}
                   </div>
                 </div>
                 <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
@@ -1129,82 +1489,196 @@
                     <span class="block font-bold p-2 border-b border-black"
                       >39. Title</span
                     >
-                    <div class="p-2 font-semibold">CEO</div>
+                    <div class="p-2 font-semibold">
+                      {{ finalCommercialInvoiceData?.officerTitle }}
+                    </div>
                   </div>
                   <div class="">
                     <div class="block font-bold p-2 border-b border-black">
                       40. Date
                     </div>
 
-                    <div class="p-2 font-semibold">11/5/25</div>
+                    <div class="p-2 font-semibold">
+                      {{
+                        finalCommercialInvoiceData?.createdAt
+                          | date: "mediumDate"
+                      }}
+                    </div>
                   </div>
                 </div>
 
                 <div class="border-b border-black block font-bold p-2">
-                  33. ☑ Check here to validate Electronic Signature. Electronic
-                  signatures must be typed in all capital letters in Box 38 in
-                  order to be valid.
+                  41.
+                  <label
+                    class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="validateElectronicSignature"
+                      [value]="true"
+                    />
+                    Check here to validate Electronic Signature. Electronic
+                    signatures must be typed in all capital letters in Box 38 in
+                    order to be valid.
+                  </label>
                 </div>
               </div>
             </div>
           </mat-tab>
         </mat-tab-group>
-
-        <div *ngIf="isLoading" class="flex-1 flex items-center justify-center"> <div class="text-center"> <div class="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-2 border-t-[#a5b98b] mx-auto mb-4"></div> <p class="text-gray-600">Loading invoice data...</p> </div> </div>
       </div>
-
+      <div *ngIf="isLoading" class="flex-1 flex items-center justify-center">
+        <div class="text-center">
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-2 border-t-[#a5b98b] mx-auto mb-4"
+          ></div>
+          <p class="text-gray-600">Loading invoice data...</p>
+        </div>
+      </div>
       <!-- Modal Footer -->
-      <div class="px-6 py-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
+      <div
+        class="px-6 py-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center print:hidden"
+      >
         <div class="flex items-center gap-4">
-          <button 
+          <button
             class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
             (click)="selectedTabIndex = 0"
             [class.bg-blue-50]="selectedTabIndex === 0"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
             </svg>
             Invoice
           </button>
-          <button 
+          <button
             class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
             (click)="selectedTabIndex = 1"
             [class.bg-blue-50]="selectedTabIndex === 1"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              ></path>
             </svg>
             Packing List
           </button>
-          <button 
+          <button
             class="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
             (click)="selectedTabIndex = 2"
             [class.bg-blue-50]="selectedTabIndex === 2"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
             </svg>
             Instructions
           </button>
         </div>
-        
+
         <div class="flex items-center gap-3">
-          <button 
+          <button
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            (click)="printDocument()"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+              ></path>
+            </svg>
+            Print
+          </button>
+          <!-- <button
+            (click)="deleteInvoiceButton = !deleteInvoiceButton"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            Delete
+          </button> -->
+          <button
             class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             (click)="closeModel()"
           >
             Close
           </button>
-          <button 
-            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-            (click)="printDocument()"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-            </svg>
-            Print
-          </button>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- DELETE CONFIRMATION MODAL -->
+<section
+  *ngIf="deleteInvoiceButton"
+  class="fixed flex items-center justify-center print:bg-white bg-gray-400/30 top-0 left-0 right-0 z-50 w-full p-4 print:p-0 overflow-hidden sm:inset-0 h-[calc(100%-1rem)] md:h-full print:hidden"
+  (click)="deleteInvoiceButton = false"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="relative w-full max-w-3xl max-h-56 print:w-full overflow-y-auto"
+  >
+    <div
+      class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight items-center"
+    >
+      <div>
+        <p>Are you sure you want to delete this Invoice</p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          *ngIf="!isDeleting"
+          (click)="deleteInvoice()"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-red-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Delete
+        </button>
+        <button
+          *ngIf="isDeleting"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-red-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-red-700"
+        >
+          Deleting ...
+        </button>
+        <button
+          (click)="deleteInvoiceButton = false"
+          type="button"
+          class="px-6 py-2 print:hidden mb-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>

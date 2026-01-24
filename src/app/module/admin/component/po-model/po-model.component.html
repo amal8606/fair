@@ -7,45 +7,58 @@
     class="relative h-full w-full max-w-7xl max-h-[650px] overflow-y-scroll rounded-lg no-scrollbar"
   >
     <div class="relative bg-white rounded-lg shadow mt-50">
-      <div class="flex justify-between p-6 border-b rounded-t bg-blue-200">
-        <p
-          class="text-[1rem] flex mb-0 items-center font-semibold text-gray-900"
-        >
-          Fairmount LLC
-        </p>
-        <button
-          type="button"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-          (click)="closeModel()"
-        >
-          <svg
-            aria-hidden="true"
-            class="w-5 h-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
+      <div class="p-5 border-b rounded-t bg-gray-600 text-white">
+        <div class="flex justify-between">
+          <p class="text-xl flex mb-0 items-center font-semibold">
+            Fairmount LLC
+          </p>
+
+          <button
+            type="button"
+            class="text-gray-200 bg-transparent rounded-3xl text-sm p-1 ml-auto inline-flex items-center"
+            (click)="closeModel()"
           >
-            <path
-              fill-rule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <p class="">
+          PO Status : <span class="font-semibold">{{ po.poStatus }}</span>
+        </p>
       </div>
-      <div class="px-6 mt-4">
+      <div class="px-6 mt-2">
         <div class="space-y-4 text-sm text-gray-700">
           <div class="flex flex-col justify-between gap-8">
-            <div>
-              <button
-                (click)="addItemModel = !addItemModel"
-                class="ml-auto text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              >
-                Add New Item
-              </button>
+            <div class="flex mb-2">
+              <div>
+                <button
+                  (click)="addItemModel = !addItemModel"
+                  class="ml-auto text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Add New Item
+                </button>
+              </div>
+              <div>
+                <button
+                  (click)="updateStatusModel = !updateStatusModel"
+                  class="ml-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Update Status
+                </button>
+              </div>
             </div>
-
             <form [formGroup]="addPOItemForm">
               <div *ngIf="addItemModel">
                 <div class="grid grid-cols-4 gap-4 mb-4">
@@ -127,6 +140,30 @@
                       class="border rounded px-2 py-2"
                     />
                   </div>
+                  <div class="flex flex-col">
+                    <label for="">Country Of Orgin</label>
+                    <input
+                      formControlName="countryOfOrigin"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">HSC</label>
+                    <input
+                      formControlName="hsc"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="">Weight & Dim</label>
+                    <input
+                      formControlName="weightDim"
+                      type="text"
+                      class="border rounded px-2 py-2"
+                    />
+                  </div>
                 </div>
                 <div class="w-[20%] flex gap-2 items-end">
                   <button
@@ -154,6 +191,53 @@
                 </div>
               </div>
             </form>
+            <form [formGroup]="statusForm">
+              <div *ngIf="updateStatusModel" class="mb-4">
+                <label
+                  for="customerName"
+                  class="block mb-2 text-sm font-medium text-gray-700"
+                >
+                  Update PO Status
+                </label>
+                <select
+                  id="statusName"
+                  name="statusName"
+                  formControlName="statusId"
+                  class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="null" disabled selected>Select Status</option>
+                  <option *ngFor="let status of statuses" [value]="status.id">
+                    {{ status.name }}
+                  </option>
+                </select>
+                <div class="w-[20%] flex gap-2 items-end">
+                  <button
+                    (click)="updateStatus()"
+                    [disabled]="isUpdating || statusForm.invalid"
+                    class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  >
+                    <ng-container *ngIf="!isUpdating">
+                      Update Status
+                    </ng-container>
+
+                    <ng-container *ngIf="isUpdating">
+                      <span>Updating </span>
+                      <span class="loading-dots">
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                      </span>
+                    </ng-container>
+                  </button>
+                  <button
+                    (click)="updateStatusModel = !updateStatusModel"
+                    class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
 
             <div class="overflow-x-auto">
               <table class="min-w-full border text-xs mb-4">
@@ -168,7 +252,7 @@
                 <tbody>
                   <tr>
                     <td class="border px-2 py-1">
-                      {{ po.orderDate | date : "dd/MM/yyyy" }}
+                      {{ po.orderDate | date: "dd/MM/yyyy" }}
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.modeOfShipment }}
@@ -363,7 +447,7 @@
                     SUB TOTAL
                   </td>
                   <td class="border px-2 py-1">
-                    {{ subTotal | currency : "USD" }}
+                    {{ subTotal | currency: "USD" }}
                   </td>
                 </tr>
                 <tr>
@@ -373,7 +457,9 @@
                   >
                     DISCOUNT
                   </td>
-                  <td class="border px-2 py-1">$-</td>
+                  <td class="border px-2 py-1">
+                    {{ po.discount | currency: "USD" }}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -382,17 +468,19 @@
                   >
                     FREIGHT /SHIPPING
                   </td>
-                  <td class="border px-2 py-1">$-</td>
+                  <td class="border px-2 py-1">
+                    {{ po.shippingCharges | currency: "USD" }}
+                  </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td
                     colspan="11"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     CUSTOM FEE /TAX
                   </td>
-                  <td class="border px-2 py-1">$-</td>
-                </tr>
+                  <td class="border px-2 py-1"></td>
+                </tr> -->
                 <tr>
                   <td
                     colspan="11"
@@ -401,7 +489,7 @@
                     TOTAL AMOUNT
                   </td>
                   <td class="border px-2 py-1">
-                    {{ total | currency : "USD" }}
+                    {{ total | currency: "USD" }}
                   </td>
                 </tr>
               </table>

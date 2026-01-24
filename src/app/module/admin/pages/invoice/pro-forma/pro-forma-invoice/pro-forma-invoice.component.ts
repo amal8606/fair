@@ -15,6 +15,7 @@ import { PoService } from '../../../../../../_core/http/api/po.service';
 import { InvoiceService } from '../../../../../../_core/http/api/invoice.service';
 import { OrgainizationService } from '../../../../../../_core/http/api/orginization.service';
 import { InvoicedProFormaComponent } from '../invoiced-pro-forma/invoiced-pro-forma.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pro-forma-invoice',
@@ -31,6 +32,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     purchaseOrderId: new FormControl(null),
     customerId: new FormControl(null, Validators.required),
     shipToId: new FormControl(0),
+    customerAddressId: new FormControl(0),
     freightType: new FormControl('PICK UP'),
     currencyCode: new FormControl('USD'),
     totalAmount: new FormControl(0, Validators.min(0)),
@@ -40,7 +42,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     createdBy: new FormControl(0),
     createdAt: new FormControl(
       new Date().toISOString().substring(0, 10),
-      Validators.required
+      Validators.required,
     ),
     proformaItems: new FormArray([], Validators.required),
     selectedPoNumber: new FormControl(null, Validators.required),
@@ -79,7 +81,8 @@ export class ProFormaInvoiceComponent implements OnInit {
   constructor(
     private readonly poService: PoService,
     private readonly invoiceService: InvoiceService,
-    private readonly orgService: OrgainizationService
+    private readonly orgService: OrgainizationService,
+    private readonly toastr: ToastrService,
   ) {}
 
   public createProformaItemFormGroup(item?: any): FormGroup {
@@ -120,7 +123,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       totalPrice: new FormControl(itemData.totalPrice),
       actualCostPerUnit: new FormControl(
         itemData.actualCostPerUnit,
-        Validators.min(0)
+        Validators.min(0),
       ),
       statusId: new FormControl(itemData.statusId || 0),
       terms: new FormControl(itemData.terms),
@@ -171,7 +174,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     this.selectedPO = po;
     this.proFormaForm.get('purchaseOrderId')?.setValue(po.id);
     this.selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId === po.buyerOrgId
+      (c: any) => c.organizationId === po.buyerOrgId,
     );
     this.proFormaForm
       .get('customerId')
@@ -194,7 +197,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       error: (err: any) => {
         this.isLoading = false;
         alert(
-          'Could not load PO line items. Please check the PO ID or network connection.'
+          'Could not load PO line items. Please check the PO ID or network connection.',
         );
       },
     });
@@ -228,7 +231,7 @@ export class ProFormaInvoiceComponent implements OnInit {
   }
   onCustomerSelect(customerId: number): void {
     this.selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId == customerId
+      (c: any) => c.organizationId == customerId,
     );
     if (this.selectedCustomer) {
       this.fetchAndSetCustomerAddresses(customerId, this.selectedCustomer);
@@ -246,7 +249,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     const selectedAddressId = selectElement.value;
 
     const selectedAddress = this.customerAddresses.find(
-      (addr: any) => addr.addressId === +selectedAddressId
+      (addr: any) => addr.addressId === +selectedAddressId,
     );
     if (selectedAddress) {
       const fullAddress = [
@@ -263,6 +266,9 @@ export class ProFormaInvoiceComponent implements OnInit {
       this.proFormaForm
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
+      this.proFormaForm
+        .get('customerAddressId')
+        ?.setValue(selectedAddress.addressId);
     }
   }
 
@@ -271,7 +277,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     const selectedAddressId = selectElement.value;
 
     const selectedAddress = this.customerAddresses.find(
-      (addr: any) => addr.addressId === +selectedAddressId
+      (addr: any) => addr.addressId === +selectedAddressId,
     );
     if (selectedAddress) {
       const fullAddress = [
@@ -303,14 +309,14 @@ export class ProFormaInvoiceComponent implements OnInit {
     } else if (this.currentStep === 2) {
       this.proFormaForm.markAllAsTouched();
       const areAllItemsValid = this.itemsArray.controls.every(
-        (control) => control.valid
+        (control) => control.valid,
       );
 
       if (this.proFormaForm.valid && areAllItemsValid) {
         this.generateInvoice();
       } else {
         alert(
-          'Please correct all validation errors (including all line item fields) before proceeding.'
+          'Please correct all validation errors (including all line item fields) before proceeding.',
         );
       }
     } else if (this.currentStep < this.totalSteps) {
@@ -344,10 +350,10 @@ export class ProFormaInvoiceComponent implements OnInit {
     const items = formValue.proformaItems;
     const subTotal = items.reduce(
       (sum: number, item: any) => sum + item.quantity * item.unitPrice,
-      0
+      0,
     );
     const selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId === formValue.customerId
+      (c: any) => c.organizationId === formValue.customerId,
     );
 
     this.finalProFormaPostData = {
@@ -355,6 +361,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       purchaseOrderId: formValue.purchaseOrderId,
       customerId: formValue.customerId,
       shipToId: formValue.shipToId,
+      customerAddressId: formValue.customerAddressId,
       freightType: formValue.freightType,
       currencyCode: formValue.currencyCode,
       totalAmount: subTotal,
@@ -364,6 +371,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       sellerFax: this.seller.fax,
       createdBy: formValue.createdBy,
       createdAt: formValue.createdAt,
+      poNumber: formValue.selectedPoNumber,
       proformaItems: items.map((item: any) => ({
         itemId: item.itemId,
         quantity: item.quantity,
@@ -409,20 +417,28 @@ export class ProFormaInvoiceComponent implements OnInit {
 
     this.currentStep = 3;
   }
-  public generateLoding: boolean = false;
+  public generateLoading: boolean = false;
   postInvoice() {
-    this.generateLoding = true;
+    this.generateLoading = true;
     this.invoiceService
       .postProFormaInvoiceData(this.finalProFormaPostData)
       .subscribe({
         next: (res) => {
-          this.generateLoding = false;
-          this.currentStep = 3;
+          this.generateLoading = false;
+          this.currentStep = 1;
+          this.toastr.success('Pro Forma Invoice generated successfully.');
+          this.proFormaForm.reset();
+          this.itemsArray.clear();
+          this.finalInvoiceData = null;
+          this.getProFormaInvoicablePO();
+        },
+        error: (err) => {
+          this.generateLoading = false;
+          this.toastr.error('Error generating Pro Forma Invoice.');
         },
       });
   }
   printProForma() {
-    console.log(this.finalInvoiceData);
     window.print();
   }
 
@@ -435,7 +451,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     const element = document.createElement('a');
     element.setAttribute(
       'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode)
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode),
     );
     element.setAttribute('download', `proforma-${invoice.proformaNumber}.json`);
     element.style.display = 'none';

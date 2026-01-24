@@ -126,7 +126,7 @@
               Actual Cost
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
+              {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -135,7 +135,7 @@
               Unit Price
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
+              {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -144,7 +144,7 @@
               Total Price
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
+              {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
 
@@ -247,20 +247,20 @@
           <ng-container matColumnDef="actualCostPerUnit">
             <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
+              {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
             <th mat-header-cell *matHeaderCellDef>Unit Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
+              {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
             <th mat-header-cell *matHeaderCellDef>Total Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
+              {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
@@ -839,14 +839,14 @@
                     formControlName="partNumber"
                     type="text"
                     placeholder="Part Number"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
                   <input
                     formControlName="ui"
                     type="text"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -862,7 +862,7 @@
                   <textarea
                     formControlName="description"
                     rows="2"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                   ></textarea>
                   <div
                     *ngIf="
@@ -878,7 +878,7 @@
                   <input
                     formControlName="poNumber"
                     type="text"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -895,7 +895,7 @@
                   <input
                     formControlName="countryOfOrigin"
                     type="text"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -914,7 +914,7 @@
                     type="number"
                     min="1"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -933,7 +933,7 @@
                     type="number"
                     min="0"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
                   />
                   <div
                     *ngIf="
@@ -952,7 +952,7 @@
                     formControlName="totalPrice"
                     type="text"
                     [disabled]="true"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                    class="w-24 border border-gray-300 rounded-md text-sm text-right bg-gray-100"
                   />
                 </td>
                 <td class="px-3 py-2">
@@ -1096,7 +1096,7 @@
                 >
                   DATE -
                   {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    finalCommercialInvoiceData.createdAt | date: "mediumDate"
                   }}
                 </span>
                 <span
@@ -1310,7 +1310,7 @@
                       {{ item.partNumber }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
+                      {{ item.unit }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
                       <p class="font-medium">
@@ -1503,7 +1503,7 @@
                 >
                   DATE -
                   {{
-                    finalCommercialInvoiceData.createdAt | date : "mediumDate"
+                    finalCommercialInvoiceData.createdAt | date: "mediumDate"
                   }}
                 </span>
                 <span
@@ -1738,7 +1738,7 @@
                       {{ item.quantity }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.ui }}
+                      {{ item.unit }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
                       <p class="font-medium">
@@ -1749,11 +1749,14 @@
                       {{ item.poNumber }}
                     </td>
                     <td class="p-1 align-top border border-gray-400">
-                      {{ item.countryOfOrgin }}
+                      {{ item.countryOfOrigin }}
                     </td>
 
                     <td class="p-1 align-top border border-gray-400">
                       {{ item.hsc }}
+                    </td>
+                    <td class="p-1 align-top border border-gray-400">
+                      {{ item.weightDim }}
                     </td>
                   </tr>
                 </tbody>
@@ -1807,6 +1810,7 @@
             style="font-size: 10pt"
           >
             <div
+              [formGroup]="sliForm"
               class="max-w-5xl mx-auto bg-white border-2 border-black text-[10px] uppercase font-sans text-gray-900"
             >
               <div class="border border-black p-2 text-center bg-gray-100">
@@ -1840,21 +1844,41 @@
                     <span class="block font-bold"
                       >3. Freight Location Company Name:</span
                     >
-                    <div class="font-semibold text-blue-700"></div>
+                    <div class="font-semibold text-blue-700">
+                      <input
+                        formControlName="flcName"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
+                    </div>
                   </div>
                   <div class="p-2 border border-black">
                     <span class="block font-bold"
                       >4.Freight Location Address (if not box #2):</span
                     >
-                    <div class="font-semibold"></div>
-                    <div class="font-semibold"></div>
-                    <div class="font-semibold"></div>
+                    <div class="font-semibold">
+                      <input
+                        formControlName="flcAddress"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
+                    </div>
+                    \
                   </div>
                 </div>
                 <div class="grid">
                   <div class="p-2 border border-black">
                     <span class="block font-bold">5. Forwarding Agent:</span>
-                    <div class="font-semibold text-blue-700"></div>
+                    <div class="font-semibold text-blue-700">
+                      <input
+                        formControlName="forwardingAgent"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Freight Location Company Name"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1877,14 +1901,24 @@
                   <label
                     class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                   >
-                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="relatedPartyIndicator"
+                      [value]="true"
+                    />
                     Related
                   </label>
 
                   <label
                     class="flex items-center gap-2 font-bold p-2 cursor-pointer"
                   >
-                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="relatedPartyIndicator"
+                      [value]="false"
+                    />
                     Non-Related
                   </label>
                 </div>
@@ -1894,7 +1928,23 @@
                   <div class="block font-bold border-black p-2 border-r">
                     8. USPPI Reference#:
                   </div>
-                  <div class="block font-bold border-black p-2"></div>
+                  <div class="block font-bold border-black p-2">
+                    <input
+                      formControlName="usppiReference"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter USPPI Reference"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('usppiReference')?.invalid &&
+                        sliForm.get('usppiReference')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      USPPI Reference is required.
+                    </div>
+                  </div>
                 </div>
                 <div class="flex gap-2 border border-black">
                   <div class="block font-bold border-black p-2">
@@ -1905,14 +1955,24 @@
                   <label
                     class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
                   >
-                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="routedExportTransaction"
+                      [value]="true"
+                    />
                     Yes
                   </label>
 
                   <label
                     class="flex items-center gap-2 font-bold p-2 cursor-pointer"
                   >
-                    <input type="checkbox" class="h-4 w-4 accent-black" />
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4 accent-black"
+                      formControlName="routedExportTransaction"
+                      [value]="false"
+                    />
                     No
                   </label>
                 </div>
@@ -1931,7 +1991,8 @@
                   </div>
 
                   <div class="font-semibold">
-                    Telephone (Office): +965-22055325, 22055326
+                    Telephone (Office):
+                    {{ finalCommercialInvoiceData.customerPhone }}
                   </div>
                 </div>
                 <div class="">
@@ -1943,7 +2004,13 @@
                       <label
                         class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Direct Consumer"
+                        />
                         Direct Consumer
                       </label>
                     </div>
@@ -1951,7 +2018,13 @@
                       <label
                         class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Government Entity"
+                        />
                         Government Entity
                       </label>
                     </div>
@@ -1959,7 +2032,13 @@
                       <label
                         class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Reseller"
+                        />
                         Reseller
                       </label>
                     </div>
@@ -1967,7 +2046,13 @@
                       <label
                         class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="radio"
+                          name="ucType"
+                          class="h-4 w-4 accent-black"
+                          formControlName="ucType"
+                          value="Other/Unknown"
+                        />
                         Other/Unknown
                       </label>
                     </div>
@@ -1977,10 +2062,40 @@
                   <span class="block font-bold"
                     >12. Intermediate Consignee Name & Address</span
                   >
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
-                  <div class="font-semibold"></div>
+                  <div class="font-semibold">
+                    <input
+                      formControlName="icName"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter Intermediate Consignee Name"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('icName')?.invalid &&
+                        sliForm.get('icName')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      Intermediate Consignee Name is required.
+                    </div>
+                  </div>
+                  <div class="font-semibold">
+                    <input
+                      formControlName="icAddress"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter Intermediate Consignee Address"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('icAddress')?.invalid &&
+                        sliForm.get('icAddress')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      Intermediate Consignee Address is required.
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="grid grid-cols-3">
@@ -1989,32 +2104,58 @@
                     <div class="block font-bold border-black p-2 border-r">
                       13. Sate of Origin:
                     </div>
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="stateOfOrigin"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter State of Origin"
+                      />
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2 border-r">
                       14. Country of Ultimate Destination:
                     </div>
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="countryOfUltimateDestination"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Country of Ultimate Destination"
+                      />
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2 border-r">
                       15. Hazardous Material:
                     </div>
-                    <div class="grid grid-cols-2 w-fit">
-                      <label
-                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
-                      >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
-                        Yes
-                      </label>
+                    <div class="block font-bold border-black p-2">
+                      <div class="grid grid-cols-2 w-fit">
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            class="h-4 w-4 accent-black"
+                            formControlName="hazardousMaterial"
+                            [value]="true"
+                          />
+                          Yes
+                        </label>
 
-                      <label
-                        class="flex items-center gap-2 font-bold p-2 cursor-pointer"
-                      >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
-                        No
-                      </label>
+                        <label
+                          class="flex items-center gap-2 font-bold p-2 cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            class="h-4 w-4 accent-black"
+                            formControlName="hazardousMaterial"
+                            [value]="false"
+                          />
+                          No
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2023,27 +2164,77 @@
                     <div class="block font-bold border-black p-2">
                       16. In-Bond Code:
                     </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="inBondCode"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter In-Bond Code"
+                      />
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2">
                       17. Entry Number:
+                    </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="entryNumber"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter Entry Number"
+                      />
                     </div>
                   </div>
                   <div class="flex gap-2 border border-black">
                     <div class="block font-bold border-black p-2">
                       18. FTZ Identifier:
                     </div>
+                    <div class="block font-bold border-black p-2">
+                      <input
+                        formControlName="ftzIdentifier"
+                        type="text"
+                        class="w-full border border-black p-1 font-semibold"
+                        placeholder="Enter FTZ Identifier"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div class="grid grid-row-3 border-b border-black text-center">
-                  <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2"></div>
+                  <div class="block font-bold border-black p-2">
+                    19. TIB / Carnet?
                   </div>
                   <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="block font-bold border-black">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="tibCarnet"
+                          formControlName="tibCarnet"
+                          [value]="true"
+                          class="h-4 w-4 accent-black"
+                        />
+                        Yes
+                      </label>
+                    </div>
                   </div>
                   <div class="flex gap-2 border border-black">
-                    <div class="block font-bold border-black p-2"></div>
+                    <div class="block font-bold border-black">
+                      <label
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="tibCarnet"
+                          formControlName="tibCarnet"
+                          [value]="false"
+                          class="h-4 w-4 accent-black"
+                        />
+                        No
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2051,79 +2242,146 @@
               <div class="border-b border-black block font-bold p-2">
                 INSTRUCTIONS TO FORWARDER:
               </div>
-
-              <table class="w-full border-collapse">
-                <thead>
-                  <tr class="bg-gray-100 border-b border-black">
-                    <th class="border-r border-black p-1 text-left w-12">
-                      20. Domestic or Foreign (D/F)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-20">
-                      21. Schedule B / HTS Number and Commercial Commodity<br />
-                      Description For Vehicles: VIN/Year, Make, Model and<br />
-                      Vehicle Title Number are required
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-16">
-                      22. Quantity in Schedule B / HTS Units
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-16">
-                      23. DDTC Quantity and DDTC Unit of Measure
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-20">
-                      24. Shipping Weight (in Kilos)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      25. ECCN, EAR99 or USML Category No.
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      26. SME (Y/ N)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      27. Export License No., License Exception Symbol, D D TC
-                      Exemption No., D D TC ACM No. o r NLR
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      28. Value at the Port of Export ( U S Dollars)
-                    </th>
-                    <th class="border-r border-black p-1 text-left w-24">
-                      28. License Value by item (if applicable) ( US Dollars)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="border-b border-black align-top">
-                    <td
-                      class="border-r border-black p-2 font-semibold text-center"
+              <div>
+                <table class="w-full border-collapse">
+                  <thead>
+                    <tr class="bg-gray-100 border-b border-black">
+                      <th class="border-r border-black p-1 text-left w-12">
+                        20. Domestic or Foreign (D/F)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-20">
+                        21. Schedule B / HTS Number and Commercial Commodity<br />
+                        Description For Vehicles: VIN/Year, Make, Model and<br />
+                        Vehicle Title Number are required
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-16">
+                        22. Quantity in Schedule B / HTS Units
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-16">
+                        23. DDTC Quantity and DDTC Unit of Measure
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-20">
+                        24. Shipping Weight (in Kilos)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        25. ECCN, EAR99 or USML Category No.
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        26. SME (Y/ N)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        27. Export License No., License Exception Symbol, D D TC
+                        Exemption No., D D TC ACM No. o r NLR
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        28. Value at the Port of Export ( U S Dollars)
+                      </th>
+                      <th class="border-r border-black p-1 text-left w-24">
+                        28. License Value by item (if applicable) ( US Dollars)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="items">
+                    <tr
+                      class="border-b border-black align-top"
+                      *ngFor="
+                        let itemGroup of sliItemsArray.controls;
+                        let i = index
+                      "
+                      [formGroupName]="i"
                     >
-                      D
-                    </td>
-                    <td class="border-r border-black p-2">
-                      <span class="font-bold">3923.90.9000</span> <br />
-                      HOSE, NONMETALLIC, MACHINE, 0.375 INCH X 50 FEET
-                      MANUFACTURER:C-TECH INDUSTRIES<br />
-                      PART #:8.925-157.0 HOSE NONMETALLIC
-                    </td>
-                    <td class="border-r border-black p-2 font-semibold">EA</td>
-                    <td class="border-r border-black p-2 font-semibold">35</td>
-                    <td class="border-r border-black p-2 font-semibold"></td>
-                    <td class="border-r border-black p-2 font-semibold">
-                      EAR99
-                    </td>
-                    <td class="border-r border-black p-2 font-semibold"></td>
-                    <td class="border-r border-black p-2 font-semibold">NLR</td>
-                    <td class="p-2 font-bold text-left border-r border-black">
-                      $27,885.00
-                    </td>
-                    <td class="p-2 font-bold text-right"></td>
-                  </tr>
-                </tbody>
-              </table>
+                      <td
+                        class="border-r border-black p-2 font-semibold text-center"
+                      >
+                        <input
+                          type="text"
+                          formControlName="df"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                      <td class="border-r border-black p-2">
+                        <span class="font-bold">
+                          {{ itemGroup.get("hsc")?.value }}</span
+                        >
+                        <br />
+                        {{ itemGroup.get("description")?.value }} <br />
+                        <br />
+                        PART #: {{ itemGroup.get("partNumber")?.value }} <br />
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        {{ itemGroup.get("ui")?.value }}
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        {{ itemGroup.get("quantity")?.value }}
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        <input
+                          type="number"
+                          formControlName="shippingWeight"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        <input
+                          type="text"
+                          formControlName="eccnEar99Usml"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        <input
+                          type="text"
+                          formControlName="sme"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                      <td class="border-r border-black p-2 font-semibold">
+                        <input
+                          type="text"
+                          formControlName="elNoNlr"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                      <td class="p-2 font-bold text-left border-r border-black">
+                        {{
+                          (itemGroup.get("unitPrice")?.value || 0) *
+                            (itemGroup.get("quantity")?.value || 0)
+                        }}
+                      </td>
+                      <td class="p-2 font-bold text-right">
+                        <input
+                          type="text"
+                          formControlName="licenseValueByItem"
+                          class="w-full border border-black p-1 font-semibold"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="grid grid-cols-2 border-b border-black text-center">
                 <div class="flex gap-2 border border-black">
                   <div class="block font-bold border-black p-2 border-r">
                     30. DDTC Applicant Registration Number:
                   </div>
-                  <div class="block font-bold border-black p-2 w-16"></div>
+                  <div class="block font-bold border-black p-2 w-48">
+                    <input
+                      formControlName="ddtcApplicantRegistrationNumber"
+                      type="text"
+                      class="w-full border border-black p-1 font-semibold"
+                      placeholder="Enter DDTC Applicant Registration Number"
+                    />
+                    <div
+                      *ngIf="
+                        sliForm.get('ddtcApplicantRegistrationNumber')
+                          ?.invalid &&
+                        sliForm.get('ddtcApplicantRegistrationNumber')?.touched
+                      "
+                      class="text-red-600 text-xs mt-1"
+                    >
+                      DDTC Applicant Registration Number is required.
+                    </div>
+                  </div>
                 </div>
                 <div class="flex gap-2 border border-black">
                   <div class="block font-bold border-black p-2 border-r">
@@ -2132,17 +2390,27 @@
                   <div class="flex gap-2">
                     <div class="block font-bold border-black p-2 border-r">
                       <label
-                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4 accent-black"
+                          formControlName="eligiblePartyCertification"
+                          [value]="true"
+                        />
                         Yes
                       </label>
                     </div>
                     <div class="block font-bold border-black p-2">
                       <label
-                        class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                        class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                       >
-                        <input type="checkbox" class="h-4 w-4 accent-black" />
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4 accent-black"
+                          formControlName="eligiblePartyCertification"
+                          [value]="false"
+                        />
                         No
                       </label>
                     </div>
@@ -2152,9 +2420,14 @@
 
               <div class="border-b border-black block font-bold p-2">
                 32.<label
-                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                 >
-                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="nonLicensableScheduleBHTSNumbers"
+                    [value]="true"
+                  />
                   Check here if there are any remaining non-licensable Schedule
                   B / HTS Numbers that are valued $2500.00 or less and that do
                   not otherwise require AES filing.
@@ -2163,9 +2436,14 @@
               <div class="border-b border-black block font-bold p-2">
                 33.
                 <label
-                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                 >
-                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="usppiAuthorize"
+                    [value]="true"
+                  />
                   Check here if the USPPI authorizes the above named forwarder
                   to act as its true and lawful agent for purposes of preparing
                   and filing the Electronic Export Information ("EEI") in
@@ -2176,14 +2454,14 @@
                 <div class="block font-bold p-2 border-r border-b border-black">
                   35. USPPI E-mail Address:
                 </div>
-                <div class="block font-bold p-2 border-r border-b border-black">
-                  {{ finalCommercialInvoiceData.email }}
+                <div class="font-bold p-2 border-r border-b border-black">
+                  {{ finalCommercialInvoiceData.sellerEmail }}
                 </div>
                 <div class="block font-bold p-2 border-r border-b border-black">
                   37. Printed Name of Duly authorized officer or employee:
                 </div>
                 <div class="block font-bold p-2 border-r border-b border-black">
-                  Tony Joseph
+                  {{ finalCommercialInvoiceData.signerName }}
                 </div>
               </div>
               <div class="grid grid-cols-3 bg-gray-50 border-b border-black">
@@ -2204,16 +2482,25 @@
                     40. Date
                   </div>
 
-                  <div class="p-2 font-semibold">11/5/25</div>
+                  <div class="p-2 font-semibold">
+                    {{
+                      finalCommercialInvoiceData.createdAt | date: "mediumDate"
+                    }}
+                  </div>
                 </div>
               </div>
 
               <div class="border-b border-black block font-bold p-2">
-                33.
+                41.
                 <label
-                  class="flex items-center gap-2 font-bold p-2 border-r border-black cursor-pointer"
+                  class="flex items-center gap-2 font-bold p-2 border-black cursor-pointer"
                 >
-                  <input type="checkbox" class="h-4 w-4 accent-black" />
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 accent-black"
+                    formControlName="validateElectronicSignature"
+                    [value]="true"
+                  />
                   Check here to validate Electronic Signature. Electronic
                   signatures must be typed in all capital letters in Box 38 in
                   order to be valid.

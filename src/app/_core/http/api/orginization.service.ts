@@ -22,14 +22,14 @@ export class OrgainizationService {
   public updateOrganization(org: any) {
     return this.http.post<any>(
       `${environment.api}/Organization/UpdateOrg`,
-      org
+      org,
     );
   }
 
   public addOrganizationAddress(address: any) {
     return this.http.post<any>(
       `${environment.api}/Organization/Address`,
-      address
+      address,
     );
   }
 
@@ -39,7 +39,7 @@ export class OrgainizationService {
 
   public deleteOrganizationAddress(id: any): Observable<any> {
     return this.http.delete<any>(
-      `${environment.api}/Organization/Address/${id}`
+      `${environment.api}/Organization/Address/${id}`,
     );
   }
 }

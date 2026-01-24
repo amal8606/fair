@@ -11,26 +11,30 @@ export class CommercialInvoiceService {
 
   public getInvoicableo(): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/CommercialInvoice/eligible-pos`
+      `${environment.api}/CommercialInvoice/eligible-pos`,
     );
   }
   public getCommercialInvoicedPO(
     startDate: any,
-    endDate: any
+    endDate: any,
   ): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/CommercialInvoice?startDate=${startDate}&endDate=${endDate}`
+      `${environment.api}/CommercialInvoice?startDate=${startDate}&endDate=${endDate}`,
     );
   }
   public postCommercialInvoice(ciForm: any): Observable<any> {
     return this.http.post<any>(`${environment.api}/CommercialInvoice`, ciForm);
   }
 
-    public getCommercialInvoiceDetails(
-    invoiceId: number,
-  ): Observable<any> {
+  public getCommercialInvoiceDetails(invoiceId: number): Observable<any> {
     return this.http.get<any>(
-      `${environment.api}/CommercialInvoice/${invoiceId}`
+      `${environment.api}/CommercialInvoice/${invoiceId}`,
+    );
+  }
+
+  public deleteInvoice(id: any, poId: any): Observable<any> {
+    return this.http.delete<any>(
+      `${environment.api}/CommercialInvoice?id=${id}&poId=${poId}`,
     );
   }
 }

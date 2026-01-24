@@ -28,7 +28,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 export class HomeComponent implements AfterViewInit {
   constructor(
     private readonly poService: PoService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   public showModel = false;
@@ -103,7 +103,6 @@ export class HomeComponent implements AfterViewInit {
     this.poService.getActivePO().subscribe({
       next: (response: any[]) => {
         this.isLoading = false;
-
         const incomingPOs: any[] = [];
         const outgoingPOs: any[] = [];
 
@@ -184,7 +183,7 @@ export class HomeComponent implements AfterViewInit {
           return this.compare(
             a.supplier || a.vendorOrgName,
             b.supplier || b.vendorOrgName,
-            isAsc
+            isAsc,
           );
         case 'destination':
           return this.compare(a.destination, b.destination, isAsc);
@@ -219,7 +218,7 @@ export class HomeComponent implements AfterViewInit {
   public compare(
     a: number | string | null,
     b: number | string | null,
-    isAsc: boolean
+    isAsc: boolean,
   ) {
     const valA = a ?? '';
     const valB = b ?? '';
@@ -243,5 +242,13 @@ export class HomeComponent implements AfterViewInit {
   public closeAddPo() {
     this.showAddPo = false;
     this.getActivePO();
+  }
+  public closePoModel(event: boolean) {
+    if (event == true) {
+      this.getActivePO();
+      this.showModel = false;
+    } else {
+      this.showModel = false;
+    }
   }
 }

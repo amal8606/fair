@@ -14,12 +14,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { CommercialInvoiceService } from '../../../../../../_core/http/api/commericalInvoice.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTabsModule } from '@angular/material/tabs';
-import { AnySrvRecord } from 'node:dns';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PackingListService } from '../../../../../../_core/http/api/packingList.service';
+import { SliService } from '../../../../../../_core/http/api/sli.service';
 
 @Component({
   selector: 'app-create-commerical-invoice',
@@ -48,9 +48,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     customerId: new FormControl(null, Validators.required),
     shipperId: new FormControl(1, Validators.required),
     shipToId: new FormControl(0),
+    customerAddressesId: new FormControl(0),
     createdAt: new FormControl(
       new Date().toISOString().substring(0, 19),
-      Validators.required
+      Validators.required,
     ),
 
     currency: new FormControl('USD'),
@@ -124,6 +125,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   public finalCommercialInvoiceData: any;
   public finalPostData: any;
   public packingListData: any;
+  public sliData: any;
 
   public isLoading: boolean = false;
   public isPoLoading: boolean = false;
@@ -138,7 +140,9 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   seller = {
     name: 'FAIRMOUNT INTERNATIONAL LLC',
+    organizationId: 1,
     address: '11877 91st Ave, SEMINOLE, FL. 33772',
+    email: 'mail@fairmountintl.com',
     phone: '727-460-6757',
     fax: '321-783-3895',
   };
@@ -148,12 +152,13 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     private readonly commercialInvoiceService: CommercialInvoiceService,
     private readonly orgService: OrgainizationService,
     private readonly packingListService: PackingListService,
-    private readonly toastr: ToastrService
+    private readonly toastr: ToastrService,
+    private readonly sliService: SliService,
   ) {}
 
   public createCommercialInvoiceItemFormGroup(
     item?: any,
-    lineNumber?: number
+    lineNumber?: number,
   ): FormGroup {
     const itemData: any = {
       itemId: item?.itemId,
@@ -163,8 +168,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       unitPrice: item?.unitPrice || 0,
       description: item?.description || '',
       partNumber: item?.partNumber || '',
-      countryOfOrgin: item?.countryOfOrigin || '',
-      ui: item?.ui || '',
+      countryOfOrigin: item?.countryOfOrigin || '',
+      unit: item?.unit || '',
       totalPrice: item?.totalPrice || 0,
     };
     const totalPrice = itemData.quantity * itemData.unitPrice;
@@ -172,20 +177,19 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     return new FormGroup({
       itemId: new FormControl(itemData.itemId),
       commercialInvoiceNumber: new FormControl(
-        this.commercialInvoiceForm.get('commercialInvoiceNumber')?.value || ''
+        this.commercialInvoiceForm.get('commercialInvoiceNumber')?.value || '',
       ),
       lineNumber: new FormControl(lineNumber), // Added lineNumber
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
         Validators.min(1),
       ]),
-      countryOfOrgin: new FormControl(itemData.countryOfOrgin),
-      ui: new FormControl(itemData.ui),
+      unit: new FormControl(itemData.unit),
       poId: new FormControl(itemData.poId),
       poNumber: new FormControl(itemData.poNumber),
       description: new FormControl(itemData.description, Validators.required),
       partNumber: new FormControl(itemData.partNumber),
-      countryOfOrigin: new FormControl(itemData.countryOfOrgin),
+      countryOfOrigin: new FormControl(itemData.countryOfOrigin),
       unitPrice: new FormControl(itemData.unitPrice, [
         Validators.required,
         Validators.min(0),
@@ -193,14 +197,91 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       totalPrice: new FormControl(totalPrice.toFixed(2)),
     });
   }
+  public sliForm: FormGroup = new FormGroup({
+    usppiNameId: new FormControl(0),
+    usppiAddressId: new FormControl(0),
+    flcName: new FormControl(''),
+    flcAddress: new FormControl(''),
+    forwardingAgent: new FormControl(''),
+    usppiEin: new FormControl(''),
+    relatedPartyIndicator: new FormControl(false),
+    usppiReference: new FormControl(''),
+    routedExportTransaction: new FormControl(false),
+    ucName: new FormControl(0),
+    ucAddressId: new FormControl(0),
+    ucType: new FormControl(''),
+    icName: new FormControl(''),
+    icAddress: new FormControl(''),
+    stateOfOrigin: new FormControl(''),
+    countryOfUltimateDestination: new FormControl(''),
+    hazardousMaterial: new FormControl(false),
+    inBondCode: new FormControl(''),
+    entryNumber: new FormControl(''),
+    ftzIdentifier: new FormControl(''),
+    tibCarnet: new FormControl(false),
+    ddtcApplicantRegistrationNumber: new FormControl(''),
+    eligiblePartyCertification: new FormControl(false),
+    nonLicensableScheduleBHTSNumbers: new FormControl(false),
+    usppiAuthorize: new FormControl(false),
+    usppiEmailAddress: new FormControl(''),
+    authorizedOfficerName: new FormControl(''),
+    officerTitle: new FormControl(''),
+    validateElectronicSignature: new FormControl(false),
+    commercialInvoiceId: new FormControl(0),
+    packingListId: new FormControl(0),
+    createdAt: new FormControl(''),
+    updatedAt: new FormControl(''),
+    items: new FormArray([]),
+  });
+  public itemGroup(item?: any, lineNumber?: number): FormGroup {
+    {
+      const itemData: any = {
+        itemId: item?.itemId || 0,
+        df: '',
+        shippingWeight: 0,
+        eccnEar99Usml: '',
+        sme: '',
+        elNoNlr: '',
+        licenseValueByItem: '',
+        partNumber: item?.partNumber || '',
+        description: item?.description || '',
+        quantity: item?.quantity || 0,
+        unitPrice: item?.unitPrice || 0,
+        totalPrice: item?.totalPrice || 0,
+        poId: item?.poId || 0,
+        hsc: item?.hsc || '',
+        unit: item?.unit || '',
+      };
+
+      return new FormGroup({
+        itemId: new FormControl(itemData.itemId),
+        df: new FormControl(itemData.df),
+        shippingWeight: new FormControl(itemData.shippingWeight),
+        eccnEar99Usml: new FormControl(itemData.eccnEar99Usml),
+        sme: new FormControl(itemData.sme),
+        elNoNlr: new FormControl(itemData.elNoNlr),
+        licenseValueByItem: new FormControl(itemData.licenseValueByItem),
+        partNumber: new FormControl(itemData.partNumber),
+        description: new FormControl(itemData.description),
+        quantity: new FormControl(itemData.quantity),
+        unitPrice: new FormControl(itemData.unitPrice),
+        totalPrice: new FormControl(itemData.totalPrice),
+        poId: new FormControl(itemData.poId),
+        hsc: new FormControl(itemData.hsc),
+        unit: new FormControl(itemData.unit),
+      });
+    }
+  }
+  get sliItemsArray(): FormArray {
+    return this.sliForm.get('items') as FormArray;
+  }
 
   ngOnInit(): void {
     this.getCommercialInvoicablePO();
     this.getCustomer();
     this.commercialInvoiceForm
       .get('createdAt')
-      ?.setValue(new Date().toISOString().substring(0, 19)); // Use ISO string
-
+      ?.setValue(new Date().toISOString().substring(0, 19));
     this.commercialInvoiceForm
       .get('customerId')
       ?.valueChanges.subscribe((customerId) => {
@@ -209,7 +290,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         }
       });
 
-    // ADDED: Subscribe to line item array changes to recalculate the grand total
     this.commercialInvoiceItemsArray.valueChanges.subscribe(() => {
       this.calculateGrandTotal();
     });
@@ -244,11 +324,11 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const parsedId = Number(poParam);
     if (!Number.isNaN(parsedId)) {
       selectedPO = this.incomingPOs.find(
-        (p: any) => p.poId === parsedId || String(p.poId) === String(poParam)
+        (p: any) => p.poId === parsedId || String(p.poId) === String(poParam),
       );
     } else {
       selectedPO = this.incomingPOs.find(
-        (p: any) => String(p.poNumber) === String(poParam)
+        (p: any) => String(p.poNumber) === String(poParam),
       );
     }
     const poNumber = selectedPO?.poNumber ?? String(poParam);
@@ -256,7 +336,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       next: (response: any) => {
         this.loading = false;
         const filteredResponse = response.filter(
-          (item: any) => item.quantity > 0
+          (item: any) => item.quantity > 0,
         );
         const itemsWithSelectedQty = filteredResponse.map(
           (item: any, index: any) => ({
@@ -265,7 +345,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
             selectedQuantity: 0,
             totalPrice: 0,
             poNumber: poNumber,
-          })
+          }),
         );
 
         this.sortedData1.data = itemsWithSelectedQty;
@@ -284,10 +364,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   addItem() {
     const selectedItems = this.selection.selected || [];
     const existingIds = new Set(
-      this.sortedData2.data.map((i: any) => i.itemId)
+      this.sortedData2.data.map((i: any) => i.itemId),
     );
     const itemsToAdd = selectedItems.filter(
-      (item: any) => !existingIds.has(item.itemId)
+      (item: any) => !existingIds.has(item.itemId),
     );
     if (itemsToAdd.length > 0) {
       this.sortedData2.data = [...this.sortedData2.data, ...itemsToAdd];
@@ -322,7 +402,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       (selected: any) =>
         selected.itemId === item.itemId ||
         (selected.description === item.description &&
-          selected.quantity === item.quantity)
+          selected.quantity === item.quantity),
     );
     if (index > -1) {
       this.sortedData2.data.splice(index, 1);
@@ -332,7 +412,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   get commercialInvoiceItemsArray(): FormArray {
     return this.commercialInvoiceForm.get(
-      'commercialInvoiceItems'
+      'commercialInvoiceItems',
     ) as FormArray;
   }
 
@@ -341,7 +421,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     if (this.selection.selected && this.selection.selected.length > 0) {
       this.sortedData2.data.forEach((item: any, index: number) => {
         this.commercialInvoiceItemsArray.push(
-          this.createCommercialInvoiceItemFormGroup(item, index + 1)
+          this.createCommercialInvoiceItemFormGroup(item, index + 1),
         );
       });
     }
@@ -379,7 +459,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   }
   onCustomerSelect(customerId: number): void {
     this.selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId == customerId
+      (c: any) => c.organizationId == customerId,
     );
     if (this.selectedCustomer) {
       this.fetchAndSetCustomerAddresses(customerId, this.selectedCustomer);
@@ -397,7 +477,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const selectedAddressId = selectElement.value;
 
     const selectedAddress = this.customerAddresses.find(
-      (addr: any) => addr.addressId === +selectedAddressId
+      (addr: any) => addr.addressId === +selectedAddressId,
     );
     if (selectedAddress) {
       const fullAddress = [
@@ -414,6 +494,9 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       this.commercialInvoiceForm
         .get('invoiceDetails.customerAddress')
         ?.setValue(fullAddress);
+      this.commercialInvoiceForm
+        .get('customerAddressesId')
+        ?.setValue(selectedAddress.addressId);
     }
   }
 
@@ -422,7 +505,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const selectedAddressId = selectElement.value;
 
     const selectedAddress = this.customerAddresses.find(
-      (addr: any) => addr.addressId === +selectedAddressId
+      (addr: any) => addr.addressId === +selectedAddressId,
     );
     if (selectedAddress) {
       const fullAddress = [
@@ -456,14 +539,14 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     } else if (this.currentStep === 2) {
       this.commercialInvoiceForm.markAllAsTouched();
       const areAllItemsValid = this.commercialInvoiceItemsArray.controls.every(
-        (control) => control.valid
+        (control) => control.valid,
       );
 
       if (this.commercialInvoiceForm.valid && areAllItemsValid) {
         this.generateInvoice();
       } else {
         alert(
-          'Please correct all validation errors (including all line item fields) before proceeding.'
+          'Please correct all validation errors (including all line item fields) before proceeding.',
         );
       }
     } else if (this.currentStep < this.totalSteps) {
@@ -483,7 +566,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const subTotal = items.reduce(
       (sum: number, item: any) =>
         sum + (item.quantity || 0) * (item.unitPrice || 0),
-      0
+      0,
     );
 
     const taxable = this.commercialInvoiceForm.get('taxableAmount')?.value || 0;
@@ -521,12 +604,15 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const taxableAmount = formValue.taxableAmount;
     const shippingCharge = formValue.shippingCharge;
     const grandTotal = this.commercialInvoiceForm.get('grandTotal')?.value;
-
+    const selectedCustomer = this.customers.find(
+      (c: any) => c.organizationId == formValue.customerId,
+    );
     this.finalPostData = {
       commercialInvoiceNumber: formValue.commercialInvoiceNumber,
       purchaseOrderId: formValue.purchaseOrderId,
       customerId: formValue.customerId,
       shipperId: formValue.shipperId,
+      customerAddressesId: formValue.customerAddressesId,
       shipToId: formValue.shipToId,
       createdAt: formValue.createdAt,
       createdBy: formValue.createdBy,
@@ -551,8 +637,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         itemId: item.itemId,
         partNumber: item.partNumber,
         poNumber: item.poNumber,
-        countryOfOrgin: item.countryOfOrgin,
-        ui: item.ui,
+        countryOfOrigin: item.countryOfOrigin,
+        unit: item.unit,
         poId: item.poId,
         description: item.description,
         quantity: item.quantity,
@@ -591,8 +677,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         itemId: item.itemId,
         partNumber: item.partNumber,
         poNumber: item.poNumber,
-        countryOfOrgin: item.countryOfOrgin,
-        ui: item.ui,
+        countryOfOrigin: item.countryOfOrigin,
+        unit: item.unit,
+        hsc: item.hsc,
+        weightDim: item.weightDim,
         poId: item.poId,
         description: item.description,
         quantity: item.quantity,
@@ -600,15 +688,20 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         totalPrice: item.quantity * item.unitPrice,
       })),
     };
-
-    const selectedCustomer = this.customers.find(
-      (c: any) => c.organizationId == formValue.customerId
-    );
+    this.sliForm.patchValue({
+      usppiEin: formValue.ein,
+      ucNameId: selectedCustomer.id,
+      ucAddressId: formValue.invoiceDetails.customerAddress,
+      usppiEmail: this.seller?.email,
+      authorizedOfficerName: 'Tony Jospeh',
+      officerTitle: 'CEO',
+    });
 
     this.finalCommercialInvoiceData = {
       sellerName: this.seller?.name,
       sellerAddress: this.seller.address,
       sellerPhone: this.seller.phone,
+      sellerEmail: this.seller.email,
       signerName: 'Tony Jospeh',
       signDate: formValue.createdAt,
       commercialInvoiceNumber: formValue.commercialInvoiceNumber,
@@ -624,6 +717,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       customerName: selectedCustomer?.name || 'N/A',
       customerAddress: formValue.invoiceDetails.customerAddress,
       shipToAddress: formValue.invoiceDetails.shipToAddress,
+      customerPhone: selectedCustomer?.phone || 'N/A',
+      customerEmail: selectedCustomer?.email || 'N/A',
       freightType: formValue.freightType,
       termsOfSale: formValue.termsOfSale,
       termsOfPayment: formValue.termsOfPayment,
@@ -648,12 +743,20 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         currency: formValue.currency,
       },
     };
+
+    const sliItemsArray = this.sliForm.get('items') as FormArray;
+    sliItemsArray.clear();
+    this.finalPostData.commercialInvoiceItems.forEach(
+      (item: any, index: number) => {
+        sliItemsArray.push(this.itemGroup(item, index + 1));
+      },
+    );
+
     this.currentStep = 3;
   }
   public generateLoding: boolean = false;
   postInvoice() {
     this.generateLoding = true;
-
     this.commercialInvoiceService
       .postCommercialInvoice(this.finalPostData)
       .subscribe({
@@ -675,8 +778,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     };
     this.packingListService.postPackingList(this.packingListData).subscribe({
       next: (res) => {
-        this.generateLoding = false;
-
+        this.postSLi(res.packingListId, ciId);
         this.toastr.success('Packing List created successfully!');
       },
       error: (err) => {
@@ -686,9 +788,93 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     });
   }
 
+  postSLi(packingListId: any, commercialInvoiceId: any) {
+    const formValue = this.commercialInvoiceForm.getRawValue();
+    const items = formValue.commercialInvoiceItems;
+    this.sliData = {
+      usppiNameId: Number(formValue.shipperId),
+      usppiAddressId: Number(formValue.shipperId),
+      flcName: this.sliForm.get('flcName')?.value,
+      flcAddress: this.sliForm.get('flcAddress')?.value,
+      forwardingAgent: this.sliForm.get('forwardingAgent')?.value,
+      usppiEin: formValue.ein,
+      relatedPartyIndicator: this.sliForm.get('relatedPartyIndicator')?.value,
+      usppiReference: this.sliForm.get('usppiReference')?.value,
+      routedExportTransaction: this.sliForm.get('routedExportTransaction')
+        ?.value,
+      ucName: Number(formValue.customerId),
+      ucAddressId: Number(formValue.shipperId),
+      ucType: this.sliForm.get('ucType')?.value,
+      icName: this.sliForm.get('icName')?.value,
+      icAddress: this.sliForm.get('icAddress')?.value,
+      stateOfOrigin: this.sliForm.get('stateOfOrigin')?.value,
+      countryOfUltimateDestination: this.sliForm.get(
+        'countryOfUltimateDestination',
+      )?.value,
+      hazardousMaterial: this.sliForm.get('hazardousMaterial')?.value,
+      inBondCode: this.sliForm.get('inBondCode')?.value,
+      ftzIdentifier: this.sliForm.get('ftzIdentifier')?.value,
+      entryNumber: this.sliForm.get('entryNumber')?.value,
+      tibCarnet: this.sliForm.get('tibCarnet')?.value,
+      ddtcApplicantRegistrationNumber: this.sliForm.get(
+        'ddtcApplicantRegistrationNumber',
+      )?.value,
+      eligiblePartyCertification: this.sliForm.get('eligiblePartyCertification')
+        ?.value,
+      nonLicensableScheduleBHTSNumbers: this.sliForm.get(
+        'nonLicensableScheduleBHTSNumbers',
+      )?.value,
+      usppiAuthorize: this.sliForm.get('usppiAuthorize')?.value,
+      usppiEmailAddress: this.seller?.email,
+      authorizedOfficerName: 'Tony Jospeh',
+      officerTitle: 'CEO',
+      validateElectronicSignature: this.sliForm.get(
+        'validateElectronicSignature',
+      )?.value,
+      createdAt: formValue.createdAt,
+      items: items.map((item: any, index: number) => {
+        const sliItem = this.sliItemsArray.at(index);
+        return {
+          itemId: Number(item.itemId),
+          df: sliItem?.get('df')?.value,
+          eccnEar99Usml: sliItem?.get('eccnEar99Usml')?.value,
+          sme: sliItem?.get('sme')?.value,
+          elNoNlr: sliItem?.get('elNoNlr')?.value,
+          shippingWeight: Number(sliItem?.get('shippingWeight')?.value),
+          licenseValueByItem: sliItem?.get('licenseValueByItem')?.value,
+          partNumber: item.partNumber,
+          description: item.description,
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unitPrice),
+          totalPrice: Number(item.totalPrice),
+          poId: Number(item.poId),
+          hsc: item.hsc || '',
+          unit: item.unit,
+        };
+      }),
+      signatureDate: formValue.createdAt,
+      commercialInvoiceNumber: formValue.commercialInvoiceNumber,
+      commercialInvoiceId: Number(commercialInvoiceId),
+      packingListId: Number(packingListId),
+    };
+    this.sliService.postSliList(this.sliData).subscribe({
+      next: (res: any) => {
+        this.generateLoding = false;
+        this.currentStep = 1;
+        this.sortedData1.data = [];
+        this.sortedData2.data = [];
+        this.selection.clear();
+        this.commercialInvoiceForm.reset();
+        this.sliForm.reset();
+        this.getCommercialInvoicablePO();
+        this.toastr.success('SLI created successfully!');
+      },
+    });
+  }
+
   printCommercialInvoice() {
     const invoiceNumber = this.commercialInvoiceForm.get(
-      'commercialInvoiceNumber'
+      'commercialInvoiceNumber',
     )?.value;
     const originalTitle = document.title;
 
@@ -716,7 +902,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const element = document.createElement('a');
     element.setAttribute(
       'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode)
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceCode),
     );
     element.setAttribute('download', fileName);
     element.style.display = 'none';

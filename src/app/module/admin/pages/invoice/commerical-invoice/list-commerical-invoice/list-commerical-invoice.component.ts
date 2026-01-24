@@ -35,7 +35,7 @@ import { ViewCommericalInvoiceComponent } from './component/view-commerical-invo
 export class ListCommericalInvoiceComponent {
   constructor(
     private readonly commercialInvoiceService: CommercialInvoiceService,
-    private readonly orgainizationService: OrgainizationService
+    private readonly orgainizationService: OrgainizationService,
   ) {}
   public matHeaders: string[] = [
     'commercialInvoiceNumber',
@@ -68,11 +68,11 @@ export class ListCommericalInvoiceComponent {
   public CIReport = new FormGroup({
     startDate: new FormControl(
       this.formatDate(this.startDate),
-      Validators.required
+      Validators.required,
     ),
     endDate: new FormControl(
       this.formatDate(this.endDate),
-      Validators.required
+      Validators.required,
     ),
   });
   ciNumber: any;
@@ -87,7 +87,7 @@ export class ListCommericalInvoiceComponent {
   public tablehead: any;
   public getCustomerName(customerId: any) {
     const customer = this.orgList.find(
-      (c: any) => c.organizationId == customerId
+      (c: any) => c.organizationId == customerId,
     );
     return customer?.name || '';
   }
@@ -102,7 +102,6 @@ export class ListCommericalInvoiceComponent {
       .getCommercialInvoicedPO(startDate, endDate)
       .subscribe({
         next: (result: any) => {
-          console.log(result);
           const data = result;
           this.sortedData.data = data;
           this.ciReport.data = data;
@@ -117,11 +116,18 @@ export class ListCommericalInvoiceComponent {
       });
   }
 
-  public openViewCIModel(ciNumber:number) {
+  public openViewCIModel(ciNumber: number) {
     this.ciNumber = ciNumber;
     this.showModel = !this.showModel;
   }
-
+  public closeModel(event: any) {
+    if (event == true) {
+      this.showModel = !this.showModel;
+      this.getCIReport();
+    } else {
+      this.showModel = !this.showModel;
+    }
+  }
   //   sort table headers
   sortData(sort: Sort) {
     const data = this.ciReport.data.slice();
@@ -137,7 +143,7 @@ export class ListCommericalInvoiceComponent {
           return this.compare(
             a.commercialInvoiceNumber,
             b.commercialInvoiceNumber,
-            isAsc
+            isAsc,
           );
         case 'customerId':
           return this.compare(a.customerId, b.customerId, isAsc);
@@ -157,7 +163,6 @@ export class ListCommericalInvoiceComponent {
     }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
-  // csv download
 
   public options = {
     fieldSeparator: ',',

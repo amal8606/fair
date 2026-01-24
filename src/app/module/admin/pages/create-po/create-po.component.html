@@ -32,9 +32,9 @@
             <option [value]="null" disabled selected>Select customer</option>
             <option
               *ngFor="let customer of customers"
-              [value]="customer.customerId"
+              [value]="customer.organizationId"
             >
-              {{ customer.customerName }}
+              {{ customer.name }}
             </option>
           </select>
         </div>
@@ -128,7 +128,7 @@
       <div class="mt-6 flex" (click)="$event.stopPropagation()">
         <button
           type="button"
-          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454]"
+          class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
           (click)="showAddItem = true"
         >
           Add PO Items
@@ -184,20 +184,20 @@
           <ng-container matColumnDef="actualCostPerUnit">
             <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.actualCostPerUnit | currency : "USD" }}
+              {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
             <th mat-header-cell *matHeaderCellDef>Unit Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.unitPrice | currency : "USD" }}
+              {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
             <th mat-header-cell *matHeaderCellDef>Total Price</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.totalPrice | currency : "USD" }}
+              {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
@@ -247,7 +247,7 @@
       </div>
       <div class="mt-6 flex justify-center gap-3">
         <button
-          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed flex items-center justify-center gap-2"
           (click)="createPO()"
           type="button"
         >
@@ -295,7 +295,7 @@
             <button
               (click)="addNewItem = true; addExisting = false"
               [disabled]="addNewItem"
-              class="bg-[#749c63] text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-[#638454]"
+              class="bg-green-700 text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-green-800"
               type="button"
             >
               Add New Item
@@ -303,7 +303,7 @@
             <button
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
-              class="bg-[#749c63] text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-[#638454]"
+              class="bg-green-700 text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-green-800"
               type="button"
             >
               Add From Existing PO
@@ -398,12 +398,36 @@
                     class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
                   />
                 </div>
+                <div class="flex flex-col">
+                  <label for="">Country Of Origin</label>
+                  <input
+                    formControlName="countryOfOrigin"
+                    type="text"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label for="">HSC</label>
+                  <input
+                    formControlName="hsc"
+                    type="text"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label for="">Weight&Dim</label>
+                  <input
+                    formControlName="weightDim"
+                    type="text"
+                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                  />
+                </div>
               </div>
               <div class="w-[20%] flex gap-2 items-end">
                 <button
                   (click)="addItem()"
                   [disabled]="newPoItem.invalid"
-                  class="bg-[#749c63] disabled:bg-[#a9d08d] disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6 hover:bg-[#638454]"
+                  class="bg-green-700 disabled:bg-[#a9d08d] disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6 hover:bg-green-800"
                   type="button"
                 >
                   Add Item
@@ -438,7 +462,7 @@
               </div>
               <div>
                 <button
-                  class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+                  class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
                   (click)="getPO()"
                   [disabled]="poId.invalid"
                   type="button"
@@ -574,7 +598,7 @@
                     Actual Cost
                   </th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.actualCostPerUnit | currency : "USD" }}
+                    {{ element.actualCostPerUnit | currency: "USD" }}
                   </td>
                 </ng-container>
 
@@ -587,7 +611,7 @@
                     Unit Price
                   </th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.unitPrice | currency : "USD" }}
+                    {{ element.unitPrice | currency: "USD" }}
                   </td>
                 </ng-container>
 
@@ -600,7 +624,7 @@
                     Total Price
                   </th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.totalPrice | currency : "USD" }}
+                    {{ element.totalPrice | currency: "USD" }}
                   </td>
                 </ng-container>
 
@@ -649,7 +673,7 @@
             <div class="mt-6 flex justify-end">
               <button
                 (click)="closeModel()"
-                class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+                class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
                 [disabled]="selection.selected.length === 0"
                 type="button"
               >

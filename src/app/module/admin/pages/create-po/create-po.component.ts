@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ToastrService } from 'ngx-toastr';
+import { OrgainizationService } from '../../../../_core/http/api/orginization.service';
 
 export interface PoItem {
   itemId?: number;
@@ -47,7 +48,8 @@ export interface PoItem {
 export class CreatePoComponent implements OnInit {
   constructor(
     private readonly poService: PoService,
-    private readonly toaster: ToastrService
+    private readonly toaster: ToastrService,
+    private readonly orgainizationService: OrgainizationService,
   ) {}
 
   @ViewChild(MatSort) matSort!: MatSort;
@@ -102,6 +104,7 @@ export class CreatePoComponent implements OnInit {
   public poForm: FormGroup = new FormGroup({
     poNumber: new FormControl('', Validators.required),
     customerId: new FormControl(null, Validators.required),
+    buyerOrgId: new FormControl(null, Validators.required),
     supplier: new FormControl('', Validators.required),
     destination: new FormControl('', Validators.required),
     paymentTerms: new FormControl('', Validators.required),
@@ -135,6 +138,9 @@ export class CreatePoComponent implements OnInit {
     totalPrice: new FormControl(null),
     actualCostPerUnit: new FormControl(null, Validators.required),
     terms: new FormControl(''),
+    countryOfOrigin: new FormControl(''),
+    hsc: new FormControl(''),
+    weightDim: new FormControl(''),
   });
 
   public customers: any = [];
@@ -155,7 +161,9 @@ export class CreatePoComponent implements OnInit {
   public getActivePO() {
     this.poService.getActivePO().subscribe({
       next: (response: any[]) => {
-        this.poList = response.filter((po: any) => po.poType === 'Incoming');
+        this.poList = response.filter(
+          (po: any) => po.poType === 'Incoming' && po.poStatusId === 4,
+        );
       },
       error: (error: any) => {},
     });
@@ -231,7 +239,7 @@ export class CreatePoComponent implements OnInit {
   }
 
   public getCustomer() {
-    this.poService.getCustomer().subscribe({
+    this.orgainizationService.getOrganization().subscribe({
       next: (response: any) => {
         this.customers = response;
       },
@@ -242,6 +250,9 @@ export class CreatePoComponent implements OnInit {
   public createPO() {
     if (this.poForm.valid && this.sortedData2.data.length > 0) {
       this.isLoading = true;
+      this.poForm.patchValue({
+        buyerOrgId: this.poForm.get('customerId')?.value,
+      });
       this.poService.createPO(this.poForm.value).subscribe({
         next: (response) => {
           this.newPoId = response.id;
@@ -270,7 +281,7 @@ export class CreatePoComponent implements OnInit {
           poId: this.newPoId,
           itemId: undefined,
           lineNumber: undefined,
-        })
+        }),
       );
 
       this.poService
@@ -292,7 +303,7 @@ export class CreatePoComponent implements OnInit {
           error: (error) => {
             this.isLoading = false;
             this.toaster.error(
-              'Purchase Order created, but error adding items.'
+              'Purchase Order created, but error adding items.',
             );
           },
         });
@@ -387,7 +398,7 @@ export class CreatePoComponent implements OnInit {
       (selected: PoItem) =>
         selected.itemId === item.itemId ||
         (selected.description === item.description &&
-          selected.quantity === item.quantity)
+          selected.quantity === item.quantity),
     );
     if (index > -1) {
       this.sortedData2.data.splice(index, 1);

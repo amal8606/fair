@@ -1,4 +1,4 @@
-<section class="p-5">
+<section class="p-5 print:hidden">
   <p class="text-3xl text-gray-700 font-bold">Commerical Invoice</p>
 
   <form [formGroup]="CIReport">
@@ -99,13 +99,11 @@
           mat-row
           *matRowDef="let row; columns: matHeaders"
           class="cursor-pointer hover:bg-gray-200 h-8"
-          (click)="openViewCIModel(row.commercialInvoiceId)"
+          (click)="openViewCIModel(row)"
         ></tr>
       </table>
     </div>
   </div>
-
-  <!-- no data found -->
 
   <div
     *ngIf="loadingReport == false && ciReport.data.length == 0"
@@ -113,7 +111,6 @@
   >
     No Data Found
   </div>
-  <!-- loading -->
   <div
     *ngIf="loadingReport"
     class="flex items-center justify-center py-10 px-5 mr-2 shadow-md font-medium text-gray-900"
@@ -147,8 +144,8 @@
   ></mat-paginator>
 </section>
 <app-view-commerical-invoice
-*ngIf="showModel"
+  *ngIf="showModel"
   [ciNumber]="ciNumber"
-  (onClick)="showModel = false"
+  (onClick)="closeModel($event)"
 >
 </app-view-commerical-invoice>
