@@ -1,44 +1,44 @@
-<section class="p-5 print:hidden">
-  <p class="text-3xl text-gray-700 font-bold">Commerical Invoice</p>
+<section class="p-6 bg-gray-50 min-h-screen print:hidden">
+  <div class="mb-6">
+    <p class="text-2xl font-semibold text-gray-800">Commercial Invoice Report</p>
+  </div>
 
-  <form [formGroup]="CIReport">
-    <div class="flex items-end mb-10">
-      <div class="mr-6">
-        <label class="block mb-2 text-sm font-medium text-gray-900"
-          >Start Date*</label
-        >
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+    <form [formGroup]="CIReport" class="flex flex-wrap items-end gap-4">
+      <div class="w-full md:w-auto">
+        <label class="block mb-2 text-sm font-medium text-gray-700">Start Date*</label>
         <input
           formControlName="startDate"
           type="date"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
         />
       </div>
 
-      <div class="mr-6">
-        <label class="block mb-2 text-sm font-medium text-gray-900"
-          >End Date*</label
-        >
+      <div class="w-full md:w-auto">
+        <label class="block mb-2 text-sm font-medium text-gray-700">End Date*</label>
         <input
           formControlName="endDate"
           type="date"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
         />
       </div>
 
       <button
         (click)="getCIReport()"
         type="submit"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2"
+        class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
       >
-        Get report
+        Get Report
       </button>
-    </div>
-  </form>
-  <div>
+    </form>
+  </div>
+
+  <div class="overflow-x-auto shadow-sm rounded-lg border border-gray-200 bg-white">
     <div class="overflow-x-auto">
       <table
         mat-table
         matSort
+        class="w-full text-sm text-left text-gray-500"
         [dataSource]="sortedData"
         #empTbSort="matSort"
         (matSortChange)="sortData($event)"
@@ -48,19 +48,20 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header="commercialInvoiceNumber"
+            class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
           >
             Commercial Invoice Number
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
             {{ element.commercialInvoiceNumber }}
           </td>
         </ng-container>
         <ng-container matColumnDef="customerId">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="customerId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="customerId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
             Customer
           </th>
-          <td mat-cell *matCellDef="let element">
-            {{ getCustomerName(element.customerId) }}
+          <td mat-cell *matCellDef="let element" class="px-4 py-3">
+            {{ orgList ? getCustomerName(element.customerId) : '' }}
           </td>
         </ng-container>
         <ng-container matColumnDef="finalDestination">
@@ -68,20 +69,21 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header="finalDestination"
+            class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
           >
             Final Destination
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="px-4 py-3">
             <ng-container>
               {{ element.finalDestination }}
             </ng-container>
           </td>
         </ng-container>
         <ng-container matColumnDef="totalAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmount" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
             Total Amount
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="px-4 py-3">
             <ng-container>
               {{ element.totalAmount }}
             </ng-container>
@@ -93,50 +95,49 @@
         <tr
           mat-header-row
           *matHeaderRowDef="matHeaders"
-          class="bg-gray-100 text-uppercase h-8"
         ></tr>
         <tr
           mat-row
           *matRowDef="let row; columns: matHeaders"
-          class="cursor-pointer hover:bg-gray-200 h-8"
+          class="bg-white border-b hover:bg-gray-50 cursor-pointer"
           (click)="openViewCIModel(row)"
         ></tr>
       </table>
     </div>
-  </div>
 
-  <div
-    *ngIf="loadingReport == false && ciReport.data.length == 0"
-    class="flex items-center justify-center py-10 px-5 mr-2 font-medium text-gray-900"
-  >
-    No Data Found
-  </div>
-  <div
-    *ngIf="loadingReport"
-    class="flex items-center justify-center py-10 px-5 mr-2 shadow-md font-medium text-gray-900"
-  >
-    <svg
-      aria-hidden="true"
-      role="status"
-      class="inline w-4 h-4 mr-3 text-gray-200 animate-spin"
-      viewBox="0 0 100 101"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <div
+      *ngIf="loadingReport == false && ciReport.data.length == 0"
+      class="text-center py-8 text-gray-500 text-sm"
     >
-      <path
-        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-        fill="currentColor"
-      />
-      <path
-        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-        fill="#1C64F2"
-      />
-    </svg>
-    Loading Report...
+      No Data Found
+    </div>
+    <div
+      *ngIf="loadingReport"
+      class="text-center py-8 text-gray-500 text-sm"
+    >
+      <svg
+        aria-hidden="true"
+        role="status"
+        class="inline w-4 h-4 mr-3 text-gray-200 animate-spin"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor"
+        />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="#1C64F2"
+        />
+      </svg>
+      Loading Report...
+    </div>
   </div>
   <!-- pagination -->
   <mat-paginator
-    class="mt-5"
+    class="mt-4 bg-transparent"
     #paginator
     [length]="ciReport.data.length"
     [pageSize]="10"

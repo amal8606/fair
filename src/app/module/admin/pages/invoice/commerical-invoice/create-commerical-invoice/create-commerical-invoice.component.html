@@ -1,9 +1,9 @@
 <div
-  class="p-6 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
+  class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-200 shadow-sm rounded-xl print:border-none print:shadow-none print:overflow-visible"
 >
   <header class="mb-8 text-center print:hidden">
-    <p class="text-3xl text-gray-700 font-bold">COMMERCIAL INVOICE CREATOR</p>
-    <p class="text-gray-600 mt-2">
+    <p class="text-xl font-semibold text-gray-800">Commercial Invoice Creator</p>
+    <p class="text-gray-500 mt-2 text-sm">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
       <span *ngIf="currentStep === 2">Enter Details & Confirm Items</span>
@@ -11,7 +11,7 @@
     </p>
     <div class="h-2 bg-gray-200 rounded-full mt-4">
       <div
-        class="h-full bg-blue-500 rounded-full transition-all duration-500"
+        class="h-full bg-blue-600 rounded-full transition-all duration-500"
         [style.width]="(currentStep / totalSteps) * 100 + '%'"
       ></div>
     </div>
@@ -19,14 +19,14 @@
 
   <form [formGroup]="commercialInvoiceForm" class="space-y-8">
     <section *ngIf="currentStep === 1">
-      <p class="text-xl font-semibold mb-4 text-blue-500">
+      <p class="text-lg font-medium text-gray-900 mb-4">
         Select Invoicable Purchase Order
       </p>
       <div class="flex justify-center items-end gap-3">
         <div class="w-2/3">
-          <label class="block text-gray-700">Select Po</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Select Po</label>
           <select
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             #poSelect
             (change)="getPO(poSelect.value)"
           >
@@ -39,18 +39,18 @@
         </div>
       </div>
       <div
-        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+        class="max-w-full max-h-96 overflow-auto mt-4 border border-gray-200 rounded-lg shadow-sm"
       >
         <table
           mat-table
-          class="mat-elevation-z8"
+          class="w-full text-sm text-left text-gray-500"
           [dataSource]="sortedData1"
           matSort
           #matSort="matSort"
         >
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>Select</th>
-            <td mat-cell *matCellDef="let row">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 bg-gray-50">Select</th>
+            <td mat-cell *matCellDef="let row" class="px-4 py-3">
               <mat-checkbox
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -60,28 +60,28 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Item ID
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.itemId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               PO Id
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.poId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Line Number
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.lineNumber }}
             </td>
           </ng-container>
@@ -91,28 +91,29 @@
               mat-header-cell
               *matHeaderCellDef
               mat-sort-header="manufacturerModel"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
             >
               Manufacturer Model
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.manufacturerModel }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Part Number
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.partNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Available Qty
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.quantity }}
             </td>
           </ng-container>
@@ -122,45 +123,46 @@
               mat-header-cell
               *matHeaderCellDef
               mat-sort-header="actualCostPerUnit"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
             >
               Actual Cost
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Unit Price
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Total Price
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="description" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Description
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.description }}
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
               Unit
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unit }}
             </td>
           </ng-container>
@@ -170,7 +172,7 @@
           <tr
             mat-row
             *matRowDef="let element; columns: displayedColumnsFirst"
-            class="example-element-row"
+            class="example-element-row bg-white border-b hover:bg-gray-50"
           ></tr>
         </table>
         <div
@@ -185,7 +187,7 @@
       </div>
       <div class="mt-6 flex justify-end">
         <button
-          class="bg-[#749c63] text-white px-4 py-2 rounded hover:bg-[#638454] disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
           [disabled]="selection.selected.length === 0"
           (click)="addItem()"
           type="button"
@@ -196,88 +198,88 @@
 
       <div
         *ngIf="sortedData2.data.length > 0"
-        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+        class="max-w-full max-h-96 overflow-auto mt-4 border border-gray-200 rounded-lg shadow-sm"
       >
-        <p class="text-xl font-semibold mb-4 text-blue-500">
-          Commerical Invoice Items
+        <p class="text-lg font-medium text-gray-900 mb-4 px-4 pt-4">
+          Commercial Invoice Items
         </p>
-        <table mat-table class="mat-elevation-z8" [dataSource]="sortedData2">
+        <table mat-table class="w-full text-sm text-left text-gray-500" [dataSource]="sortedData2">
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef>Item ID</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Item ID</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.itemId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef>PO Id</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">PO Id</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.poId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef>Line Number</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Line Number</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.lineNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="manufacturerModel">
-            <th mat-header-cell *matHeaderCellDef>Manufacturer Model</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Manufacturer Model</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.manufacturerModel }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef>Part Number</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Part Number</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.partNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef>Quantity</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Quantity</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.quantity }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="actualCostPerUnit">
-            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actual Cost</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef>Unit Price</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit Price</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef>Total Price</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Total Price</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Description</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Description</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.description }}
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef>Unit</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unit }}
             </td>
           </ng-container>
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               <button
                 (click)="$event.stopPropagation()"
                 (click)="removeSelectedItem(element)"
@@ -304,16 +306,16 @@
           <tr
             mat-row
             *matRowDef="let element; columns: displayedColumnsSecond"
-            class="example-element-row"
+            class="example-element-row bg-white border-b hover:bg-gray-50"
           ></tr>
         </table>
       </div>
     </section>
 
     <section *ngIf="currentStep === 2">
-      <p class="text-4xl font-semibold mb-4 text-blue-500">Invoice Details</p>
+      <p class="text-lg font-medium text-gray-900 mb-4">Invoice Details</p>
 
-      <p class="text-xl font-semibold mb-4 text-blue-400">Reference Details</p>
+      <p class="text-md font-medium text-gray-800 mb-4">Reference Details</p>
       <div
         class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 mb-4 border p-2 rounded-sm"
       >
@@ -327,14 +329,15 @@
             id="commercialInvoiceNumber"
             formControlName="commercialInvoiceNumber"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter invoice number"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div
             *ngIf="
               commercialInvoiceForm.get('commercialInvoiceNumber')?.invalid &&
               commercialInvoiceForm.get('commercialInvoiceNumber')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Invoice Number is required.
           </div>
@@ -348,14 +351,14 @@
             id="createdAt"
             formControlName="createdAt"
             type="date"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div
             *ngIf="
               commercialInvoiceForm.get('createdAt')?.invalid &&
               commercialInvoiceForm.get('createdAt')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Date is required.
           </div>
@@ -370,8 +373,12 @@
             id="finalDestination"
             formControlName="finalDestination"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter final destination"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('finalDestination')?.invalid && (commercialInvoiceForm.get('finalDestination')?.dirty || commercialInvoiceForm.get('finalDestination')?.touched)" class="text-red-500 text-xs mt-1">
+            Final Destination is required.
+          </div>
         </div>
 
         <div class="space-y-1">
@@ -384,7 +391,8 @@
             id="termsOfSale"
             formControlName="termsOfSale"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter terms of sale"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             required
           />
           <div
@@ -392,7 +400,7 @@
               commercialInvoiceForm.get('termsOfSale')?.invalid &&
               commercialInvoiceForm.get('termsOfSale')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Required.
           </div>
@@ -407,7 +415,8 @@
             id="termsOfPayment"
             formControlName="termsOfPayment"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter terms of payment"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             required
           />
           <div
@@ -415,7 +424,7 @@
               commercialInvoiceForm.get('termsOfPayment')?.invalid &&
               commercialInvoiceForm.get('termsOfPayment')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Required.
           </div>
@@ -430,7 +439,8 @@
             id="termsOfShipping"
             formControlName="termsOfShipping"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter terms of shipping"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             required
           />
           <div
@@ -438,7 +448,7 @@
               commercialInvoiceForm.get('termsOfShipping')?.invalid &&
               commercialInvoiceForm.get('termsOfShipping')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Required.
           </div>
@@ -452,7 +462,7 @@
             id="currency"
             formControlName="currency"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             readonly
           />
         </div>
@@ -466,8 +476,12 @@
             id="modeOfTransport"
             formControlName="modeOfTransport"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter mode of transport"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('modeOfTransport')?.invalid && (commercialInvoiceForm.get('modeOfTransport')?.dirty || commercialInvoiceForm.get('modeOfTransport')?.touched)" class="text-red-500 text-xs mt-1">
+            Mode of Transport is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label
@@ -479,8 +493,12 @@
             id="placeOfReceipt"
             formControlName="placeOfReceipt"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter place of receipt"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('placeOfReceipt')?.invalid && (commercialInvoiceForm.get('placeOfReceipt')?.dirty || commercialInvoiceForm.get('placeOfReceipt')?.touched)" class="text-red-500 text-xs mt-1">
+            Place of Receipt is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label
@@ -491,10 +509,13 @@
           <input
             id="billOfLandingAwbNo"
             formControlName="billOfLandingAwbNo"
-            type="nu
-            "
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            type="text"
+            placeholder="Enter Bill of Landing / AWB No"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('billOfLandingAwbNo')?.invalid && (commercialInvoiceForm.get('billOfLandingAwbNo')?.dirty || commercialInvoiceForm.get('billOfLandingAwbNo')?.touched)" class="text-red-500 text-xs mt-1">
+            Bill of Landing / AWB No is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="noOfBoxes" class="block text-sm font-medium text-gray-700"
@@ -504,8 +525,12 @@
             id="noOfBoxes"
             formControlName="noOfBoxes"
             type="number"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter number of boxes"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('noOfBoxes')?.invalid && (commercialInvoiceForm.get('noOfBoxes')?.dirty || commercialInvoiceForm.get('noOfBoxes')?.touched)" class="text-red-500 text-xs mt-1">
+            Number of Boxes is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label
@@ -517,8 +542,12 @@
             id="noOfPallets"
             formControlName="noOfPallets"
             type="number"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter number of pallets"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('noOfPallets')?.invalid && (commercialInvoiceForm.get('noOfPallets')?.dirty || commercialInvoiceForm.get('noOfPallets')?.touched)" class="text-red-500 text-xs mt-1">
+            Number of Pallets is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label
@@ -530,8 +559,12 @@
             id="grossWeight"
             formControlName="grossWeight"
             type="number"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter gross weight"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('grossWeight')?.invalid && (commercialInvoiceForm.get('grossWeight')?.dirty || commercialInvoiceForm.get('grossWeight')?.touched)" class="text-red-500 text-xs mt-1">
+            Gross Weight is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label
@@ -543,12 +576,16 @@
             id="marksandNumbers"
             formControlName="marksandNumbers"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter marks & numbers"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('marksandNumbers')?.invalid && (commercialInvoiceForm.get('marksandNumbers')?.dirty || commercialInvoiceForm.get('marksandNumbers')?.touched)" class="text-red-500 text-xs mt-1">
+            Marks & Numbers is required.
+          </div>
         </div>
       </div>
 
-      <p class="text-xl font-semibold mt-4 text-blue-400">
+      <p class="text-md font-medium text-gray-800 mt-6 mb-4">
         Shipper Information
       </p>
 
@@ -563,7 +600,7 @@
           >
           <select
             id="customerId"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             formControlName="customerId"
             required
           >
@@ -580,7 +617,7 @@
               commercialInvoiceForm.get('customerId')?.invalid &&
               commercialInvoiceForm.get('customerId')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Customer is required.
           </div>
@@ -595,8 +632,12 @@
             id="contactName"
             formControlName="contactName"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter contact name"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('contactName')?.invalid && (commercialInvoiceForm.get('contactName')?.dirty || commercialInvoiceForm.get('contactName')?.touched)" class="text-red-500 text-xs mt-1">
+            Contact Name is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="contactNo" class="block text-sm font-medium text-gray-700"
@@ -606,8 +647,12 @@
             id="contactNo"
             formControlName="contactNo"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter contact number"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('contactNo')?.invalid && (commercialInvoiceForm.get('contactNo')?.dirty || commercialInvoiceForm.get('contactNo')?.touched)" class="text-red-500 text-xs mt-1">
+            Contact No is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="email" class="block text-sm font-medium text-gray-700"
@@ -617,8 +662,12 @@
             id="email"
             formControlName="email"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter email"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('email')?.invalid && (commercialInvoiceForm.get('email')?.dirty || commercialInvoiceForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
+            Email is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="email" class="block text-sm font-medium text-gray-700"
@@ -628,7 +677,8 @@
             id="email"
             formControlName="email2"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter secondary email"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
         </div>
         <div class="space-y-1">
@@ -639,8 +689,12 @@
             id="taxId"
             formControlName="taxId"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter tax ID"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('taxId')?.invalid && (commercialInvoiceForm.get('taxId')?.dirty || commercialInvoiceForm.get('taxId')?.touched)" class="text-red-500 text-xs mt-1">
+            Tax ID is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="ein" class="block text-sm font-medium text-gray-700"
@@ -650,8 +704,12 @@
             id="ein"
             formControlName="ein"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter EIN"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="commercialInvoiceForm.get('ein')?.invalid && (commercialInvoiceForm.get('ein')?.dirty || commercialInvoiceForm.get('ein')?.touched)" class="text-red-500 text-xs mt-1">
+            EIN is required.
+          </div>
         </div>
         <div class="space-y-1">
           <label for="k11" class="block text-sm font-medium text-gray-700"
@@ -661,7 +719,8 @@
             id="k11"
             formControlName="k11"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Enter K11"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
         </div>
         <div
@@ -678,7 +737,7 @@
             <select
               id="customerAddressSelect"
               (change)="onCustomerAddressSelect($event)"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             >
               <option value="" disabled selected>
                 Select or Review Address
@@ -700,7 +759,8 @@
               id="customerAddress"
               formControlName="customerAddress"
               rows="3"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+              placeholder="Enter customer address"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             ></textarea>
 
             <div
@@ -710,7 +770,7 @@
                 commercialInvoiceForm.get('invoiceDetails.customerAddress')
                   ?.touched
               "
-              class="text-red-600 text-xs mt-1"
+              class="text-red-500 text-xs mt-1"
             >
               Customer Address is required.
             </div>
@@ -725,7 +785,7 @@
             <select
               id="shipToAddressSelect"
               (change)="onShipToAddressSelect($event)"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             >
               <option value="" disabled selected>
                 Select or Review Address
@@ -747,7 +807,8 @@
               id="shipToAddress"
               formControlName="shipToAddress"
               rows="3"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+              placeholder="Enter shipping address"
+              class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             ></textarea>
 
             <div
@@ -757,7 +818,7 @@
                 commercialInvoiceForm.get('invoiceDetails.shipToAddress')
                   ?.touched
               "
-              class="text-red-600 text-xs mt-1"
+              class="text-red-500 text-xs mt-1"
             >
               Customer Address is required.
             </div>
@@ -765,62 +826,62 @@
         </div>
       </div>
 
-      <p class="text-lg font-semibold my-4 text-blue-500">Line Items</p>
+      <p class="text-lg font-medium text-gray-900 my-4">Line Items</p>
 
       <div
-        class="overflow-x-auto border rounded-lg shadow-sm print:shadow-none"
+        class="overflow-x-auto border border-gray-200 rounded-lg shadow-sm print:shadow-none"
       >
         <div formArrayName="commercialInvoiceItems">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-10"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10"
                 >
                   LIN
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-48"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48"
                 >
                   Part Number
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20"
                 >
                   UI
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Description
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20"
                 >
                   PO#
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20"
                 >
                   COUNTRY OF ORIGIN
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20"
                 >
                   Qty
                 </th>
 
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-24"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
                 >
                   Unit Price
                 </th>
                 <th
-                  class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-24"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
                 >
                   TOTAL PRICE
                 </th>
-                <th class="px-3 py-2 w-10"></th>
+                <th class="px-4 py-3 w-10"></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -831,131 +892,131 @@
                 "
                 [formGroupName]="i"
               >
-                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                   {{ i + 1 }}
                 </td>
-                <td class="px-3 py-2 text-sm text-gray-700">
+                <td class="px-4 py-3 text-sm text-gray-700">
                   <input
                     formControlName="partNumber"
                     type="text"
                     placeholder="Part Number"
-                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                 </td>
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <input
-                    formControlName="ui"
+                    formControlName="unit"
                     type="text"
-                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
-                      itemGroup.get('ui')?.invalid &&
-                      itemGroup.get('ui')?.touched
+                      itemGroup.get('unit')?.invalid &&
+                      itemGroup.get('unit')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <textarea
                     formControlName="description"
                     rows="2"
-                    class="w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   ></textarea>
                   <div
                     *ngIf="
                       itemGroup.get('description')?.invalid &&
                       itemGroup.get('description')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <input
                     formControlName="poNumber"
                     type="text"
-                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('poNumber')?.invalid &&
                       itemGroup.get('poNumber')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
 
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <input
                     formControlName="countryOfOrigin"
                     type="text"
-                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('countryOfOrigin')?.invalid &&
                       itemGroup.get('countryOfOrigin')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
 
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <input
                     formControlName="quantity"
                     type="number"
                     min="1"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-20 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('quantity')?.invalid &&
                       itemGroup.get('quantity')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
 
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <input
                     formControlName="unitPrice"
                     type="number"
                     min="0"
                     (input)="calculateTotalPrice(itemGroup)"
-                    class="w-24 border border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('unitPrice')?.invalid &&
                       itemGroup.get('unitPrice')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
                 </td>
                 <td
-                  class="px-3 py-2 whitespace-nowrap text-sm font-medium text-right"
+                  class="px-4 py-3 whitespace-nowrap text-sm font-medium text-right"
                 >
                   <input
                     formControlName="totalPrice"
                     type="text"
                     [disabled]="true"
-                    class="w-24 border border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                    class="w-24 border border-gray-300 rounded-lg p-1.5 text-sm text-right bg-gray-100"
                   />
                 </td>
-                <td class="px-3 py-2">
+                <td class="px-4 py-3">
                   <button
                     type="button"
                     (click)="commercialInvoiceItemsArray.removeAt(i)"
@@ -997,7 +1058,7 @@
                     : '1.2-2'
               "
               [disabled]="true"
-              class="w-36 text-right border-gray-300 rounded-md shadow-sm bg-gray-100"
+              class="w-36 text-right border border-gray-300 rounded-lg p-1.5 bg-gray-100 text-sm"
             />
           </div>
 
@@ -1013,7 +1074,8 @@
               type="number"
               min="0"
               (input)="calculateGrandTotal()"
-              class="w-36 text-right border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              placeholder="0.00"
+              class="w-36 text-right border border-gray-300 rounded-lg p-1.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
           </div>
 
@@ -1029,7 +1091,8 @@
               type="number"
               min="0"
               (input)="calculateGrandTotal()"
-              class="w-36 text-right border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              placeholder="0.00"
+              class="w-36 text-right border border-gray-300 rounded-lg p-1.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
           </div>
 
@@ -1049,7 +1112,7 @@
                     : '1.2-2'
               "
               [disabled]="true"
-              class="w-36 text-right border-gray-300 rounded-md shadow-sm bg-blue-50 text-lg font-bold text-blue-800"
+              class="w-36 text-right border border-gray-300 rounded-lg p-1.5 bg-blue-50 text-lg font-bold text-blue-800"
             />
             <input type="hidden" formControlName="grandTotal" />
           </div>
@@ -1063,16 +1126,17 @@
           id="note"
           formControlName="note"
           rows="3"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm print:shadow-none focus:border-blue-500 focus:ring-blue-500"
+          placeholder="Enter notes"
+          class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
         ></textarea>
       </div>
     </section>
 
     <section *ngIf="currentStep === 3">
-      <p class="text-xl font-semibold mb-4 text-blue-600 print:hidden">
+      <p class="text-lg font-medium text-gray-900 mb-4 print:hidden">
         Review & Print
       </p>
-      <mat-tab-group class="hide-tab-header-on-print">
+      <mat-tab-group class="hide-tab-header-on-print print:overflow-visible">
         <mat-tab label="COMMERCIAL INVOICE">
           <div
             *ngIf="finalCommercialInvoiceData"
@@ -1483,7 +1547,7 @@
         <mat-tab label="EXPORT PACKING LIST">
           <div
             *ngIf="finalCommercialInvoiceData"
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar print:overflow-visible print:h-auto"
             style="font-size: 10pt"
           >
             <div
@@ -1806,7 +1870,7 @@
         </mat-tab>
         <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
           <div
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt]"
+              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:overflow-visible print:h-auto"
             style="font-size: 10pt"
           >
             <div
@@ -2519,7 +2583,7 @@
         type="button"
         (click)="prevStep()"
         [disabled]="currentStep === 1"
-        class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-gray-500 disabled:opacity-50"
+        class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors disabled:opacity-50"
       >
         &larr; Previous
       </button>
@@ -2531,7 +2595,7 @@
             (click)="postInvoice()"
             type="button"
             [disabled]="generateLoding"
-            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
           >
             <span *ngIf="!generateLoding">Generate Commercial Invoice</span>
             <span *ngIf="generateLoding"> Generating... </span>
@@ -2540,7 +2604,7 @@
             *ngIf="currentStep === totalSteps"
             (click)="printCommercialInvoice()"
             type="button"
-            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-700"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
           >
             Print
           </button>
@@ -2551,7 +2615,7 @@
           type="button"
           (click)="nextStep()"
           [disabled]="currentStep === 1 && selection.selected.length === 0"
-          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md print:shadow-none hover:bg-blue-600 disabled:opacity-50"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
         >
           {{
             currentStep === 1
@@ -2563,3 +2627,38 @@
     </div>
   </form>
 </div>
+
+<style>
+  @media print {
+    * {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+    html, body {
+      overflow: visible !important;
+      height: auto !important;
+    }
+    ::ng-deep mat-tab-group {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+    ::ng-deep .mat-mdc-tab-body-wrapper {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+    ::ng-deep .mat-mdc-tab-body {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+    ::ng-deep .mat-mdc-tab-labels {
+      display: none !important;
+    }
+    ::ng-deep .mat-mdc-tab-header {
+      display: none !important;
+    }
+  }
+</style>

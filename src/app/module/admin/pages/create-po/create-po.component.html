@@ -1,33 +1,39 @@
-<div class="overflow-x-auto m-5 border border-gray-300 p-3 rounded-lg">
+<div class="overflow-x-auto m-6 border border-gray-200 p-6 rounded-lg shadow-sm bg-white">
   <div (click)="closeModel()" class="cursor-pointer">
-    <p class="text-3xl text-gray-700 font-bold mb-4">Create Purchase Order</p>
+    <p class="text-2xl font-semibold text-gray-800 mb-6">Create Purchase Order</p>
     <form [formGroup]="poForm">
       <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         <div>
-          <label class="block text-gray-700">Purchase Order #</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Purchase Order #</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter po number"
             formControlName="poNumber"
           />
+          <div *ngIf="poForm.get('poNumber')?.invalid && (poForm.get('poNumber')?.dirty || poForm.get('poNumber')?.touched)" class="text-red-500 text-xs mt-1">
+            PO Number is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Supplier/Quote Ref #</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Supplier/Quote Ref #</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter supplier/quote ref"
             formControlName="supplier"
           />
+          <div *ngIf="poForm.get('supplier')?.invalid && (poForm.get('supplier')?.dirty || poForm.get('supplier')?.touched)" class="text-red-500 text-xs mt-1">
+            Supplier is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Customer Name</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
           <select
             id="customerName"
             name="customerName"
             formControlName="customerId"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#749c63] focus:border-[#749c63]"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           >
             <option [value]="null" disabled selected>Select customer</option>
             <option
@@ -37,67 +43,88 @@
               {{ customer.name }}
             </option>
           </select>
+          <div *ngIf="poForm.get('customerId')?.invalid && (poForm.get('customerId')?.dirty || poForm.get('customerId')?.touched)" class="text-red-500 text-xs mt-1">
+            Customer is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Order Date</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Order Date</label>
           <input
             type="date"
             id="orderDate"
             name="orderDate"
             formControlName="orderDate"
-            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#749c63] focus:border-[#749c63]"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
+          <div *ngIf="poForm.get('orderDate')?.invalid && (poForm.get('orderDate')?.dirty || poForm.get('orderDate')?.touched)" class="text-red-500 text-xs mt-1">
+            Order Date is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">PO Amount</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">PO Amount</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter total amount"
             formControlName="totalAmount"
           />
+          <div *ngIf="poForm.get('totalAmount')?.invalid && (poForm.get('totalAmount')?.dirty || poForm.get('totalAmount')?.touched)" class="text-red-500 text-xs mt-1">
+            Total Amount is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">PO Cost</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">PO Cost</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter total cost"
             formControlName="totalCost"
           />
+          <div *ngIf="poForm.get('totalCost')?.invalid && (poForm.get('totalCost')?.dirty || poForm.get('totalCost')?.touched)" class="text-red-500 text-xs mt-1">
+            Total Cost is required.
+          </div>
         </div>
 
         <div>
-          <label class="block text-gray-700">Destination</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Destination</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter Destination"
             formControlName="destination"
           />
+          <div *ngIf="poForm.get('destination')?.invalid && (poForm.get('destination')?.dirty || poForm.get('destination')?.touched)" class="text-red-500 text-xs mt-1">
+            Destination is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Payment Terms</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Payment Terms</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter terms"
             formControlName="paymentTerms"
           />
+          <div *ngIf="poForm.get('paymentTerms')?.invalid && (poForm.get('paymentTerms')?.dirty || poForm.get('paymentTerms')?.touched)" class="text-red-500 text-xs mt-1">
+            Payment Terms is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Delivery Terms</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Delivery Terms</label>
           <input
             type="text"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter delivery terms"
             formControlName="deliveryTerms"
           />
+          <div *ngIf="poForm.get('deliveryTerms')?.invalid && (poForm.get('deliveryTerms')?.dirty || poForm.get('deliveryTerms')?.touched)" class="text-red-500 text-xs mt-1">
+            Delivery Terms is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Mode of Shipment</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mode of Shipment</label>
           <select
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             formControlName="modeOfShipment"
           >
             <option value="" disabled selected>Select mode of shipment</option>
@@ -105,30 +132,39 @@
             <option value="Sea">Sea</option>
             <option value="Land">Land</option>
           </select>
+          <div *ngIf="poForm.get('modeOfShipment')?.invalid && (poForm.get('modeOfShipment')?.dirty || poForm.get('modeOfShipment')?.touched)" class="text-red-500 text-xs mt-1">
+            Mode of Shipment is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Freight /Shipping charges</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Freight /Shipping charges</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter charges"
             formControlName="shippingCharges"
           />
+          <div *ngIf="poForm.get('shippingCharges')?.invalid && (poForm.get('shippingCharges')?.dirty || poForm.get('shippingCharges')?.touched)" class="text-red-500 text-xs mt-1">
+            Shipping Charges is required.
+          </div>
         </div>
         <div>
-          <label class="block text-gray-700">Discount</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Discount</label>
           <input
             type="number"
-            class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
             placeholder="Enter discount"
             formControlName="discount"
           />
+          <div *ngIf="poForm.get('discount')?.invalid && (poForm.get('discount')?.dirty || poForm.get('discount')?.touched)" class="text-red-500 text-xs mt-1">
+            Discount is required.
+          </div>
         </div>
       </div>
       <div class="mt-6 flex" (click)="$event.stopPropagation()">
         <button
           type="button"
-          class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-colors"
           (click)="showAddItem = true"
         >
           Add PO Items
@@ -136,85 +172,85 @@
       </div>
       <div
         *ngIf="sortedData2.data.length > 0"
-        class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+        class="max-w-full max-h-96 overflow-auto mt-4 border border-gray-200 rounded-lg shadow-sm"
       >
-        <table mat-table class="mat-elevation-z8" [dataSource]="sortedData2">
+        <table mat-table class="w-full text-sm text-left text-gray-500" [dataSource]="sortedData2">
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef>Item ID</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Item ID</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.itemId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef>PO Id</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">PO Id</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.poId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef>Line Number</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Line Number</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.lineNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="manufacturerModel">
-            <th mat-header-cell *matHeaderCellDef>Manufacturer Model</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Manufacturer Model</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.manufacturerModel }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef>Part Number</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Part Number</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.partNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef>Quantity</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Quantity</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.quantity }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="actualCostPerUnit">
-            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actual Cost</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef>Unit Price</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit Price</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef>Total Price</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Total Price</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Description</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Description</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.description }}
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef>Unit</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unit }}
             </td>
           </ng-container>
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
+            <td mat-cell *matCellDef="let element" class="px-4 py-3">
               <button
                 (click)="$event.stopPropagation()"
                 (click)="removeSelectedItem(element)"
@@ -241,15 +277,16 @@
           <tr
             mat-row
             *matRowDef="let element; columns: displayedColumnsSecond"
-            class="example-element-row"
+            class="example-element-row bg-white border-b hover:bg-gray-50"
           ></tr>
         </table>
       </div>
       <div class="mt-6 flex justify-center gap-3">
         <button
-          class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
           (click)="createPO()"
           type="button"
+          [disabled]="poForm.invalid || isLoading"
         >
           <svg
             *ngIf="isLoading"
@@ -277,7 +314,7 @@
         </button>
         <button
           (click)="clear()"
-          class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 transition-colors"
           type="button"
         >
           Clear
@@ -295,7 +332,7 @@
             <button
               (click)="addNewItem = true; addExisting = false"
               [disabled]="addNewItem"
-              class="bg-green-700 text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-green-800"
+              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mb-4 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
               type="button"
             >
               Add New Item
@@ -303,7 +340,7 @@
             <button
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
-              class="bg-green-700 text-white px-4 py-2 rounded mb-4 disabled:bg-[#a9d08d] disabled:cursor-not-allowed hover:bg-green-800"
+              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mb-4 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
               type="button"
             >
               Add From Existing PO
@@ -312,68 +349,97 @@
 
           <form [formGroup]="newPoItem">
             <div *ngIf="addNewItem">
+              <p class="text-lg font-medium text-gray-900 mb-4">Add New Item</p>
               <div class="grid grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col">
-                  <label for="">Quantity</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Quantity</label>
                   <input
                     formControlName="quantity"
                     type="number"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter quantity"
                   />
+                  <div *ngIf="newPoItem.get('quantity')?.invalid && (newPoItem.get('quantity')?.dirty || newPoItem.get('quantity')?.touched)" class="text-red-500 text-xs mt-1">
+                    Quantity is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Unit</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Unit</label>
                   <input
                     formControlName="unit"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter unit"
                   />
+                  <div *ngIf="newPoItem.get('unit')?.invalid && (newPoItem.get('unit')?.dirty || newPoItem.get('unit')?.touched)" class="text-red-500 text-xs mt-1">
+                    Unit is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Description</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Description</label>
                   <input
                     formControlName="description"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter description"
                   />
+                  <div *ngIf="newPoItem.get('description')?.invalid && (newPoItem.get('description')?.dirty || newPoItem.get('description')?.touched)" class="text-red-500 text-xs mt-1">
+                    Description is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Unit Price</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Unit Price</label>
                   <input
                     formControlName="unitPrice"
                     type="number"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter unit price"
                   />
+                  <div *ngIf="newPoItem.get('unitPrice')?.invalid && (newPoItem.get('unitPrice')?.dirty || newPoItem.get('unitPrice')?.touched)" class="text-red-500 text-xs mt-1">
+                    Unit Price is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Actual Cost Per Unit</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Actual Cost Per Unit</label>
                   <input
                     formControlName="actualCostPerUnit"
                     type="number"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter actual cost"
                   />
+                  <div *ngIf="newPoItem.get('actualCostPerUnit')?.invalid && (newPoItem.get('actualCostPerUnit')?.dirty || newPoItem.get('actualCostPerUnit')?.touched)" class="text-red-500 text-xs mt-1">
+                    Actual Cost is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Total Price </label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Total Price </label>
                   <input
                     formControlName="totalPrice"
                     type="number"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter total price"
                   />
+                  <div *ngIf="newPoItem.get('totalPrice')?.invalid && (newPoItem.get('totalPrice')?.dirty || newPoItem.get('totalPrice')?.touched)" class="text-red-500 text-xs mt-1">
+                    Total Price is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Part #</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Part #</label>
                   <input
                     formControlName="partNumber"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter part number"
                   />
+                  <div *ngIf="newPoItem.get('partNumber')?.invalid && (newPoItem.get('partNumber')?.dirty || newPoItem.get('partNumber')?.touched)" class="text-red-500 text-xs mt-1">
+                    Part Number is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Trace</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Trace</label>
                   <select
                     formControlName="traceabilityRequired"
-                    class="px-2 py-2 border-2 rounded-sm focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                     name="trace"
                     id=""
                   >
@@ -381,60 +447,83 @@
                     <option [value]="1">yes</option>
                     <option [value]="0">no</option>
                   </select>
+                  <div *ngIf="newPoItem.get('traceabilityRequired')?.invalid && (newPoItem.get('traceabilityRequired')?.dirty || newPoItem.get('traceabilityRequired')?.touched)" class="text-red-500 text-xs mt-1">
+                    Trace is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Manufacturer Model</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Manufacturer Model</label>
                   <input
                     formControlName="manufacturerModel"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter manufacturer model"
                   />
+                  <div *ngIf="newPoItem.get('manufacturerModel')?.invalid && (newPoItem.get('manufacturerModel')?.dirty || newPoItem.get('manufacturerModel')?.touched)" class="text-red-500 text-xs mt-1">
+                    Manufacturer Model is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Terms</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Terms</label>
                   <input
                     formControlName="terms"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter terms"
                   />
+                  <div *ngIf="newPoItem.get('terms')?.invalid && (newPoItem.get('terms')?.dirty || newPoItem.get('terms')?.touched)" class="text-red-500 text-xs mt-1">
+                    Terms is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Country Of Origin</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Country Of Origin</label>
                   <input
                     formControlName="countryOfOrigin"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter country of origin"
                   />
+                  <div *ngIf="newPoItem.get('countryOfOrigin')?.invalid && (newPoItem.get('countryOfOrigin')?.dirty || newPoItem.get('countryOfOrigin')?.touched)" class="text-red-500 text-xs mt-1">
+                    Country Of Origin is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">HSC</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">HSC</label>
                   <input
                     formControlName="hsc"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter HSC"
                   />
+                  <div *ngIf="newPoItem.get('hsc')?.invalid && (newPoItem.get('hsc')?.dirty || newPoItem.get('hsc')?.touched)" class="text-red-500 text-xs mt-1">
+                    HSC is required.
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <label for="">Weight&Dim</label>
+                  <label for="" class="text-sm font-medium text-gray-700 mb-1">Weight&Dim</label>
                   <input
                     formControlName="weightDim"
                     type="text"
-                    class="border rounded px-2 py-2 focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Enter weight & dim"
                   />
+                  <div *ngIf="newPoItem.get('weightDim')?.invalid && (newPoItem.get('weightDim')?.dirty || newPoItem.get('weightDim')?.touched)" class="text-red-500 text-xs mt-1">
+                    Weight&Dim is required.
+                  </div>
                 </div>
               </div>
               <div class="w-[20%] flex gap-2 items-end">
                 <button
                   (click)="addItem()"
                   [disabled]="newPoItem.invalid"
-                  class="bg-green-700 disabled:bg-[#a9d08d] disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6 hover:bg-green-800"
+                  class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mt-6 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                   type="button"
                 >
                   Add Item
                 </button>
                 <button
                   (click)="closeModel()"
-                  class="bg-gray-500 text-white px-4 py-2 rounded mt-6 hover:bg-gray-600"
+                  class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-4 py-2 mt-6 transition-colors"
                   type="button"
                 >
                   Cancel
@@ -444,12 +533,13 @@
           </form>
 
           <div *ngIf="addExisting">
+            <p class="text-lg font-medium text-gray-900 mb-4">Add From Existing PO</p>
             <div class="flex justify-center items-end gap-3">
               <div class="w-2/3">
                 <form [formGroup]="poId">
-                  <label class="block text-gray-700">Select Po</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Select Po</label>
                   <select
-                    class="w-full px-3 py-2 border rounded focus:ring-[#749c63] focus:border-[#749c63]"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
                     formControlName="poId"
                   >
                     <option [value]="null" disabled selected>Select PO</option>
@@ -462,7 +552,7 @@
               </div>
               <div>
                 <button
-                  class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+                  class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                   (click)="getPO()"
                   [disabled]="poId.invalid"
                   type="button"
@@ -472,18 +562,18 @@
               </div>
             </div>
             <div
-              class="max-w-full max-h-96 overflow-auto mt-5 p-7 border border-gray-200 rounded-lg"
+              class="max-w-full max-h-96 overflow-auto mt-4 border border-gray-200 rounded-lg shadow-sm"
             >
               <table
                 mat-table
-                class="mat-elevation-z8"
+                class="w-full text-sm text-left text-gray-500"
                 [dataSource]="sortedData1"
                 (matSortChange)="sortData($event)"
                 matSort
                 #matSort="matSort"
               >
                 <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>
+                  <th mat-header-cell *matHeaderCellDef class="px-4 py-3 bg-gray-50">
                     <mat-checkbox
                       (change)="$event ? masterToggle() : null"
                       [checked]="isAllSelected()"
@@ -491,7 +581,7 @@
                     >
                     </mat-checkbox>
                   </th>
-                  <td mat-cell *matCellDef="let row">
+                  <td mat-cell *matCellDef="let row" class="px-4 py-3">
                     <mat-checkbox
                       (click)="$event.stopPropagation()"
                       (change)="$event ? selection.toggle(row) : null"
@@ -501,15 +591,15 @@
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="selectedQuantity">
-                  <th mat-header-cell *matHeaderCellDef>Select Qty</th>
-                  <td mat-cell *matCellDef="let element">
+                  <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Select Qty</th>
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     <input
                       type="number"
                       [value]="element.selectedQuantity"
                       (change)="updateSelectionQuantity(element, $event)"
                       min="0"
                       [max]="element.quantity"
-                      class="w-20 px-2 py-1 border rounded text-center focus:ring-[#749c63] focus:border-[#749c63]"
+                      class="w-20 px-2 py-1 border border-gray-300 rounded text-center focus:ring-blue-500 focus:border-blue-500 text-sm"
                       (click)="$event.stopPropagation()"
                     />
                   </td>
@@ -520,19 +610,20 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="itemId"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Item ID
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.itemId }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="poId">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header="poId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header="poId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
                     PO Id
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.poId }}
                   </td>
                 </ng-container>
@@ -542,10 +633,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="lineNumber"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Line Number
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.lineNumber }}
                   </td>
                 </ng-container>
@@ -555,10 +647,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="manufacturerModel"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Manufacturer Model
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.manufacturerModel }}
                   </td>
                 </ng-container>
@@ -568,10 +661,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="partNumber"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Part Number
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.partNumber }}
                   </td>
                 </ng-container>
@@ -581,10 +675,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="quantity"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Available Qty
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.quantity }}
                   </td>
                 </ng-container>
@@ -594,10 +689,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="actualCostPerUnit"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Actual Cost
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.actualCostPerUnit | currency: "USD" }}
                   </td>
                 </ng-container>
@@ -607,10 +703,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="unitPrice"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Unit Price
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.unitPrice | currency: "USD" }}
                   </td>
                 </ng-container>
@@ -620,10 +717,11 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="totalPrice"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Total Price
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.totalPrice | currency: "USD" }}
                   </td>
                 </ng-container>
@@ -633,18 +731,19 @@
                     mat-header-cell
                     *matHeaderCellDef
                     mat-sort-header="description"
+                    class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
                   >
                     Description
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.description }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="unit">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header="unit">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header="unit" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
                     Unit
                   </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="px-4 py-3">
                     {{ element.unit }}
                   </td>
                 </ng-container>
@@ -657,7 +756,7 @@
                 <tr
                   mat-row
                   *matRowDef="let element; columns: displayedColumnsFirst"
-                  class="example-element-row"
+                  class="example-element-row bg-white border-b hover:bg-gray-50"
                 ></tr>
               </table>
               <div
@@ -673,7 +772,7 @@
             <div class="mt-6 flex justify-end">
               <button
                 (click)="closeModel()"
-                class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:bg-[#a9d08d] disabled:cursor-not-allowed"
+                class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                 [disabled]="selection.selected.length === 0"
                 type="button"
               >

@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddOrgainizationComponent } from './component/add-orgainization/add-orgainization.component';
 import { OrgainizationService } from '../../../../_core/http/api/orginization.service';
 import { EditOrgainizationComponent } from './component/edit-orgainization/edit-orgainization.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-organization',
@@ -21,7 +22,10 @@ import { EditOrgainizationComponent } from './component/edit-orgainization/edit-
   templateUrl: './organization.component.html',
 })
 export class OrganizationComponent implements OnInit {
-  constructor(private readonly orgService: OrgainizationService) {}
+  constructor(
+    private readonly orgService: OrgainizationService,
+    private readonly toaster: ToastrService
+  ) {}
 
   public organizations: any = [];
   public showAddOrganization: boolean = false;
@@ -78,9 +82,11 @@ export class OrganizationComponent implements OnInit {
         next: (response: any) => {
           this.isDeleteModel = !this.isDeleteModel;
           this.getOrganizations();
+          this.toaster.success('Organization deleted successfully');
         },
         error: (error: any) => {
           this.isDeleteModel = !this.isDeleteModel;
+          this.toaster.error('Error deleting organization');
         },
       });
     }

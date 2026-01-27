@@ -142,6 +142,21 @@ body {
   .print-hidden {
     display: none !important;
   }
+
+  /* Collapse margins on all print elements */
+  div,
+  p,
+  span,
+  section {
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Allow controlled padding only */
+  .print\:p-0 {
+    padding: 0 !important;
+  }
 }
 @media print {
   /* Hides the entire tab header bar when printing */
@@ -163,6 +178,69 @@ body {
     /* Target your specific tab group */
     .hide-tab-header-on-print .mat-mdc-tab-header {
       display: none !important;
+    }
+
+    /* Targeted print style overrides - only for overflow containers */
+    html,
+    body {
+      overflow: visible !important;
+    }
+
+    /* Fix only scrollable containers, not layout */
+    [style*="overflow"],
+    [class*="overflow"],
+    [class*="scroll"] {
+      overflow: visible !important;
+    }
+
+    /* Fix Material tab containers specifically */
+    mat-tab-group,
+    .mat-mdc-tab-body-wrapper,
+    .mat-mdc-tab-body,
+    .mat-mdc-tab-body-content {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+
+    /* Remove only scrollable height constraints */
+    [style*="height"][style*="calc"],
+    [class*="h-\[calc"] {
+      height: auto !important;
+      max-height: none !important;
+    }
+
+    /* Hide tab headers */
+    .mat-mdc-tab-labels {
+      display: none !important;
+    }
+
+    .mat-mdc-tab-header {
+      display: none !important;
+    }
+
+    /* Page break handling for tables */
+    table {
+      page-break-inside: avoid;
+      width: 100% !important;
+    }
+
+    thead {
+      display: table-header-group !important;
+    }
+
+    tbody {
+      display: table-row-group !important;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      display: table-row !important;
+    }
+
+    th, td {
+      display: table-cell !important;
+      width: auto !important;
     }
   }
 }

@@ -8,7 +8,7 @@
   >
     <div class="relative bg-white rounded-lg shadow **my-8** px-2">
       <div class="flex justify-between p-6 border-b rounded-t">
-        <p class="text-xl flex mb-0 items-center font-semibold text-gray-400">
+        <p class="text-xl flex mb-0 items-center font-semibold text-gray-800">
           Add Organization
         </p>
         <button
@@ -52,6 +52,9 @@
               formControlName="name"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
+            <div *ngIf="orgForm.get('name')?.invalid && (orgForm.get('name')?.dirty || orgForm.get('name')?.touched)" class="text-red-500 text-xs mt-1">
+              Organization Name is required.
+            </div>
           </div>
 
           <div>
@@ -68,6 +71,9 @@
               formControlName="type"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
+            <div *ngIf="orgForm.get('type')?.invalid && (orgForm.get('type')?.dirty || orgForm.get('type')?.touched)" class="text-red-500 text-xs mt-1">
+              Type is required.
+            </div>
           </div>
 
           <div>
@@ -84,6 +90,10 @@
               formControlName="email"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
+            <div *ngIf="orgForm.get('email')?.invalid && (orgForm.get('email')?.dirty || orgForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="orgForm.get('email')?.errors?.['required']">Email is required.</div>
+              <div *ngIf="orgForm.get('email')?.errors?.['email']">Invalid email format.</div>
+            </div>
           </div>
 
           <div>
@@ -100,6 +110,9 @@
               formControlName="phone"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
+            <div *ngIf="orgForm.get('phone')?.invalid && (orgForm.get('phone')?.dirty || orgForm.get('phone')?.touched)" class="text-red-500 text-xs mt-1">
+              Phone is required.
+            </div>
           </div>
 
           <div>
@@ -116,6 +129,9 @@
               formControlName="taxId"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
+            <div *ngIf="orgForm.get('taxId')?.invalid && (orgForm.get('taxId')?.dirty || orgForm.get('taxId')?.touched)" class="text-red-500 text-xs mt-1">
+              Tax ID is required.
+            </div>
           </div>
 
           <div class="flex items-end pb-2">
@@ -174,6 +190,9 @@
                       <option value="Shipping">Shipping</option>
                       <option value="Billing">Billing</option>
                     </select>
+                    <div *ngIf="addressGroup.get('addressType')?.invalid && (addressGroup.get('addressType')?.dirty || addressGroup.get('addressType')?.touched)" class="text-red-500 text-xs mt-1">
+                      Address Type is required.
+                    </div>
                   </div>
 
                   <div>
@@ -190,6 +209,9 @@
                       formControlName="addressLine1"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
+                    <div *ngIf="addressGroup.get('addressLine1')?.invalid && (addressGroup.get('addressLine1')?.dirty || addressGroup.get('addressLine1')?.touched)" class="text-red-500 text-xs mt-1">
+                      Address Line 1 is required.
+                    </div>
                   </div>
 
                   <div class="md:col-span-2">
@@ -222,6 +244,9 @@
                       formControlName="city"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
+                    <div *ngIf="addressGroup.get('city')?.invalid && (addressGroup.get('city')?.dirty || addressGroup.get('city')?.touched)" class="text-red-500 text-xs mt-1">
+                      City is required.
+                    </div>
                   </div>
 
                   <div>
@@ -238,6 +263,9 @@
                       formControlName="state"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
+                    <div *ngIf="addressGroup.get('state')?.invalid && (addressGroup.get('state')?.dirty || addressGroup.get('state')?.touched)" class="text-red-500 text-xs mt-1">
+                      State is required.
+                    </div>
                   </div>
 
                   <div>
@@ -254,6 +282,9 @@
                       formControlName="postalCode"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
+                    <div *ngIf="addressGroup.get('postalCode')?.invalid && (addressGroup.get('postalCode')?.dirty || addressGroup.get('postalCode')?.touched)" class="text-red-500 text-xs mt-1">
+                      Postal Code is required.
+                    </div>
                   </div>
 
                   <div>
@@ -270,6 +301,9 @@
                       formControlName="country"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
+                    <div *ngIf="addressGroup.get('country')?.invalid && (addressGroup.get('country')?.dirty || addressGroup.get('country')?.touched)" class="text-red-500 text-xs mt-1">
+                      Country is required.
+                    </div>
                   </div>
 
                   <div class="flex items-end pb-2">
@@ -293,7 +327,7 @@
             <button
               type="button"
               (click)="addAddress()"
-              class="text-green-600 hover:text-green-800 text-sm font-medium mt-2 flex items-center"
+              class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -318,7 +352,7 @@
         <button
           *ngIf="!isLoading"
           type="button"
-          class="text-white bg-green-600 hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-white disabled:bg-green-400 disabled:cursor-not-allowed focus:z-10"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
           [disabled]="orgForm.invalid"
           (click)="onSubmit()"
         >
@@ -328,7 +362,7 @@
         <button
           *ngIf="isLoading"
           type="button"
-          class="text-white bg-green-500 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 disabled:bg-green-200 disabled:cursor-not-allowed focus:z-10"
+          class="text-white bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
           disabled
         >
           <svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24">
@@ -350,7 +384,7 @@
         </button>
         <button
           type="button"
-          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+          class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
           (click)="closeModel(false)"
         >
           Close

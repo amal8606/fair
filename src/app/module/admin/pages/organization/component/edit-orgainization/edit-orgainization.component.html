@@ -13,7 +13,7 @@
       <div class="sm:flex sm:items-start">
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
           <p
-            class="text-xl leading-6 font-medium text-gray-900 border-b pb-2 mb-4"
+            class="text-xl leading-6 font-semibold text-gray-800 border-b pb-2 mb-4"
             id="modal-title"
           >
             Edit Organization: {{ organizationForm.get("name")?.value }}
@@ -21,61 +21,77 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700"
+              <label for="name" class="block mb-2 text-sm font-medium text-gray-700"
                 >Organization Name</label
               >
               <input
                 id="name"
                 type="text"
                 formControlName="name"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
+              <div *ngIf="organizationForm.get('name')?.invalid && (organizationForm.get('name')?.dirty || organizationForm.get('name')?.touched)" class="text-red-500 text-xs mt-1">
+                Organization Name is required.
+              </div>
             </div>
             <div>
-              <label for="type" class="block text-sm font-medium text-gray-700"
+              <label for="type" class="block mb-2 text-sm font-medium text-gray-700"
                 >Type</label
               >
               <select
                 id="type"
                 formControlName="type"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
               >
                 <option value="Client">Client</option>
                 <option value="Vendor">Vendor</option>
               </select>
+              <div *ngIf="organizationForm.get('type')?.invalid && (organizationForm.get('type')?.dirty || organizationForm.get('type')?.touched)" class="text-red-500 text-xs mt-1">
+                Type is required.
+              </div>
             </div>
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700"
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-700"
                 >Email</label
               >
               <input
                 id="email"
                 type="email"
                 formControlName="email"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
+              <div *ngIf="organizationForm.get('email')?.invalid && (organizationForm.get('email')?.dirty || organizationForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
+                <div *ngIf="organizationForm.get('email')?.errors?.['required']">Email is required.</div>
+                <div *ngIf="organizationForm.get('email')?.errors?.['email']">Invalid email format.</div>
+              </div>
             </div>
             <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700"
+              <label for="phone" class="block mb-2 text-sm font-medium text-gray-700"
                 >Phone</label
               >
               <input
                 id="phone"
                 type="text"
                 formControlName="phone"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
+              <div *ngIf="organizationForm.get('phone')?.invalid && (organizationForm.get('phone')?.dirty || organizationForm.get('phone')?.touched)" class="text-red-500 text-xs mt-1">
+                Phone is required.
+              </div>
             </div>
             <div>
-              <label for="taxId" class="block text-sm font-medium text-gray-700"
+              <label for="taxId" class="block mb-2 text-sm font-medium text-gray-700"
                 >Tax ID</label
               >
               <input
                 id="taxId"
                 type="text"
                 formControlName="taxId"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
+              <div *ngIf="organizationForm.get('taxId')?.invalid && (organizationForm.get('taxId')?.dirty || organizationForm.get('taxId')?.touched)" class="text-red-500 text-xs mt-1">
+                Tax ID is required.
+              </div>
             </div>
           </div>
 
@@ -110,7 +126,7 @@
                   type="button"
                   (click)="saveNewAddress(i)"
                   [disabled]="addressGroup.invalid || isAddingAddress[i]"
-                  class="ml-3 inline-flex items-center px-2.5 py-0.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none disabled:opacity-50 transition duration-150"
+                  class="ml-3 inline-flex items-center px-2.5 py-0.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none disabled:opacity-50 transition duration-150"
                   title="Save New Address"
                 >
                   <svg
@@ -142,15 +158,18 @@
                 <div>
                   <label
                     [for]="'addressType-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >Address Type</label
                   >
                   <input
                     [id]="'addressType-' + i"
                     type="text"
                     formControlName="addressType"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('addressType')?.invalid && (addressGroup.get('addressType')?.dirty || addressGroup.get('addressType')?.touched)" class="text-red-500 text-xs mt-1">
+                    Address Type is required.
+                  </div>
                 </div>
                 <div class="flex items-end pb-1">
                   <div class="flex items-center h-5">
@@ -158,7 +177,7 @@
                       [id]="'isDefault-' + i"
                       type="checkbox"
                       formControlName="isDefault"
-                      class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
                     />
                   </div>
                   <div class="ml-2 text-sm">
@@ -175,28 +194,31 @@
                 <div>
                   <label
                     [for]="'addressLine1-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >Address Line 1</label
                   >
                   <input
                     [id]="'addressLine1-' + i"
                     type="text"
                     formControlName="addressLine1"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('addressLine1')?.invalid && (addressGroup.get('addressLine1')?.dirty || addressGroup.get('addressLine1')?.touched)" class="text-red-500 text-xs mt-1">
+                    Address Line 1 is required.
+                  </div>
                 </div>
 
                 <div>
                   <label
                     [for]="'addressLine2-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >Address Line 2 (Optional)</label
                   >
                   <input
                     [id]="'addressLine2-' + i"
                     type="text"
                     formControlName="addressLine2"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
                 </div>
               </div>
@@ -205,57 +227,69 @@
                 <div>
                   <label
                     [for]="'city-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >City</label
                   >
                   <input
                     [id]="'city-' + i"
                     type="text"
                     formControlName="city"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('city')?.invalid && (addressGroup.get('city')?.dirty || addressGroup.get('city')?.touched)" class="text-red-500 text-xs mt-1">
+                    City is required.
+                  </div>
                 </div>
 
                 <div>
                   <label
                     [for]="'state-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >State/Province</label
                   >
                   <input
                     [id]="'state-' + i"
                     type="text"
                     formControlName="state"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('state')?.invalid && (addressGroup.get('state')?.dirty || addressGroup.get('state')?.touched)" class="text-red-500 text-xs mt-1">
+                    State is required.
+                  </div>
                 </div>
 
                 <div>
                   <label
                     [for]="'postalCode-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >Postal Code</label
                   >
                   <input
                     [id]="'postalCode-' + i"
                     type="text"
                     formControlName="postalCode"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('postalCode')?.invalid && (addressGroup.get('postalCode')?.dirty || addressGroup.get('postalCode')?.touched)" class="text-red-500 text-xs mt-1">
+                    Postal Code is required.
+                  </div>
                 </div>
 
                 <div>
                   <label
                     [for]="'country-' + i"
-                    class="block text-xs font-medium text-gray-700"
+                    class="block mb-2 text-xs font-medium text-gray-700"
                     >Country</label
                   >
                   <input
                     [id]="'country-' + i"
                     type="text"
                     formControlName="country"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm"
+                    class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
+                  <div *ngIf="addressGroup.get('country')?.invalid && (addressGroup.get('country')?.dirty || addressGroup.get('country')?.touched)" class="text-red-500 text-xs mt-1">
+                    Country is required.
+                  </div>
                 </div>
               </div>
 
@@ -287,27 +321,41 @@
           <button
             type="button"
             (click)="addAddress()"
-            class="mt-4 px-3 py-1 text-sm bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition duration-150"
+            class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-4 flex items-center"
           >
-            + Add Another Address
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            Add Another Address
           </button>
         </div>
       </div>
     </div>
 
-    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
       <button
         type="submit"
         (click)="onSubmit()"
         [disabled]="isSaving || organizationForm.invalid"
-        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+        class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
       >
         {{ isSaving ? "Saving..." : "Save Changes" }}
       </button>
       <button
         type="button"
         (click)="onClose()"
-        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
       >
         Cancel
       </button>

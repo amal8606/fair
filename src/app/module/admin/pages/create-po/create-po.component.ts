@@ -165,7 +165,9 @@ export class CreatePoComponent implements OnInit {
           (po: any) => po.poType === 'Incoming' && po.poStatusId === 4,
         );
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.toaster.error('Error fetching active POs');
+      },
     });
   }
 
@@ -197,6 +199,7 @@ export class CreatePoComponent implements OnInit {
         if (error.status === 404) {
           this.toaster.info('No items found for the selected PO.');
         } else {
+          this.toaster.error('Error fetching PO items');
         }
       },
     });
@@ -243,7 +246,9 @@ export class CreatePoComponent implements OnInit {
       next: (response: any) => {
         this.customers = response;
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.toaster.error('Error fetching customers');
+      },
     });
   }
 
@@ -267,6 +272,9 @@ export class CreatePoComponent implements OnInit {
       });
     } else {
       this.poForm.markAllAsTouched();
+      if (this.poForm.invalid) {
+        this.toaster.error('Please fill all required fields.');
+      }
       if (this.sortedData2.data.length === 0) {
         this.toaster.warning('Please add at least one item to the PO.');
       }

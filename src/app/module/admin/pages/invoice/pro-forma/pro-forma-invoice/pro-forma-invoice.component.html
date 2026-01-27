@@ -1,9 +1,9 @@
 <div
-  class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-300 shadow-2xl print:border-none print:shadow-none"
+  class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-200 shadow-sm rounded-xl print:border-none print:shadow-none print:overflow-visible"
 >
   <header class="mb-8 text-center print:hidden">
-    <p class="text-3xl text-gray-700 font-bold">PRO FORMA INVOICE CREATOR</p>
-    <p class="text-gray-600 mt-2">
+    <p class="text-2xl font-semibold text-gray-800">Pro Forma Invoice Creator</p>
+    <p class="text-gray-500 mt-2 text-sm">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
       <span *ngIf="currentStep === 2">Enter Details & Confirm Items</span>
@@ -11,7 +11,7 @@
     </p>
     <div class="h-2 bg-gray-200 rounded-full mt-4">
       <div
-        class="h-full bg-blue-500 rounded-full transition-all duration-500"
+        class="h-full bg-blue-600 rounded-full transition-all duration-500"
         [style.width]="(currentStep / totalSteps) * 100 + '%'"
       ></div>
     </div>
@@ -19,14 +19,14 @@
 
   <form [formGroup]="proFormaForm" class="space-y-8">
     <section *ngIf="currentStep === 1">
-      <p class="text-xl font-semibold mb-4 text-blue-500">
+      <p class="text-lg font-medium text-gray-900 mb-4">
         Select Incoming Purchase Order
       </p>
       <div
         *ngIf="isLoading"
         class="absolute inset-0 h-full flex items-center justify-center bg-white bg-opacity-80 z-10"
       >
-        <p class="text-sm font-medium text-blue">Loading PO Details...</p>
+        <p class="text-sm font-medium text-blue-600">Loading PO Details...</p>
       </div>
 
       <div class="overflow-x-auto border rounded-lg shadow-md">
@@ -86,7 +86,9 @@
                 {{ po.poNumber }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {{ orgId(po.buyerOrgId) }}
+                <ng-container *ngFor="let customer of customers">
+                  <ng-container *ngIf="customer.organizationId === po.buyerOrgId">{{ customer.name }}</ng-container>
+                </ng-container>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ po.createdAt | date: "shortDate" }}
@@ -95,7 +97,7 @@
                 <button
                   type="button"
                   (click)="selectPO(po)"
-                  class="px-3 py-1 bg-blue text-white text-xs font-semibold rounded-md shadow-md hover:bg-blue-600 bg-blue-500 transition duration-150"
+                  class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors"
                   [disabled]="isLoading"
                 >
                   Select PO
@@ -112,14 +114,14 @@
           proFormaForm.get('selectedPoNumber')?.invalid &&
           proFormaForm.get('selectedPoNumber')?.touched
         "
-        class="text-red-600 text-sm mt-2"
+        class="text-red-500 text-xs mt-1"
       >
         Please select a Purchase Order to continue to the next step.
       </div>
     </section>
 
     <section *ngIf="currentStep === 2">
-      <p class="text-2xl font-semibold mb-4 text-blue">Invoice Details</p>
+      <p class="text-lg font-medium text-gray-900 mb-4">Invoice Details</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="space-y-1">
@@ -132,14 +134,14 @@
             id="proformaNumber"
             formControlName="proformaNumber"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div
             *ngIf="
               proFormaForm.get('proformaNumber')?.invalid &&
               proFormaForm.get('proformaNumber')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Proforma Number is required.
           </div>
@@ -153,14 +155,14 @@
             id="createdAt"
             formControlName="createdAt"
             type="date"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div
             *ngIf="
               proFormaForm.get('createdAt')?.invalid &&
               proFormaForm.get('createdAt')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Date is required.
           </div>
@@ -174,7 +176,7 @@
           >
           <select
             id="customerId"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             formControlName="customerId"
             required
           >
@@ -191,7 +193,7 @@
               proFormaForm.get('customerId')?.invalid &&
               proFormaForm.get('customerId')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Customer is required.
           </div>
@@ -212,7 +214,7 @@
           <select
             id="customerAddressSelect"
             (change)="onCustomerAddressSelect($event)"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           >
             <option value="" disabled selected>Select or Review Address</option>
             <option
@@ -232,7 +234,7 @@
             id="customerAddress"
             formControlName="customerAddress"
             rows="3"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           ></textarea>
 
           <div
@@ -240,7 +242,7 @@
               proFormaForm.get('invoiceDetails.customerAddress')?.invalid &&
               proFormaForm.get('invoiceDetails.customerAddress')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Customer Address is required.
           </div>
@@ -255,7 +257,7 @@
           <select
             id="shipToAddressSelect"
             (change)="onShipToAddressSelect($event)"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           >
             <option value="" disabled selected>Select or Review Address</option>
             <option
@@ -275,7 +277,7 @@
             id="shipToAddress"
             formControlName="shipToAddress"
             rows="3"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           ></textarea>
 
           <div
@@ -283,7 +285,7 @@
               proFormaForm.get('invoiceDetails.shipToAddress')?.invalid &&
               proFormaForm.get('invoiceDetails.shipToAddress')?.touched
             "
-            class="text-red-600 text-xs mt-1"
+            class="text-red-500 text-xs mt-1"
           >
             Customer Address is required.
           </div>
@@ -299,7 +301,7 @@
           <select
             id="freightType"
             formControlName="freightType"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           >
             <option value="PICK UP">PICK UP</option>
             <option value="PREPAID">PREPAID</option>
@@ -317,7 +319,7 @@
             id="estimatedShipDate"
             formControlName="estimatedShipDate"
             type="date"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
         </div>
 
@@ -331,13 +333,13 @@
             id="currencyCode"
             formControlName="currencyCode"
             type="text"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             readonly
           />
         </div>
       </div>
 
-      <p class="text-lg font-semibold my-4 text-blue-500">Line Items</p>
+      <p class="text-lg font-medium text-gray-900 my-4">Line Items</p>
 
       <div class="overflow-x-auto border rounded-lg shadow-sm">
         <div formArrayName="proformaItems">
@@ -396,14 +398,14 @@
                     type="number"
                     min="1"
                     (input)="calculateExtendedPrice(itemGroup)"
-                    class="w-20 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-20 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('quantity')?.invalid &&
                       itemGroup.get('quantity')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
@@ -412,21 +414,21 @@
                   <input
                     formControlName="unit"
                     type="text"
-                    class="w-16 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-16 border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
                   <textarea
                     formControlName="description"
                     rows="2"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   ></textarea>
                   <div
                     *ngIf="
                       itemGroup.get('description')?.invalid &&
                       itemGroup.get('description')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
@@ -436,13 +438,13 @@
                     formControlName="manufacturerModel"
                     type="text"
                     placeholder="Model"
-                    class="w-full mb-1 border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full mb-1 border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                   <input
                     formControlName="partNumber"
                     type="text"
                     placeholder="Part Number"
-                    class="w-full border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+                    class="w-full border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
                   />
                 </td>
                 <td class="px-3 py-2">
@@ -451,14 +453,14 @@
                     type="number"
                     min="0"
                     (input)="calculateExtendedPrice(itemGroup)"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right focus:border-blue-500 focus:ring-blue-500"
+                    class="w-24 border border-gray-300 rounded-lg p-1.5 text-sm text-right focus:ring-blue-500 focus:border-blue-500"
                   />
                   <div
                     *ngIf="
                       itemGroup.get('unitPrice')?.invalid &&
                       itemGroup.get('unitPrice')?.touched
                     "
-                    class="text-red-600 text-xs mt-1"
+                    class="text-red-500 text-xs mt-1"
                   >
                     Req
                   </div>
@@ -470,7 +472,7 @@
                     formControlName="extendedPrice"
                     type="text"
                     [disabled]="true"
-                    class="w-24 border-gray-300 rounded-md text-sm text-right bg-gray-100"
+                    class="w-24 border border-gray-300 rounded-lg p-1.5 text-sm text-right bg-gray-100"
                   />
                 </td>
                 <td class="px-3 py-2">
@@ -507,13 +509,13 @@
           id="notes"
           formControlName="notes"
           rows="3"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
         ></textarea>
       </div>
     </section>
 
     <section *ngIf="currentStep === 3">
-      <p class="text-xl font-semibold mb-4 text-blue-600 print:hidden">
+      <p class="text-lg font-medium text-gray-900 mb-4 print:hidden">
         Review & Print
       </p>
 
@@ -759,7 +761,7 @@
         type="button"
         (click)="prevStep()"
         [disabled]="currentStep === 1"
-        class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 disabled:opacity-50"
+        class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors disabled:opacity-50"
       >
         &larr; Previous
       </button>
@@ -771,7 +773,7 @@
             (click)="postInvoice()"
             type="button"
             [disabled]="isLoading"
-            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
           >
             <span *ngIf="!generateLoading">Generate Pro Forma</span>
             <span *ngIf="generateLoading"> Generating... </span>
@@ -780,7 +782,7 @@
             *ngIf="currentStep === totalSteps"
             (click)="printProForma()"
             type="button"
-            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
           >
             Print Pro Forma
           </button>
@@ -793,7 +795,7 @@
           [disabled]="
             currentStep === 1 && !proFormaForm.get('selectedPoNumber')?.value
           "
-          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 disabled:opacity-50"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
         >
           {{
             currentStep === 1

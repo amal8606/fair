@@ -1,5 +1,5 @@
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe, isPlatformBrowser } from '@angular/common';
+import { Component, ViewChild, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AddPoComponent } from '../../component/add-po/add-po.component';
@@ -8,6 +8,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { PoService } from '../../../../_core/http/api/po.service';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,8 @@ export class HomeComponent implements AfterViewInit {
   constructor(
     private readonly poService: PoService,
     private readonly router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly toaster: ToastrService
   ) {}
 
   public showModel = false;
@@ -86,11 +89,13 @@ export class HomeComponent implements AfterViewInit {
   ];
 
   ngOnInit() {
-    if (!localStorage.getItem('isLoggedIn')) {
-      window.location.href = '/login';
-    } else {
-      this.getActivePO();
-      this.getCustomer();
+    if (isPlatformBrowser(this.platformId)) {
+      if (!localStorage.getItem('isLoggedIn')) {
+        window.location.href = '/login';
+      } else {
+        this.getActivePO();
+        this.getCustomer();
+      }
     }
   }
 
@@ -122,6 +127,7 @@ export class HomeComponent implements AfterViewInit {
       },
       error: (error: any) => {
         this.isLoading = false;
+        this.toaster.error('Error fetching Purchase Orders');
       },
     });
   }
@@ -162,7 +168,9 @@ export class HomeComponent implements AfterViewInit {
       next: (response: any) => {
         this.customers = response;
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.toaster.error('Error fetching customers');
+      },
     });
   }
 
