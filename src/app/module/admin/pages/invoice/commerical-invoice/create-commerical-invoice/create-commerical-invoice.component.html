@@ -36,7 +36,7 @@
           >
             <option [ngValue]="null" disabled selected>Select PO</option>
 
-            <option *ngFor="let po of incomingPOs" [value]="po.poId">
+            <option *ngFor="let po of incomingPOs" [value]="po.id">
               {{ po.poNumber }}
             </option>
           </select>
