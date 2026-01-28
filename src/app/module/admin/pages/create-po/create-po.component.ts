@@ -104,7 +104,7 @@ export class CreatePoComponent implements OnInit {
   public poForm: FormGroup = new FormGroup({
     poNumber: new FormControl('', Validators.required),
     customerId: new FormControl(null, Validators.required),
-    buyerOrgId: new FormControl(null, Validators.required),
+    buyerOrgId: new FormControl(null),
     supplier: new FormControl('', Validators.required),
     destination: new FormControl('', Validators.required),
     paymentTerms: new FormControl('', Validators.required),
@@ -233,7 +233,6 @@ export class CreatePoComponent implements OnInit {
       }
     }
 
-    // Recalculate totalPrice based on selectedQuantity
     if (row.selectedQuantity && row.unitPrice) {
       row.totalPrice = row.selectedQuantity * row.unitPrice;
     } else {
@@ -253,6 +252,7 @@ export class CreatePoComponent implements OnInit {
   }
 
   public createPO() {
+    console.log(this.poForm.value);
     if (this.poForm.valid && this.sortedData2.data.length > 0) {
       this.isLoading = true;
       this.poForm.patchValue({
@@ -324,25 +324,44 @@ export class CreatePoComponent implements OnInit {
   public closeModel() {
     this.showAddItem = false;
 
+    // 1. Filter out only items that have a quantity > 0
     const itemsToTransfer: PoItem[] = this.selection.selected
       .filter((item) => (item.selectedQuantity || 0) > 0)
       .map((item) => ({
         ...item,
         quantity: item.selectedQuantity!,
-        selectedQuantity: undefined,
+        selectedQuantity: undefined, // Clear this as it's not needed in the main table
       }));
 
-    const combinedItems = [...this.sortedData2.data, ...itemsToTransfer];
+    // 2. Get the current list of items
+    const currentItems = [...this.sortedData2.data];
 
-    this.sortedData2.data = combinedItems;
+    // 3. Merge without duplicates based on itemId
+    itemsToTransfer.forEach((newItem) => {
+      const exists = currentItems.find(
+        (existing) => existing.itemId === newItem.itemId,
+      );
 
+      if (exists) {
+        // Option A: Update quantity if it already exists
+        exists.quantity += newItem.quantity;
+        exists.totalPrice = exists.quantity * exists.unitPrice;
+      } else {
+        // Option B: Add as a new row
+        currentItems.push(newItem);
+      }
+    });
+
+    // 4. Re-assign to trigger Angular change detection
+    this.sortedData2.data = currentItems;
+
+    // Reset UI states
     this.sortedData1.data = [];
     this.purchaseOrdersList.data = [];
     this.poId.reset({ poId: null });
     this.newPoItem.reset({ traceabilityRequired: 0 });
-    this.selection.clear(); // Clear the selection model for the modal
+    this.selection.clear();
   }
-
   public addItem() {
     if (this.newPoItem.valid) {
       const formValue = this.newPoItem.value;
