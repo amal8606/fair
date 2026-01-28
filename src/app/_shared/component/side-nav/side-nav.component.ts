@@ -12,7 +12,7 @@ import { NavigationService } from '../../../_core/services/navigation/navigation
 export class SideNavComponent {
   constructor(
     private readonly route: Router,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
   ) {}
   @Output() onClick = new EventEmitter();
   public closeNavbar() {
@@ -42,6 +42,6 @@ export class SideNavComponent {
   // }
   public logOut() {
     localStorage.clear();
-    this.route.navigate(['/login']);
+    this.route.navigate(['/']);
   }
 }

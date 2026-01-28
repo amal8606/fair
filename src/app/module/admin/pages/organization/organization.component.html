@@ -35,14 +35,15 @@
         <tr>
           <th scope="col" class="px-4 py-3 font-medium">Type</th>
           <th scope="col" class="px-4 py-3 font-medium">Name</th>
-          <th
-            scope="col"
-            class="px-4 py-3 font-medium hidden sm:table-cell"
-          >
+          <th scope="col" class="px-4 py-3 font-medium hidden sm:table-cell">
             Primary Address
           </th>
-          <th scope="col" class="px-4 py-3 font-medium hidden md:table-cell">Country</th>
-          <th scope="col" class="px-4 py-3 font-medium hidden lg:table-cell">Phone</th>
+          <th scope="col" class="px-4 py-3 font-medium hidden md:table-cell">
+            Country
+          </th>
+          <th scope="col" class="px-4 py-3 font-medium hidden lg:table-cell">
+            Phone
+          </th>
           <th scope="col" class="px-4 py-3 font-medium">Email</th>
           <th scope="col" class="px-4 py-3 font-medium">
             <span class="sr-only">Edit</span>
@@ -67,10 +68,7 @@
           </td>
           <td class="px-4 py-3 hidden lg:table-cell">{{ org.phone }}</td>
           <td class="px-4 py-3">{{ org.email }}</td>
-          <td
-            (click)="$event.stopPropagation()"
-            class="px-4 py-3 text-right"
-          >
+          <td (click)="$event.stopPropagation()" class="px-4 py-3 text-right">
             <button
               (click)="deleteOrganization(org.organizationId)"
               class="bg-transparent"
@@ -89,9 +87,21 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="organizations?.length === 0">
+        <tr *ngIf="organizations?.length === 0 && !isLoading">
           <td colspan="7" class="px-4 py-8 text-center text-gray-500 text-sm">
             No organizations found.
+          </td>
+        </tr>
+        <tr *ngIf="isLoading">
+          <td colspan="7" class="px-4 py-8 text-center text-gray-500 text-sm">
+            <p class="text-center py-8 text-gray-500 text-sm">
+              <span>Loading Data</span>
+              <span class="loading-dots">
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+              </span>
+            </p>
           </td>
         </tr>
       </tbody>

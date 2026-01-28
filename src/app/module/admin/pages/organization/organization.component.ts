@@ -24,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OrganizationComponent implements OnInit {
   constructor(
     private readonly orgService: OrgainizationService,
-    private readonly toaster: ToastrService
+    private readonly toaster: ToastrService,
   ) {}
 
   public organizations: any = [];
@@ -34,10 +34,12 @@ export class OrganizationComponent implements OnInit {
   ngOnInit(): void {
     this.getOrganizations();
   }
-
+  public isLoading: boolean = false;
   public getOrganizations(): void {
+    this.isLoading = true;
     this.orgService.getOrganization().subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         this.organizations = response;
       },
       error: (error: any) => {},

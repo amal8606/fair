@@ -1,14 +1,10 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
+// ===============================
+// Angular Material Theming
+// ===============================
 @use "@angular/material" as mat;
-// Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
 @include mat.core();
 
-// Define the theme object.
 $fairMount-theme: mat.define-theme(
   (
     color: (
@@ -26,66 +22,49 @@ $fairMount-theme: mat.define-theme(
   @include mat.all-component-themes($fairMount-theme);
 }
 
-// Comment out the line below if you want to use the pre-defined typography utility classes.
-// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
-// @include mat.typography-hierarchy($fairMount-theme);
-
-// Comment out the line below if you want to use the deprecated `color` inputs.
-// @include mat.color-variants-backwards-compatibility($fairMount-theme);
-/* You can add global styles to this file, and also import other style files */
-/* You can add global styles to this file, and also import other style files */
+// ===============================
+// Tailwind
+// ===============================
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+// ===============================
+// Base Styles
+// ===============================
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+// ===============================
+// Scrollbar Helpers
+// ===============================
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-.hide-scrollbar {
-  /* For WebKit browsers (Chrome, Safari, Edge) */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* For Firefox */
+  -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-/* 1. Define the Keyframes for the animation */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+// ===============================
+// Loading Dots Animation
+// ===============================
 @keyframes dot-flashing {
   0% {
     opacity: 0;
@@ -98,149 +77,127 @@ body {
   }
 }
 
-/* 2. Style the Container and Dots */
 .loading-dots {
   display: inline-block;
-  margin-left: 4px; /* Space after the word 'Deleting' */
+  margin-left: 4px;
 }
 
 .dot {
-  opacity: 0; /* Start invisible */
-  animation: dot-flashing 1.4s infinite linear; /* Apply the animation */
+  opacity: 0;
+  animation: dot-flashing 1.4s infinite linear;
 }
 
-/* 3. Apply staggered delay to each dot */
-/* The delay makes them appear one after the other */
 .dot:nth-child(2) {
   animation-delay: 0.2s;
 }
-
 .dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+// ===============================
+// ✅ FULL PRINT STYLES
+// ===============================
 @media print {
   @page {
-    margin: 0;
+    size: A4;
+    margin: 2mm; // Balanced margin for headers/footers
   }
 
+  // 1. Reset Global Height Restrictions
+  // "Height: 100%" is the #1 reason pages cut off in print
+  html,
   body {
-    margin: 0;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: white !important;
   }
 
-  /* Hide browser print header/footer (URL, title, etc.) */
-  @page {
-    size: auto;
-    margin: 0mm;
-  }
-
-  /* Remove unwanted page elements */
-  header,
-  footer,
-  .navbar,
-  .print-hidden {
-    display: none !important;
-  }
-
-  /* Collapse margins on all print elements */
-  div,
-  p,
-  span,
-  section {
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  /* Allow controlled padding only */
-  .print\:p-0 {
+  // 2. Neutralize Modal Fixed Positioning
+  // This turns the modal into a standard block that flows across pages
+  section.fixed,
+  div.fixed,
+  .backdrop-blur-sm {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    background: white !important;
+    backdrop-filter: none !important; // Removes the blur effect
     padding: 0 !important;
   }
-}
-@media print {
-  /* Hides the entire tab header bar when printing */
-  .mat-tab-header {
+
+  // 3. Force Content Wrapper to Expand
+  // Kills the h-[95vh] and calc height limits
+  .bg-white.rounded-xl,
+  .print-area,
+  [class*="h-[95vh]"],
+  [class*="h-[calc"] {
+    position: static !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  // 4. Force Material Tabs to Expand (CRITICAL)
+  // Material tabs use hidden overflows by default which clip content
+  mat-tab-group,
+  .mat-mdc-tab-body-wrapper,
+  .mat-mdc-tab-body,
+  .mat-mdc-tab-body-content {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+  }
+
+  // 5. Hide UI Elements
+  .print-hidden,
+  .mat-mdc-tab-header, // Hides the clickable tab buttons
+  button,
+  .bg-gray-50.border-b {
     display: none !important;
   }
-  @media print {
-    /* Hide Angular Material Tab Header (all versions) */
-    .mat-mdc-tab-header,
-    .mat-mdc-tab-label-container,
-    .mat-mdc-tab,
-    .mdc-tab,
-    .mat-mdc-tab-list,
-    .mat-mdc-tab-labels {
-      display: none !important;
-      visibility: hidden !important;
-    }
 
-    /* Target your specific tab group */
-    .hide-tab-header-on-print .mat-mdc-tab-header {
-      display: none !important;
-    }
+  // 6. Table Layout Optimization
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+    page-break-inside: auto !important;
+  }
 
-    /* Targeted print style overrides - only for overflow containers */
-    html,
-    body {
-      overflow: visible !important;
-    }
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
 
-    /* Fix only scrollable containers, not layout */
-    [style*="overflow"],
-    [class*="overflow"],
-    [class*="scroll"] {
-      overflow: visible !important;
-    }
+  td,
+  th {
+    word-wrap: break-word !important;
+  }
 
-    /* Fix Material tab containers specifically */
-    mat-tab-group,
-    .mat-mdc-tab-body-wrapper,
-    .mat-mdc-tab-body,
-    .mat-mdc-tab-body-content {
-      overflow: visible !important;
-      height: auto !important;
-      max-height: none !important;
-    }
+  // 7. Cleanup
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
 
-    /* Remove only scrollable height constraints */
-    [style*="height"][style*="calc"],
-    [class*="h-\[calc"] {
-      height: auto !important;
-      max-height: none !important;
-    }
+  form,
+  .sli-container {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
 
-    /* Hide tab headers */
-    .mat-mdc-tab-labels {
-      display: none !important;
-    }
-
-    .mat-mdc-tab-header {
-      display: none !important;
-    }
-
-    /* Page break handling for tables */
-    table {
-      page-break-inside: avoid;
-      width: 100% !important;
-    }
-
-    thead {
-      display: table-header-group !important;
-    }
-
-    tbody {
-      display: table-row-group !important;
-    }
-
-    tr {
-      page-break-inside: avoid;
-      display: table-row !important;
-    }
-
-    th, td {
-      display: table-cell !important;
-      width: auto !important;
-    }
+  // Utility to prevent specific blocks (like signatures) from splitting
+  .keep-together {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }

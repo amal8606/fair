@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -22,8 +22,14 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {
+  constructor(private readonly route: Router) {}
   public showSideNav = false;
   openMoreOptions(): void {
     this.showSideNav = true;
+  }
+
+  public navigateTo(path: string) {
+    const routePath = path === '' ? ['admin'] : ['admin', path];
+    this.route.navigate(routePath);
   }
 }
