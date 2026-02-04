@@ -49,23 +49,25 @@ export class OrganizationComponent implements OnInit {
   public addOrganization(isLoad: boolean): void {
     if (isLoad) {
       this.getOrganizations();
-      this.showAddOrganization = !this.showAddOrganization;
+      this.showAddOrganization = false;
     }
     {
-      this.showAddOrganization = !this.showAddOrganization;
+      this.showAddOrganization = false;
     }
   }
 
   public openEditModal(org: any): void {
+    this.openEditModel = true;
     this.organizationToEdit = org;
   }
 
+  openEditModel: boolean = false;
   public onOrganizationUpdate(updatedOrg: any): void {
     if (updatedOrg) {
-      this.organizationToEdit = null;
+      this.openEditModel = false;
       this.getOrganizations();
     } else {
-      this.organizationToEdit = null;
+      this.openEditModel = false;
     }
   }
   public isDeleteModel: boolean = false;
@@ -79,6 +81,7 @@ export class OrganizationComponent implements OnInit {
   }
   public isDeleting: boolean = false;
   onDeleteConfirm(): void {
+    this.isDeleting = true;
     if (this.orgId !== 0) {
       this.orgService.deleteOrganization(this.orgId).subscribe({
         next: (response: any) => {

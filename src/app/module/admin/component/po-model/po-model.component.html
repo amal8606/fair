@@ -549,7 +549,7 @@
                       >
                         <input
                           type="number"
-                          [(ngModel)]="item.unitPrice"
+                          [(ngModel)]="item.actualCostPerUnit"
                           class="border rounded px-2 py-1 w-20"
                         />
                       </ng-container>
@@ -588,12 +588,12 @@
                           >
                             Edit
                           </button>
-                          <button
+                          <!-- <button
                             (click)="deleteItem(item)"
                             class="bg-red-500 text-white px-2 py-1 rounded"
                           >
                             Delete
-                          </button>
+                          </button> -->
                         </ng-template>
                       </div>
                     </td>

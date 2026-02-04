@@ -4,7 +4,7 @@
       Client & Vendor Management
     </p>
     <button
-      (click)="addOrganization(false)"
+      (click)="showAddOrganization = !showAddOrganization"
       class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 inline-flex items-center gap-2 transition-colors"
     >
       <svg
@@ -172,7 +172,7 @@
 </div>
 
 <app-edit-orgainization
-  *ngIf="organizationToEdit"
+  *ngIf="openEditModel"
   [organization]="organizationToEdit"
   (saveSuccess)="onOrganizationUpdate($event)"
   (closeModal)="onOrganizationUpdate(null)"

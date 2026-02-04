@@ -26,7 +26,7 @@ export class AddOrgainizationComponent {
 
   constructor(
     private readonly orgService: OrgainizationService,
-    private readonly toaster: ToastrService
+    private readonly toaster: ToastrService,
   ) {}
 
   public orgForm: FormGroup = new FormGroup({

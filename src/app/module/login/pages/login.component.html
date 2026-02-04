@@ -37,7 +37,7 @@
         </span>
       </div>
       <button
-        [disabled]="loading"
+        [disabled]="loginForm.invalid || loading"
         type="submit"
         class="w-full bg-green-600 disabled:bg-green-400 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold mt-3"
       >

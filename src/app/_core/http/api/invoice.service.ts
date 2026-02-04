@@ -36,8 +36,9 @@ export class InvoiceService {
     );
   }
   public deleteProforma(id: any, poId: any): Observable<any> {
-    return this.http.delete<any>(
+    return this.http.post<any>(
       `${environment.api}/Invoice?id=${id}&poId=${poId}`,
+      {},
     );
   }
 }

@@ -34,12 +34,13 @@ export class OrgainizationService {
   }
 
   public deleteOrganization(orgId: any): Observable<any> {
-    return this.http.delete<any>(`${environment.api}/Organization/${orgId}`);
+    return this.http.post<any>(`${environment.api}/Organization/${orgId}`, {});
   }
 
   public deleteOrganizationAddress(id: any): Observable<any> {
-    return this.http.delete<any>(
+    return this.http.post<any>(
       `${environment.api}/Organization/Address/${id}`,
+      {},
     );
   }
 }
