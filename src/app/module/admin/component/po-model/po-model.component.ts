@@ -101,13 +101,17 @@ export class PoModelComponent {
   }
 
   // Save a line item
+  isediting: boolean = false;
   saveItem(item: any) {
+    this.isediting = true;
     this.poService.updatePOItem(item).subscribe({
       next: () => {
+        this.isediting = false;
         this.toaster.success('PO details updated successfully', 'Success');
         this.getPO();
       },
       error: () => {
+        this.isediting = false;
         this.toaster.error('Failed to update PO details', 'Error');
         // Optionally show an error message
       },

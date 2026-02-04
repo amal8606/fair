@@ -2,7 +2,9 @@
   class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-200 shadow-sm rounded-xl print:border-none print:shadow-none print:overflow-visible"
 >
   <header class="mb-8 text-center print:hidden">
-    <p class="text-2xl font-semibold text-gray-800">Pro Forma Invoice Creator</p>
+    <p class="text-2xl font-semibold text-gray-800">
+      Pro Forma Invoice Creator
+    </p>
     <p class="text-gray-500 mt-2 text-sm">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
@@ -24,7 +26,7 @@
       </p>
       <div
         *ngIf="isLoading"
-        class="absolute inset-0 h-full flex items-center justify-center bg-white bg-opacity-80 z-10"
+        class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10"
       >
         <p class="text-sm font-medium text-blue-600">Loading PO Details...</p>
       </div>
@@ -87,7 +89,10 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 <ng-container *ngFor="let customer of customers">
-                  <ng-container *ngIf="customer.organizationId === po.buyerOrgId">{{ customer.name }}</ng-container>
+                  <ng-container
+                    *ngIf="customer.organizationId === po.buyerOrgId"
+                    >{{ customer.name }}</ng-container
+                  >
                 </ng-container>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

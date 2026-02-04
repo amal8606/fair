@@ -153,10 +153,13 @@ export class ProFormaInvoiceComponent implements OnInit {
     this.isPoLoading = true;
     this.invoiceService.getProFormaInvoicablePO().subscribe((res: any[]) => {
       this.isPoLoading = false;
-      this.incomingPOs = res;
+      this.incomingPOs = res.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
     });
   }
-
   public getCustomer() {
     this.orgService.getOrganization().subscribe({
       next: (response: any) => {
