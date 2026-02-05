@@ -6,6 +6,31 @@
       Create Purchase Order
     </p>
     <form [formGroup]="poForm">
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Select PO Type</label
+        >
+        <select
+          id="poTypeId"
+          name="poTypeId"
+          formControlName="poTypeId"
+          class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
+        >
+          <option [value]="null" disabled selected>Select PO Type</option>
+          <option [value]="1">Incoming PO</option>
+          <option [value]="2">Outgoing PO</option>
+        </select>
+        <div
+          *ngIf="
+            poForm.get('customerId')?.invalid &&
+            (poForm.get('customerId')?.dirty ||
+              poForm.get('customerId')?.touched)
+          "
+          class="text-red-500 text-xs mt-1"
+        >
+          Customer is required.
+        </div>
+      </div>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -523,6 +548,7 @@
               Add New Item
             </button>
             <button
+              *ngIf="poForm.get('poTypeId')?.value == 2"
               (click)="addExisting = true; addNewItem = false"
               [disabled]="addExisting"
               class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mb-4 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"

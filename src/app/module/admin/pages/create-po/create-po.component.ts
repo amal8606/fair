@@ -103,6 +103,7 @@ export class CreatePoComponent implements OnInit {
 
   public poForm: FormGroup = new FormGroup({
     poNumber: new FormControl('', Validators.required),
+    poTypeId: new FormControl(1),
     customerId: new FormControl(null, Validators.required),
     buyerOrgId: new FormControl(null),
     supplier: new FormControl('', Validators.required),
@@ -252,7 +253,6 @@ export class CreatePoComponent implements OnInit {
   }
 
   public createPO() {
-    console.log(this.poForm.value);
     if (this.poForm.valid && this.sortedData2.data.length > 0) {
       this.isLoading = true;
       this.poForm.patchValue({
@@ -267,7 +267,8 @@ export class CreatePoComponent implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
-          this.toaster.error('Error creating Purchase Order.');
+          const errorMessage = error.error?.message || 'Something went wrong';
+          this.toaster.error(errorMessage);
         },
       });
     } else {
@@ -324,7 +325,6 @@ export class CreatePoComponent implements OnInit {
   public closeModel() {
     this.showAddItem = false;
 
-    // 1. Filter out only items that have a quantity > 0
     const itemsToTransfer: PoItem[] = this.selection.selected
       .filter((item) => (item.selectedQuantity || 0) > 0)
       .map((item) => ({
