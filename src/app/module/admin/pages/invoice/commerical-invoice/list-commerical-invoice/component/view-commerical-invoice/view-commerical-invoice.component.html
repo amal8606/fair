@@ -348,7 +348,7 @@
                       class=""
                     >
                       <td class="p-1 align-top border border-gray-400">
-                        {{ i + 1 }}
+                        {{ item?.lineNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         {{ item?.partNumber }}
@@ -563,7 +563,7 @@
                   <span
                     class="font-semibold print:font-light text-sm print:text-xs px-1"
                   >
-                    Bill OF LANDIND/AWB NO
+                    Bill OF LADIND/AWB NO
                     {{
                       finalCommercialInvoiceData?.packingList?.[0]
                         ?.billOfLadingOrAWBNo
@@ -829,7 +829,7 @@
                       class=""
                     >
                       <td class="p-1 align-top border border-gray-400">
-                        {{ i + 1 }}
+                        {{ item?.lineNumber }}
                       </td>
                       <td class="p-1 align-top border border-gray-400">
                         {{ item?.partNumber }}

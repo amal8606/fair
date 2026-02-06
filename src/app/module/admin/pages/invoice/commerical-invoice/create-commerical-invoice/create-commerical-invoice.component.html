@@ -650,26 +650,48 @@
         </div>
         <div class="space-y-1">
           <label
-            for="billOfLandingAwbNo"
+            for="billOfLading"
             class="block text-sm font-medium text-gray-700"
-            >Bill Of Landing Number / AWB NO</label
+            >Bill Of Lading Number</label
           >
           <input
-            id="billOfLandingAwbNo"
-            formControlName="billOfLandingAwbNo"
+            id="billOfLading"
+            formControlName="billOfLading"
             type="text"
-            placeholder="Enter Bill of Landing / AWB No"
+            placeholder="Enter Bill of Lading"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div
             *ngIf="
-              commercialInvoiceForm.get('billOfLandingAwbNo')?.invalid &&
-              (commercialInvoiceForm.get('billOfLandingAwbNo')?.dirty ||
-                commercialInvoiceForm.get('billOfLandingAwbNo')?.touched)
+              commercialInvoiceForm.get('billOfLading')?.invalid &&
+              (commercialInvoiceForm.get('billOfLading')?.dirty ||
+                commercialInvoiceForm.get('billOfLading')?.touched)
             "
             class="text-red-500 text-xs mt-1"
           >
-            Bill of Landing / AWB No is required.
+            Bill of Lading is required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label for="awbNo" class="block text-sm font-medium text-gray-700">
+            AWB NO</label
+          >
+          <input
+            id="awbNo"
+            formControlName="awbNo"
+            type="text"
+            placeholder="Enter Bill of Lading / AWB No"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('awbNo')?.invalid &&
+              (commercialInvoiceForm.get('awbNo')?.dirty ||
+                commercialInvoiceForm.get('awbNo')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
+            AWB No is required.
           </div>
         </div>
         <div class="space-y-1">
@@ -1791,8 +1813,14 @@
                 <span
                   class="font-semibold print:font-light text-sm print:text-xs px-1"
                 >
-                  Bill OF LANDIND/AWB NO
-                  {{ finalCommercialInvoiceData.billOfLandingAwbNo }}
+                  Bill OF LANDIND
+                  {{ finalCommercialInvoiceData.billOfLading }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  AWB NO
+                  {{ finalCommercialInvoiceData.awbNo }}
                 </span>
                 <span
                   class="font-semibold print:font-light text-sm print:text-xs px-1"

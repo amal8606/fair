@@ -88,6 +88,7 @@ export class ProFormaInvoiceComponent implements OnInit {
   public createProformaItemFormGroup(item?: any): FormGroup {
     const itemData: any = {
       itemId: item?.itemId || 0,
+      lineNumber: item?.lineNumber || 0,
       poId: item?.poId || 0,
       quantity: item?.quantity || 1,
       unit: item?.unit || 'EA',
@@ -107,6 +108,7 @@ export class ProFormaInvoiceComponent implements OnInit {
 
     return new FormGroup({
       itemId: new FormControl(itemData.itemId),
+      lineNumber: new FormControl(itemData.lineNumber),
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
         Validators.min(1),

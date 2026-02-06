@@ -99,6 +99,8 @@ export class ImportPosComponent {
             countryOfOrigin: row['CountryOfOrigin'],
             hsc: row['HSC'],
             weightDim: row['WeightDim'],
+            poNumber: row['PoNumber'],
+            lineNumber: row['LineNumber'],
             totalPrice: +row['TotalPrice'],
           });
           return acc;
@@ -141,6 +143,7 @@ export class ImportPosComponent {
       'CountryOfOrigin',
       'HSC',
       'WeightDim',
+      'LineNumber',
     ];
     // if(!firstRow) return false;
     const fileHeaders = Object.keys(firstRow);
