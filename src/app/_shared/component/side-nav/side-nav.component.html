@@ -20,7 +20,7 @@
       <ul class="space-y-2">
         <li>
           <div
-            class="block px-4 py-2 text-white hover:bg-gray-700"
+            class="block px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
             (click)="navigateTo('')"
           >
             Home
@@ -28,7 +28,7 @@
         </li>
         <li>
           <div
-            class="block px-4 py-2 text-white hover:bg-gray-700"
+            class="block px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
             (click)="navigateTo('create-po')"
           >
             Create PO
@@ -36,7 +36,7 @@
         </li>
         <li>
           <div
-            class="block px-4 py-2 text-white hover:bg-gray-700"
+            class="block px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
             (click)="navigateTo('organization')"
           >
             Organizations
@@ -60,7 +60,7 @@
               />
             </svg>
 
-            <span class="flex-1 ml-3 text-left whitespace-nowrap"
+            <span class="flex-1 ml-3 text-left whitespace-nowrap cursor-pointer"
               >Pro Forma Invoice</span
             >
             <span *ngIf="showProFormaMenu; else openProFormaInvoice">
@@ -98,14 +98,14 @@
             <li (click)="navigateTo('pro-forma-invoice')">
               <a
                 routerLinkActive="bg-gray-100"
-                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                 >Create Pro Forma</a
               >
             </li>
             <li (click)="navigateTo('pro-forma-invoiced-list')">
               <a
                 routerLinkActive="bg-gray-100"
-                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                 >Pro Forma List</a
               >
             </li>
@@ -128,7 +128,7 @@
               />
             </svg>
 
-            <span class="flex-1 ml-3 text-left whitespace-nowrap"
+            <span class="flex-1 ml-3 text-left whitespace-nowrap cursor-pointer"
               >Commercial Invoice</span
             >
             <span *ngIf="showCommercialInvoiceMenu; else openCommercialInvoice">
@@ -166,14 +166,14 @@
             <li (click)="navigateTo('create-commerical-invoice')">
               <a
                 routerLinkActive="bg-gray-100"
-                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                 >Create Commercial Invoice</a
               >
             </li>
             <li (click)="navigateTo('list-commerical-invoice')">
               <a
                 routerLinkActive="bg-gray-100"
-                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                 >Commercial Invoice List</a
               >
             </li>
@@ -181,7 +181,7 @@
         </li>
         <li>
           <div
-            class="block px-4 py-2 text-white hover:bg-gray-700"
+            class="block px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
             (click)="navigateTo('import-pos')"
           >
             Import POS
@@ -189,7 +189,7 @@
         </li>
         <li>
           <div
-            class="block px-4 py-2 text-white hover:bg-gray-700"
+            class="block px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
             (click)="logOut()"
           >
             Logout

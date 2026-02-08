@@ -42,7 +42,7 @@ export class PoService {
     );
   }
   public updatePOItem(po: any) {
-    return this.http.put<any>(
+    return this.http.post<any>(
       `${environment.api}/OrderManagement/UpdatePOItem`,
       po,
     );

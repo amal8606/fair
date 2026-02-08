@@ -61,83 +61,141 @@
             </div>
             <form [formGroup]="addPOItemForm">
               <div *ngIf="addItemModel">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Add New Item</h3>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                  Add New Item
+                </h3>
                 <div class="grid grid-cols-4 gap-4 mb-4">
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Quantity</label
+                    >
                     <input
                       formControlName="quantity"
                       type="number"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter quantity"
                     />
-                    <div *ngIf="addPOItemForm.get('quantity')?.invalid && (addPOItemForm.get('quantity')?.dirty || addPOItemForm.get('quantity')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('quantity')?.invalid &&
+                        (addPOItemForm.get('quantity')?.dirty ||
+                          addPOItemForm.get('quantity')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Quantity is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Unit</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Unit</label
+                    >
                     <input
                       formControlName="unit"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter unit"
                     />
-                    <div *ngIf="addPOItemForm.get('unit')?.invalid && (addPOItemForm.get('unit')?.dirty || addPOItemForm.get('unit')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('unit')?.invalid &&
+                        (addPOItemForm.get('unit')?.dirty ||
+                          addPOItemForm.get('unit')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Unit is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Description</label
+                    >
                     <input
                       formControlName="description"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter description"
                     />
-                    <div *ngIf="addPOItemForm.get('description')?.invalid && (addPOItemForm.get('description')?.dirty || addPOItemForm.get('description')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('description')?.invalid &&
+                        (addPOItemForm.get('description')?.dirty ||
+                          addPOItemForm.get('description')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Description is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Unit Price</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Unit Price</label
+                    >
                     <input
                       formControlName="unitPrice"
                       type="number"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter unit price"
                     />
-                    <div *ngIf="addPOItemForm.get('unitPrice')?.invalid && (addPOItemForm.get('unitPrice')?.dirty || addPOItemForm.get('unitPrice')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('unitPrice')?.invalid &&
+                        (addPOItemForm.get('unitPrice')?.dirty ||
+                          addPOItemForm.get('unitPrice')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Unit Price is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Actual Cost Per Unit</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Actual Cost Per Unit</label
+                    >
                     <input
                       formControlName="actualCostPerUnit"
                       type="number"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter actual cost"
                     />
-                    <div *ngIf="addPOItemForm.get('actualCostPerUnit')?.invalid && (addPOItemForm.get('actualCostPerUnit')?.dirty || addPOItemForm.get('actualCostPerUnit')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('actualCostPerUnit')?.invalid &&
+                        (addPOItemForm.get('actualCostPerUnit')?.dirty ||
+                          addPOItemForm.get('actualCostPerUnit')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Actual Cost is required.
                     </div>
                   </div>
 
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Part #</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Part #</label
+                    >
                     <input
                       formControlName="partNumber"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter part number"
                     />
-                    <div *ngIf="addPOItemForm.get('partNumber')?.invalid && (addPOItemForm.get('partNumber')?.dirty || addPOItemForm.get('partNumber')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('partNumber')?.invalid &&
+                        (addPOItemForm.get('partNumber')?.dirty ||
+                          addPOItemForm.get('partNumber')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Part Number is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Trace</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Trace</label
+                    >
                     <select
                       formControlName="traceabilityRequired"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
@@ -148,67 +206,119 @@
                       <option [value]="1">yes</option>
                       <option [value]="0">no</option>
                     </select>
-                    <div *ngIf="addPOItemForm.get('traceabilityRequired')?.invalid && (addPOItemForm.get('traceabilityRequired')?.dirty || addPOItemForm.get('traceabilityRequired')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('traceabilityRequired')?.invalid &&
+                        (addPOItemForm.get('traceabilityRequired')?.dirty ||
+                          addPOItemForm.get('traceabilityRequired')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Trace is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Manufacturer Model</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Manufacturer Model</label
+                    >
                     <input
                       formControlName="manufacturerModel"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter manufacturer model"
                     />
-                    <div *ngIf="addPOItemForm.get('manufacturerModel')?.invalid && (addPOItemForm.get('manufacturerModel')?.dirty || addPOItemForm.get('manufacturerModel')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('manufacturerModel')?.invalid &&
+                        (addPOItemForm.get('manufacturerModel')?.dirty ||
+                          addPOItemForm.get('manufacturerModel')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Manufacturer Model is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Terms</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Terms</label
+                    >
                     <input
                       formControlName="terms"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter terms"
                     />
-                    <div *ngIf="addPOItemForm.get('terms')?.invalid && (addPOItemForm.get('terms')?.dirty || addPOItemForm.get('terms')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('terms')?.invalid &&
+                        (addPOItemForm.get('terms')?.dirty ||
+                          addPOItemForm.get('terms')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Terms is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Country Of Origin</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Country Of Origin</label
+                    >
                     <input
                       formControlName="countryOfOrigin"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter country of origin"
                     />
-                    <div *ngIf="addPOItemForm.get('countryOfOrigin')?.invalid && (addPOItemForm.get('countryOfOrigin')?.dirty || addPOItemForm.get('countryOfOrigin')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('countryOfOrigin')?.invalid &&
+                        (addPOItemForm.get('countryOfOrigin')?.dirty ||
+                          addPOItemForm.get('countryOfOrigin')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Country Of Origin is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">HSC</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >HSC</label
+                    >
                     <input
                       formControlName="hsc"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter HSC"
                     />
-                    <div *ngIf="addPOItemForm.get('hsc')?.invalid && (addPOItemForm.get('hsc')?.dirty || addPOItemForm.get('hsc')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('hsc')?.invalid &&
+                        (addPOItemForm.get('hsc')?.dirty ||
+                          addPOItemForm.get('hsc')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       HSC is required.
                     </div>
                   </div>
                   <div class="flex flex-col">
-                    <label for="" class="text-sm font-medium text-gray-700 mb-1">Weight & Dim</label>
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Weight & Dim</label
+                    >
                     <input
                       formControlName="weightDim"
                       type="text"
                       class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder="Enter weight & dim"
                     />
-                    <div *ngIf="addPOItemForm.get('weightDim')?.invalid && (addPOItemForm.get('weightDim')?.dirty || addPOItemForm.get('weightDim')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('weightDim')?.invalid &&
+                        (addPOItemForm.get('weightDim')?.dirty ||
+                          addPOItemForm.get('weightDim')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Weight & Dim is required.
                     </div>
                   </div>
@@ -258,7 +368,14 @@
                     {{ status.name }}
                   </option>
                 </select>
-                <div *ngIf="statusForm.get('statusId')?.invalid && (statusForm.get('statusId')?.dirty || statusForm.get('statusId')?.touched)" class="text-red-500 text-xs mt-1">
+                <div
+                  *ngIf="
+                    statusForm.get('statusId')?.invalid &&
+                    (statusForm.get('statusId')?.dirty ||
+                      statusForm.get('statusId')?.touched)
+                  "
+                  class="text-red-500 text-xs mt-1"
+                >
                   Status is required.
                 </div>
                 <div class="w-[20%] flex gap-2 items-end">
@@ -312,7 +429,7 @@
                       {{ po.deliverySchedule }}
                     </td>
                     <td class="border px-2 py-1">
-                      {{ po.terms }}
+                      {{ po.paymentTerms }}
                     </td>
                   </tr>
                 </tbody>
@@ -323,6 +440,7 @@
                 <thead class="bg-gray-100">
                   <tr>
                     <th class="border px-2 py-1">LN#</th>
+                    <th class="border px-2 py-1">PONumber</th>
                     <th class="border px-2 py-1">QTY</th>
                     <th class="border px-2 py-1">UNIT</th>
                     <th class="border px-2 py-1">DESCRIPTION</th>
@@ -333,14 +451,16 @@
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
                     <th class="border px-2 py-1">TOTAL ($)</th>
-                    <th class="border px-2 py-1">STATUS</th>
                     <th class="border px-3 py-2">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of productItems; let i = index">
                     <td class="border px-2 py-1">
-                      {{ i + 1 }}
+                      {{ item.lineNumber }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ item.poNumber }}
                     </td>
                     <td class="border px-2 py-1">
                       <ng-container *ngIf="editingIndex === i; else readQty">
@@ -402,15 +522,9 @@
                       <ng-template #readTerms>{{ item.terms }}</ng-template>
                     </td>
                     <td class="border px-2 py-1">
-                      <ng-container *ngIf="editingIndex === i; else readTrace">
-                        <input
-                          [(ngModel)]="item.traceabilityRequired"
-                          class="border rounded px-2 py-1 w-24"
-                        />
-                      </ng-container>
-                      <ng-template #readTrace>{{
-                        item.traceabilityRequired
-                      }}</ng-template>
+                      <ng-template>
+                        {{ item.traceabilityRequired === 1 ? "Yes" : "No" }}
+                      </ng-template>
                     </td>
                     <td class="border px-2 py-1">
                       <ng-container
@@ -432,7 +546,7 @@
                       >
                         <input
                           type="number"
-                          [(ngModel)]="item.unitPrice"
+                          [(ngModel)]="item.actualCostPerUnit"
                           class="border rounded px-2 py-1 w-20"
                         />
                       </ng-container>
@@ -443,9 +557,7 @@
                     <td class="border px-2 py-1">
                       {{ item.totalPrice }}
                     </td>
-                    <td class="border px-2 py-1 font-semibold">
-                      {{ item.itemStatus?.statusName }}
-                    </td>
+
                     <td class="border px-3 py-2">
                       <div class="flex items-center space-x-2">
                         <ng-container
@@ -455,7 +567,15 @@
                             (click)="saveItem(item); cancelEdit()"
                             class="bg-green-500 text-white px-2 py-1 rounded"
                           >
-                            Save
+                            <ng-container *ngIf="!isediting">Save</ng-container>
+                            <ng-container *ngIf="isediting">
+                              <span>Saving </span>
+                              <span class="loading-dots">
+                                <span class="dot">.</span>
+                                <span class="dot">.</span>
+                                <span class="dot">.</span>
+                              </span>
+                            </ng-container>
                           </button>
                           <button
                             (click)="cancelEdit()"
@@ -471,12 +591,12 @@
                           >
                             Edit
                           </button>
-                          <button
+                          <!-- <button
                             (click)="deleteItem(item)"
                             class="bg-red-500 text-white px-2 py-1 rounded"
                           >
                             Delete
-                          </button>
+                          </button> -->
                         </ng-template>
                       </div>
                     </td>

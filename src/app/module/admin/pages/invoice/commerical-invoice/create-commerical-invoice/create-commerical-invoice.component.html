@@ -2,7 +2,9 @@
   class="p-6 print:p-0 print:mx-0 sm:p-10 mx-auto print:bg-white bg-gray-50 border border-gray-200 shadow-sm rounded-xl print:border-none print:shadow-none print:overflow-visible"
 >
   <header class="mb-8 text-center print:hidden">
-    <p class="text-xl font-semibold text-gray-800">Commercial Invoice Creator</p>
+    <p class="text-xl font-semibold text-gray-800">
+      Commercial Invoice Creator
+    </p>
     <p class="text-gray-500 mt-2 text-sm">
       Step {{ currentStep }} of {{ totalSteps }}:
       <span *ngIf="currentStep === 1">Select Purchase Order</span>
@@ -24,7 +26,9 @@
       </p>
       <div class="flex justify-center items-end gap-3">
         <div class="w-2/3">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Select Po</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Select Po</label
+          >
           <select
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
             #poSelect
@@ -32,7 +36,7 @@
           >
             <option [ngValue]="null" disabled selected>Select PO</option>
 
-            <option *ngFor="let po of incomingPOs" [value]="po.poId">
+            <option *ngFor="let po of incomingPOs" [value]="po.id">
               {{ po.poNumber }}
             </option>
           </select>
@@ -49,7 +53,9 @@
           #matSort="matSort"
         >
           <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 bg-gray-50">Select</th>
+            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 bg-gray-50">
+              Select
+            </th>
             <td mat-cell *matCellDef="let row" class="px-4 py-3">
               <mat-checkbox
                 (click)="$event.stopPropagation()"
@@ -60,7 +66,12 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="itemId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="itemId"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Item ID
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -69,7 +80,12 @@
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="poId" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="poId"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               PO Id
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -78,7 +94,12 @@
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lineNumber" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="lineNumber"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Line Number
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -101,7 +122,12 @@
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="partNumber" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="partNumber"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Part Number
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -110,7 +136,12 @@
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="quantity"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Available Qty
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -133,7 +164,12 @@
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unitPrice" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="unitPrice"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Unit Price
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -142,7 +178,12 @@
           </ng-container>
 
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="totalPrice" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="totalPrice"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Total Price
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -151,7 +192,12 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="description"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Description
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -159,7 +205,12 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="unit" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header="unit"
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
               Unit
             </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
@@ -203,82 +254,158 @@
         <p class="text-lg font-medium text-gray-900 mb-4 px-4 pt-4">
           Commercial Invoice Items
         </p>
-        <table mat-table class="w-full text-sm text-left text-gray-500" [dataSource]="sortedData2">
+        <table
+          mat-table
+          class="w-full text-sm text-left text-gray-500"
+          [dataSource]="sortedData2"
+        >
           <ng-container matColumnDef="itemId">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Item ID</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Item ID
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.itemId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="poId">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">PO Id</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              PO Id
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.poId }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="lineNumber">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Line Number</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Line Number
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.lineNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="manufacturerModel">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Manufacturer Model</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Manufacturer Model
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.manufacturerModel }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="partNumber">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Part Number</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Part Number
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.partNumber }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Quantity</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Quantity
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.quantity }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="actualCostPerUnit">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actual Cost</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Actual Cost
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.actualCostPerUnit | currency: "USD" }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="unitPrice">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit Price</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Unit Price
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unitPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Total Price</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Total Price
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.totalPrice | currency: "USD" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Description</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Description
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.description }}
             </td>
           </ng-container>
           <ng-container matColumnDef="unit">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Unit</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Unit
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               {{ element.unit }}
             </td>
           </ng-container>
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
+            >
+              Actions
+            </th>
             <td mat-cell *matCellDef="let element" class="px-4 py-3">
               <button
                 (click)="$event.stopPropagation()"
@@ -376,7 +503,14 @@
             placeholder="Enter final destination"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('finalDestination')?.invalid && (commercialInvoiceForm.get('finalDestination')?.dirty || commercialInvoiceForm.get('finalDestination')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('finalDestination')?.invalid &&
+              (commercialInvoiceForm.get('finalDestination')?.dirty ||
+                commercialInvoiceForm.get('finalDestination')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Final Destination is required.
           </div>
         </div>
@@ -479,7 +613,14 @@
             placeholder="Enter mode of transport"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('modeOfTransport')?.invalid && (commercialInvoiceForm.get('modeOfTransport')?.dirty || commercialInvoiceForm.get('modeOfTransport')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('modeOfTransport')?.invalid &&
+              (commercialInvoiceForm.get('modeOfTransport')?.dirty ||
+                commercialInvoiceForm.get('modeOfTransport')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Mode of Transport is required.
           </div>
         </div>
@@ -496,25 +637,61 @@
             placeholder="Enter place of receipt"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('placeOfReceipt')?.invalid && (commercialInvoiceForm.get('placeOfReceipt')?.dirty || commercialInvoiceForm.get('placeOfReceipt')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('placeOfReceipt')?.invalid &&
+              (commercialInvoiceForm.get('placeOfReceipt')?.dirty ||
+                commercialInvoiceForm.get('placeOfReceipt')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Place of Receipt is required.
           </div>
         </div>
         <div class="space-y-1">
           <label
-            for="billOfLandingAwbNo"
+            for="billOfLading"
             class="block text-sm font-medium text-gray-700"
-            >Bill Of Landing Number / AWB NO</label
+            >Bill Of Lading Number</label
           >
           <input
-            id="billOfLandingAwbNo"
-            formControlName="billOfLandingAwbNo"
+            id="billOfLading"
+            formControlName="billOfLading"
             type="text"
-            placeholder="Enter Bill of Landing / AWB No"
+            placeholder="Enter Bill of Lading"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('billOfLandingAwbNo')?.invalid && (commercialInvoiceForm.get('billOfLandingAwbNo')?.dirty || commercialInvoiceForm.get('billOfLandingAwbNo')?.touched)" class="text-red-500 text-xs mt-1">
-            Bill of Landing / AWB No is required.
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('billOfLading')?.invalid &&
+              (commercialInvoiceForm.get('billOfLading')?.dirty ||
+                commercialInvoiceForm.get('billOfLading')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
+            Bill of Lading is required.
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label for="awbNo" class="block text-sm font-medium text-gray-700">
+            AWB NO</label
+          >
+          <input
+            id="awbNo"
+            formControlName="awbNo"
+            type="text"
+            placeholder="Enter Bill of Lading / AWB No"
+            class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          />
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('awbNo')?.invalid &&
+              (commercialInvoiceForm.get('awbNo')?.dirty ||
+                commercialInvoiceForm.get('awbNo')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
+            AWB No is required.
           </div>
         </div>
         <div class="space-y-1">
@@ -528,7 +705,14 @@
             placeholder="Enter number of boxes"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('noOfBoxes')?.invalid && (commercialInvoiceForm.get('noOfBoxes')?.dirty || commercialInvoiceForm.get('noOfBoxes')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('noOfBoxes')?.invalid &&
+              (commercialInvoiceForm.get('noOfBoxes')?.dirty ||
+                commercialInvoiceForm.get('noOfBoxes')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Number of Boxes is required.
           </div>
         </div>
@@ -545,7 +729,14 @@
             placeholder="Enter number of pallets"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('noOfPallets')?.invalid && (commercialInvoiceForm.get('noOfPallets')?.dirty || commercialInvoiceForm.get('noOfPallets')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('noOfPallets')?.invalid &&
+              (commercialInvoiceForm.get('noOfPallets')?.dirty ||
+                commercialInvoiceForm.get('noOfPallets')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Number of Pallets is required.
           </div>
         </div>
@@ -562,7 +753,14 @@
             placeholder="Enter gross weight"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('grossWeight')?.invalid && (commercialInvoiceForm.get('grossWeight')?.dirty || commercialInvoiceForm.get('grossWeight')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('grossWeight')?.invalid &&
+              (commercialInvoiceForm.get('grossWeight')?.dirty ||
+                commercialInvoiceForm.get('grossWeight')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Gross Weight is required.
           </div>
         </div>
@@ -579,7 +777,14 @@
             placeholder="Enter marks & numbers"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('marksandNumbers')?.invalid && (commercialInvoiceForm.get('marksandNumbers')?.dirty || commercialInvoiceForm.get('marksandNumbers')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('marksandNumbers')?.invalid &&
+              (commercialInvoiceForm.get('marksandNumbers')?.dirty ||
+                commercialInvoiceForm.get('marksandNumbers')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Marks & Numbers is required.
           </div>
         </div>
@@ -635,7 +840,14 @@
             placeholder="Enter contact name"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('contactName')?.invalid && (commercialInvoiceForm.get('contactName')?.dirty || commercialInvoiceForm.get('contactName')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('contactName')?.invalid &&
+              (commercialInvoiceForm.get('contactName')?.dirty ||
+                commercialInvoiceForm.get('contactName')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Contact Name is required.
           </div>
         </div>
@@ -650,7 +862,14 @@
             placeholder="Enter contact number"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('contactNo')?.invalid && (commercialInvoiceForm.get('contactNo')?.dirty || commercialInvoiceForm.get('contactNo')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('contactNo')?.invalid &&
+              (commercialInvoiceForm.get('contactNo')?.dirty ||
+                commercialInvoiceForm.get('contactNo')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Contact No is required.
           </div>
         </div>
@@ -665,7 +884,14 @@
             placeholder="Enter email"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('email')?.invalid && (commercialInvoiceForm.get('email')?.dirty || commercialInvoiceForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('email')?.invalid &&
+              (commercialInvoiceForm.get('email')?.dirty ||
+                commercialInvoiceForm.get('email')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Email is required.
           </div>
         </div>
@@ -692,7 +918,14 @@
             placeholder="Enter tax ID"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('taxId')?.invalid && (commercialInvoiceForm.get('taxId')?.dirty || commercialInvoiceForm.get('taxId')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('taxId')?.invalid &&
+              (commercialInvoiceForm.get('taxId')?.dirty ||
+                commercialInvoiceForm.get('taxId')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             Tax ID is required.
           </div>
         </div>
@@ -707,7 +940,14 @@
             placeholder="Enter EIN"
             class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
-          <div *ngIf="commercialInvoiceForm.get('ein')?.invalid && (commercialInvoiceForm.get('ein')?.dirty || commercialInvoiceForm.get('ein')?.touched)" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              commercialInvoiceForm.get('ein')?.invalid &&
+              (commercialInvoiceForm.get('ein')?.dirty ||
+                commercialInvoiceForm.get('ein')?.touched)
+            "
+            class="text-red-500 text-xs mt-1"
+          >
             EIN is required.
           </div>
         </div>
@@ -1140,7 +1380,7 @@
         <mat-tab label="COMMERCIAL INVOICE">
           <div
             *ngIf="finalCommercialInvoiceData"
-            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
+            class="print-area p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green"
             style="font-size: 10pt"
           >
             <div
@@ -1210,7 +1450,7 @@
                   {{ finalCommercialInvoiceData.termsOfPayment }}
                 </span>
               </div>
-              <div class="w-96 h-80">
+              <div class="w-96 h-60">
                 <img class="w-full h-full mb-5" src="companyLogo.png" />
               </div>
 
@@ -1526,8 +1766,13 @@
 
             <div class="flex justify-end text-sm mt-8 print:mt-4">
               <div class="w-1/3 text-center mr-8">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                <div
+                  class="flex gap-3 items-center justify-center border-b print:border-[#a5b98b] pt-1 mb-1"
+                >
                   {{ finalCommercialInvoiceData.signerName }}
+                  <div class="w-20 print:w-15 h-10 flex print:h-10">
+                    <img class="w-full h-full mb-5" src="FM Sign.jpeg" />
+                  </div>
                 </div>
                 <div class="text-xs text-gray-500 print:text-[#a5b98b]">
                   FAIRMOUNT INTERNATIONAL LLC
@@ -1547,7 +1792,7 @@
         <mat-tab label="EXPORT PACKING LIST">
           <div
             *ngIf="finalCommercialInvoiceData"
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar print:overflow-visible print:h-auto"
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:text-black-or-dark-green overflow-auto h-[calc(100vh-140px)] no-scrollbar print:overflow-visible print:h-auto"
             style="font-size: 10pt"
           >
             <div
@@ -1573,8 +1818,14 @@
                 <span
                   class="font-semibold print:font-light text-sm print:text-xs px-1"
                 >
-                  Bill OF LANDIND/AWB NO
-                  {{ finalCommercialInvoiceData.billOfLandingAwbNo }}
+                  Bill OF LANDIND
+                  {{ finalCommercialInvoiceData.billOfLading }}
+                </span>
+                <span
+                  class="font-semibold print:font-light text-sm print:text-xs px-1"
+                >
+                  AWB NO
+                  {{ finalCommercialInvoiceData.awbNo }}
                 </span>
                 <span
                   class="font-semibold print:font-light text-sm print:text-xs px-1"
@@ -1850,8 +2101,13 @@
 
             <div class="flex justify-end text-sm mt-8 print:mt-4">
               <div class="w-1/3 text-center mr-8">
-                <div class="border-b print:border-[#a5b98b] pt-1 mb-1">
+                <div
+                  class="flex gap-3 items-center justify-centerborder-b print:border-[#a5b98b] pt-1 mb-1"
+                >
                   {{ finalCommercialInvoiceData.signerName }}
+                  <div class="w-20 print:w-15 h-10 flex print:h-10">
+                    <img class="w-full h-full mb-5" src="FM Sign.jpeg" />
+                  </div>
                 </div>
                 <div class="text-xs text-gray-500 print:text-[#a5b98b]">
                   FAIRMOUNT INTERNATIONAL LLC
@@ -1870,7 +2126,7 @@
         </mat-tab>
         <mat-tab label="SHIPPER'S LETTER OF INSTRUCTIONS">
           <div
-              class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:overflow-visible print:h-auto"
+            class="p-8 bg-white rounded-none border-none text-gray-900 font-[Arial] leading-tight print:p-4 print:text-[9pt] print:overflow-visible print:h-auto"
             style="font-size: 10pt"
           >
             <div
@@ -2533,7 +2789,11 @@
                   <span class="block font-bold p-2 border-b border-black"
                     >38. Signature</span
                   >
-                  <div class="p-2 text-sm italic font-serif"></div>
+                  <div class="p-2 text-sm italic font-serif">
+                    <div class="w-20 print:w-15 h-10 flex print:h-10">
+                      <img class="w-full h-full mb-5" src="FM Sign.jpeg" />
+                    </div>
+                  </div>
                 </div>
                 <div class="border-r border-black">
                   <span class="block font-bold p-2 border-b border-black"
@@ -2635,7 +2895,8 @@
       height: auto !important;
       max-height: none !important;
     }
-    html, body {
+    html,
+    body {
       overflow: visible !important;
       height: auto !important;
     }

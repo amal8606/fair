@@ -55,12 +55,12 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     ),
 
     currency: new FormControl('USD'),
-    totalAmount: new FormControl(0, Validators.min(0)), // This now holds the Subtotal
-    taxableAmount: new FormControl(0, Validators.min(0)), // ADDED
-    shippingCharge: new FormControl(0, Validators.min(0)), // ADDED
-    grandTotal: new FormControl(0, Validators.min(0)), // ADDED
+    totalAmount: new FormControl(0, Validators.min(0)),
+    taxableAmount: new FormControl(0, Validators.min(0)),
+    shippingCharge: new FormControl(0, Validators.min(0)),
+    grandTotal: new FormControl(0, Validators.min(0)),
     note: new FormControl(''),
-    createdBy: new FormControl(0), // Keeping createdBy, though not in final payload
+    createdBy: new FormControl(0),
     selectedPoNumber: new FormControl(null),
     termsOfSale: new FormControl(''),
     termsOfPayment: new FormControl(''),
@@ -68,17 +68,18 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     modeOfTransport: new FormControl(''),
     finalDestination: new FormControl(''),
     placeOfReceipt: new FormControl(''),
-    contactName: new FormControl(''),
-    contactNo: new FormControl(''),
-    taxId: new FormControl(''),
-    ein: new FormControl(''),
-    email: new FormControl(''),
-    billOfLandingAwbNo: new FormControl(''),
+    contactName: new FormControl('Milan Abraham'),
+    contactNo: new FormControl('727-460-6757'),
+    taxId: new FormControl('62-8016608529-3'),
+    ein: new FormControl('47-1177753'),
+    email: new FormControl('mail@fairmountintl.com'),
+    billOfLading: new FormControl(''),
+    awbNo: new FormControl(''),
     noOfBoxes: new FormControl(0, Validators.min(0)),
     noOfPallets: new FormControl(0, Validators.min(0)),
     grossWeight: new FormControl(0, Validators.min(0)),
     marksandNumbers: new FormControl(''),
-    email2: new FormControl(''),
+    email2: new FormControl('fairmountintl@gmail.com'),
     k11: new FormControl(''),
     freightType: new FormControl(''),
     commercialInvoiceItems: new FormArray([], Validators.required),
@@ -179,7 +180,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       commercialInvoiceNumber: new FormControl(
         this.commercialInvoiceForm.get('commercialInvoiceNumber')?.value || '',
       ),
-      lineNumber: new FormControl(lineNumber), // Added lineNumber
+      lineNumber: new FormControl(itemData.lineNumber),
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
         Validators.min(1),
@@ -229,7 +230,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     validateElectronicSignature: new FormControl(false),
     commercialInvoiceId: new FormControl(0),
     packingListId: new FormControl(0),
-    createdAt: new FormControl(''),
+    createdAt: new FormControl(
+      new Date().toISOString().substring(0, 19),
+      Validators.required,
+    ),
     updatedAt: new FormControl(''),
     items: new FormArray([]),
   });
@@ -281,7 +285,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     this.getCustomer();
     this.commercialInvoiceForm
       .get('createdAt')
-      ?.setValue(new Date().toISOString().substring(0, 19));
+      ?.setValue(new Date().toISOString().substring(0, 10));
     this.commercialInvoiceForm
       .get('customerId')
       ?.valueChanges.subscribe((customerId) => {
@@ -341,7 +345,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         const itemsWithSelectedQty = filteredResponse.map(
           (item: any, index: any) => ({
             ...item,
-            lineNumber: item.lineNumber || index + 1,
+            lineNumber: item.lineNumber,
             selectedQuantity: 0,
             totalPrice: 0,
             poNumber: poNumber,
@@ -421,7 +425,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     if (this.selection.selected && this.selection.selected.length > 0) {
       this.sortedData2.data.forEach((item: any, index: number) => {
         this.commercialInvoiceItemsArray.push(
-          this.createCommercialInvoiceItemFormGroup(item, index + 1),
+          this.createCommercialInvoiceItemFormGroup(item, item.lineNumber),
         );
       });
     }
@@ -667,7 +671,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       email: formValue.email,
       email2: formValue.email2,
       note: formValue.note,
-      billOfLandingAwbNo: formValue.billOfLandingAwbNo,
+      billOfLading: formValue.billOfLading,
+      awbNo: formValue.awbNo,
       numberOfBoxes: formValue.noOfBoxes,
       numberOfPallets: formValue.noOfPallets,
       grossWeight: formValue.grossWeight,
@@ -730,7 +735,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       email2: formValue.email2,
       k11: formValue.k11,
       noOfBoxes: formValue.noOfBoxes,
-      billOfLandingAwbNo: formValue.billOfLandingAwbNo,
+      billOfLading: formValue.billOfLading,
+      awbNo: formValue.awbNo,
       noOfPallets: formValue.noOfPallets,
       grossWeight: formValue.grossWeight,
       marksandNumbers: formValue.marksandNumbers,

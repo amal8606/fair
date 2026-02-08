@@ -52,7 +52,13 @@
               formControlName="name"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
-            <div *ngIf="orgForm.get('name')?.invalid && (orgForm.get('name')?.dirty || orgForm.get('name')?.touched)" class="text-red-500 text-xs mt-1">
+            <div
+              *ngIf="
+                orgForm.get('name')?.invalid &&
+                (orgForm.get('name')?.dirty || orgForm.get('name')?.touched)
+              "
+              class="text-red-500 text-xs mt-1"
+            >
               Organization Name is required.
             </div>
           </div>
@@ -71,7 +77,13 @@
               formControlName="type"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
-            <div *ngIf="orgForm.get('type')?.invalid && (orgForm.get('type')?.dirty || orgForm.get('type')?.touched)" class="text-red-500 text-xs mt-1">
+            <div
+              *ngIf="
+                orgForm.get('type')?.invalid &&
+                (orgForm.get('type')?.dirty || orgForm.get('type')?.touched)
+              "
+              class="text-red-500 text-xs mt-1"
+            >
               Type is required.
             </div>
           </div>
@@ -90,9 +102,19 @@
               formControlName="email"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
-            <div *ngIf="orgForm.get('email')?.invalid && (orgForm.get('email')?.dirty || orgForm.get('email')?.touched)" class="text-red-500 text-xs mt-1">
-              <div *ngIf="orgForm.get('email')?.errors?.['required']">Email is required.</div>
-              <div *ngIf="orgForm.get('email')?.errors?.['email']">Invalid email format.</div>
+            <div
+              *ngIf="
+                orgForm.get('email')?.invalid &&
+                (orgForm.get('email')?.dirty || orgForm.get('email')?.touched)
+              "
+              class="text-red-500 text-xs mt-1"
+            >
+              <div *ngIf="orgForm.get('email')?.errors?.['required']">
+                Email is required.
+              </div>
+              <div *ngIf="orgForm.get('email')?.errors?.['email']">
+                Invalid email format.
+              </div>
             </div>
           </div>
 
@@ -110,7 +132,13 @@
               formControlName="phone"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
-            <div *ngIf="orgForm.get('phone')?.invalid && (orgForm.get('phone')?.dirty || orgForm.get('phone')?.touched)" class="text-red-500 text-xs mt-1">
+            <div
+              *ngIf="
+                orgForm.get('phone')?.invalid &&
+                (orgForm.get('phone')?.dirty || orgForm.get('phone')?.touched)
+              "
+              class="text-red-500 text-xs mt-1"
+            >
               Phone is required.
             </div>
           </div>
@@ -129,7 +157,13 @@
               formControlName="taxId"
               class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
             />
-            <div *ngIf="orgForm.get('taxId')?.invalid && (orgForm.get('taxId')?.dirty || orgForm.get('taxId')?.touched)" class="text-red-500 text-xs mt-1">
+            <div
+              *ngIf="
+                orgForm.get('taxId')?.invalid &&
+                (orgForm.get('taxId')?.dirty || orgForm.get('taxId')?.touched)
+              "
+              class="text-red-500 text-xs mt-1"
+            >
               Tax ID is required.
             </div>
           </div>
@@ -185,12 +219,20 @@
                       formControlName="addressType"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="Mailing">Mailing</option>
-                      <option value="Physical">Physical</option>
+                      <option value="HeadOffice">HeadOffice</option>
                       <option value="Shipping">Shipping</option>
                       <option value="Billing">Billing</option>
+                      <option value="Mailing">Mailing</option>
+                      <option value="Physical">Physical</option>
                     </select>
-                    <div *ngIf="addressGroup.get('addressType')?.invalid && (addressGroup.get('addressType')?.dirty || addressGroup.get('addressType')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('addressType')?.invalid &&
+                        (addressGroup.get('addressType')?.dirty ||
+                          addressGroup.get('addressType')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Address Type is required.
                     </div>
                   </div>
@@ -209,7 +251,14 @@
                       formControlName="addressLine1"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <div *ngIf="addressGroup.get('addressLine1')?.invalid && (addressGroup.get('addressLine1')?.dirty || addressGroup.get('addressLine1')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('addressLine1')?.invalid &&
+                        (addressGroup.get('addressLine1')?.dirty ||
+                          addressGroup.get('addressLine1')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Address Line 1 is required.
                     </div>
                   </div>
@@ -244,7 +293,14 @@
                       formControlName="city"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <div *ngIf="addressGroup.get('city')?.invalid && (addressGroup.get('city')?.dirty || addressGroup.get('city')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('city')?.invalid &&
+                        (addressGroup.get('city')?.dirty ||
+                          addressGroup.get('city')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       City is required.
                     </div>
                   </div>
@@ -263,7 +319,14 @@
                       formControlName="state"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <div *ngIf="addressGroup.get('state')?.invalid && (addressGroup.get('state')?.dirty || addressGroup.get('state')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('state')?.invalid &&
+                        (addressGroup.get('state')?.dirty ||
+                          addressGroup.get('state')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       State is required.
                     </div>
                   </div>
@@ -282,7 +345,14 @@
                       formControlName="postalCode"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <div *ngIf="addressGroup.get('postalCode')?.invalid && (addressGroup.get('postalCode')?.dirty || addressGroup.get('postalCode')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('postalCode')?.invalid &&
+                        (addressGroup.get('postalCode')?.dirty ||
+                          addressGroup.get('postalCode')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Postal Code is required.
                     </div>
                   </div>
@@ -301,7 +371,14 @@
                       formControlName="country"
                       class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <div *ngIf="addressGroup.get('country')?.invalid && (addressGroup.get('country')?.dirty || addressGroup.get('country')?.touched)" class="text-red-500 text-xs mt-1">
+                    <div
+                      *ngIf="
+                        addressGroup.get('country')?.invalid &&
+                        (addressGroup.get('country')?.dirty ||
+                          addressGroup.get('country')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
                       Country is required.
                     </div>
                   </div>

@@ -33,8 +33,9 @@ export class CommercialInvoiceService {
   }
 
   public deleteInvoice(id: any, poId: any): Observable<any> {
-    return this.http.delete<any>(
+    return this.http.post<any>(
       `${environment.api}/CommercialInvoice?id=${id}&poId=${poId}`,
+      {},
     );
   }
 }

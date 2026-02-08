@@ -24,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OrganizationComponent implements OnInit {
   constructor(
     private readonly orgService: OrgainizationService,
-    private readonly toaster: ToastrService
+    private readonly toaster: ToastrService,
   ) {}
 
   public organizations: any = [];
@@ -34,10 +34,12 @@ export class OrganizationComponent implements OnInit {
   ngOnInit(): void {
     this.getOrganizations();
   }
-
+  public isLoading: boolean = false;
   public getOrganizations(): void {
+    this.isLoading = true;
     this.orgService.getOrganization().subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         this.organizations = response;
       },
       error: (error: any) => {},
@@ -47,23 +49,25 @@ export class OrganizationComponent implements OnInit {
   public addOrganization(isLoad: boolean): void {
     if (isLoad) {
       this.getOrganizations();
-      this.showAddOrganization = !this.showAddOrganization;
+      this.showAddOrganization = false;
     }
     {
-      this.showAddOrganization = !this.showAddOrganization;
+      this.showAddOrganization = false;
     }
   }
 
   public openEditModal(org: any): void {
+    this.openEditModel = true;
     this.organizationToEdit = org;
   }
 
+  openEditModel: boolean = false;
   public onOrganizationUpdate(updatedOrg: any): void {
     if (updatedOrg) {
-      this.organizationToEdit = null;
+      this.openEditModel = false;
       this.getOrganizations();
     } else {
-      this.organizationToEdit = null;
+      this.openEditModel = false;
     }
   }
   public isDeleteModel: boolean = false;
@@ -77,6 +81,7 @@ export class OrganizationComponent implements OnInit {
   }
   public isDeleting: boolean = false;
   onDeleteConfirm(): void {
+    this.isDeleting = true;
     if (this.orgId !== 0) {
       this.orgService.deleteOrganization(this.orgId).subscribe({
         next: (response: any) => {
