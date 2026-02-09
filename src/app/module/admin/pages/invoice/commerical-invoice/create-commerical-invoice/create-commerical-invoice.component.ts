@@ -184,6 +184,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
         Validators.min(1),
+        ...(item?.maxQuantity ? [Validators.max(item.maxQuantity)] : []),
       ]),
       unit: new FormControl(itemData.unit),
       poId: new FormControl(itemData.poId),
@@ -374,7 +375,13 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       (item: any) => !existingIds.has(item.itemId),
     );
     if (itemsToAdd.length > 0) {
-      this.sortedData2.data = [...this.sortedData2.data, ...itemsToAdd];
+      this.sortedData2.data = [
+        ...this.sortedData2.data,
+        ...itemsToAdd.map((item: any) => ({
+          ...item,
+          maxQuantity: item.quantity,
+        })),
+      ];
     }
   }
   selection = new SelectionModel<any>(true, []);
@@ -422,7 +429,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   public combainItems() {
     this.commercialInvoiceItemsArray.clear();
-    if (this.selection.selected && this.selection.selected.length > 0) {
+    if (this.sortedData2.data.length > 0) {
       this.sortedData2.data.forEach((item: any, index: number) => {
         this.commercialInvoiceItemsArray.push(
           this.createCommercialInvoiceItemFormGroup(item, item.lineNumber),
@@ -534,7 +541,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   nextStep(): void {
     if (this.currentStep === 1) {
-      if (this.selection.selected.length > 0) {
+      if (this.sortedData2.data.length > 0) {
         this.combainItems();
         this.currentStep++;
       } else {
