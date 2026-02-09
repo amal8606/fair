@@ -157,13 +157,11 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     private readonly sliService: SliService,
   ) {}
 
-  public createCommercialInvoiceItemFormGroup(
-    item?: any,
-    lineNumber?: number,
-  ): FormGroup {
+  public createCommercialInvoiceItemFormGroup(item?: any): FormGroup {
     const itemData: any = {
       itemId: item?.itemId,
       poId: item?.poId || 0,
+      lineNumber: item?.lineNumber,
       poNumber: item?.poNumber || '',
       quantity: item?.quantity || 1,
       unitPrice: item?.unitPrice || 0,
@@ -172,6 +170,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       countryOfOrigin: item?.countryOfOrigin || '',
       unit: item?.unit || '',
       totalPrice: item?.totalPrice || 0,
+      hsc: item?.hsc,
+      weightDim: item?.weightDim,
     };
     const totalPrice = itemData.quantity * itemData.unitPrice;
 
@@ -197,6 +197,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         Validators.min(0),
       ]),
       totalPrice: new FormControl(totalPrice.toFixed(2)),
+      hsc: new FormControl(itemData.hsc),
+      weightDim: new FormControl(itemData.weightDim),
     });
   }
   public sliForm: FormGroup = new FormGroup({
@@ -254,7 +256,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         unitPrice: item?.unitPrice || 0,
         totalPrice: item?.totalPrice || 0,
         poId: item?.poId || 0,
-        hsc: item?.hsc || '',
+        hsc: item?.hsc,
+        weightDim: item?.weightDim,
         unit: item?.unit || '',
       };
 
@@ -273,6 +276,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         totalPrice: new FormControl(itemData.totalPrice),
         poId: new FormControl(itemData.poId),
         hsc: new FormControl(itemData.hsc),
+        weightDim: new FormControl(itemData.weightDim),
         unit: new FormControl(itemData.unit),
       });
     }
@@ -347,6 +351,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
           (item: any, index: any) => ({
             ...item,
             lineNumber: item.lineNumber,
+            hsc: item.hsc,
+            weightDim: item.weightDim,
             selectedQuantity: 0,
             totalPrice: 0,
             poNumber: poNumber,
@@ -432,7 +438,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     if (this.sortedData2.data.length > 0) {
       this.sortedData2.data.forEach((item: any, index: number) => {
         this.commercialInvoiceItemsArray.push(
-          this.createCommercialInvoiceItemFormGroup(item, item.lineNumber),
+          this.createCommercialInvoiceItemFormGroup(item),
         );
       });
     }
@@ -609,7 +615,6 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   generateInvoice(): void {
     const formValue = this.commercialInvoiceForm.getRawValue();
     const items = formValue.commercialInvoiceItems;
-
     this.calculateGrandTotal();
     const subTotal = this.commercialInvoiceForm.get('totalAmount')?.value;
     const taxableAmount = formValue.taxableAmount;
@@ -646,6 +651,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       commercialInvoiceItems: items.map((item: any) => ({
         commercialInvoiceNumber: formValue.commercialInvoiceNumber,
         itemId: item.itemId,
+        lineNumber: item.lineNumber,
         partNumber: item.partNumber,
         poNumber: item.poNumber,
         countryOfOrigin: item.countryOfOrigin,
@@ -653,6 +659,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
         poId: item.poId,
         description: item.description,
         quantity: item.quantity,
+        hsc: item.hsc,
+        weightDim: item.weightDim,
         unitPrice: item.unitPrice,
         totalPrice: item.quantity * item.unitPrice,
       })),
@@ -861,7 +869,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
           unitPrice: Number(item.unitPrice),
           totalPrice: Number(item.totalPrice),
           poId: Number(item.poId),
-          hsc: item.hsc || '',
+          hsc: item.hsc,
+          weightDim: item.weightDim,
           unit: item.unit,
         };
       }),

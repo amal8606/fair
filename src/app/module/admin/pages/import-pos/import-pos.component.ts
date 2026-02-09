@@ -94,7 +94,7 @@ export class ImportPosComponent {
             unit: row['Unit'],
             description: row['ItemDescription'],
             partNumber: row['PartNumber'],
-            manufacturerModel: row['PartNumber'],
+            manufacturerModel: row['ManufacturerModel'],
             unitPrice: row['UnitPrice'],
             countryOfOrigin: row['CountryOfOrigin'],
             hsc: row['HSC'],
