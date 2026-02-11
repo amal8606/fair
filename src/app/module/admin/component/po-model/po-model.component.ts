@@ -10,6 +10,8 @@ import {
   MatProgressBarModule,
 } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { prototype } from 'events';
+import e from 'express';
 
 @Component({
   selector: 'app-po-model',
@@ -62,6 +64,13 @@ export class PoModelComponent {
     statusId: new FormControl('', Validators.required),
   });
 
+  public poForm: FormGroup = new FormGroup({
+    poId: new FormControl(null, Validators.required),
+    poNumber: new FormControl('', Validators.required),
+    poTypeId: new FormControl('', Validators.required),
+  });
+  public updatePoModel: boolean = false;
+  public isUpdatingPo: boolean = false;
   poStatusesIncoming = [
     { id: 1, name: 'Created' },
     { id: 2, name: 'Pro-Forma' },
@@ -131,13 +140,24 @@ export class PoModelComponent {
     // });
   }
 
+  public poTypeId: any;
   ngOnInit() {
     this.getPO();
     if (this.po.poType === 'Outgoing') {
       this.statuses = this.poStatusesOutgoing;
+      this.poTypeId = 2;
+    } else if (this.po.poType === 'Incoming') {
+      this.statuses = this.poStatusesIncoming;
+      this.poTypeId = 1;
     } else {
       this.statuses = this.poStatusesIncoming;
+      this.poTypeId = 3;
     }
+    this.poForm.patchValue({
+      poId: this.po.id,
+      poNumber: this.po.poNumber,
+      poTypeId: this.poTypeId,
+    });
   }
 
   newVlaue: number = 0;
@@ -221,5 +241,23 @@ export class PoModelComponent {
   closeItemModel() {
     this.addItemModel = !this.addItemModel;
     this.addPOItemForm.reset();
+  }
+
+  closeUpdatePoModel() {
+    this.updatePoModel = !this.updatePoModel;
+    this.onClick.emit(true);
+  }
+  updatePo() {
+    this.isUpdatingPo = true;
+    this.poService.updatePo(this.po.id, this.poForm.value).subscribe({
+      next: () => {
+        this.isUpdatingPo = false;
+        this.toaster.success('PO updated successfully', 'Success');
+        this.onClick.emit(false);
+      },
+      error: () => {
+        this.toaster.error('Failed to update PO Status', 'Error');
+      },
+    });
   }
 }

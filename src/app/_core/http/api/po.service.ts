@@ -71,4 +71,11 @@ export class PoService {
       {},
     );
   }
+
+  public updatePo(poId: any, po: any): Observable<any> {
+    return this.http.post<any>(
+      `${environment.api}/OrderManagement/UpdatePo?poId=${poId}`,
+      po,
+    );
+  }
 }

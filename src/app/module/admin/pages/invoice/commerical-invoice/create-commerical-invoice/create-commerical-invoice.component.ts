@@ -344,21 +344,24 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     this.poService.getPO(po).subscribe({
       next: (response: any) => {
         this.loading = false;
-        const filteredResponse = response.filter(
-          (item: any) => item.quantity > 0,
-        );
-        const itemsWithSelectedQty = filteredResponse.map(
-          (item: any, index: any) => ({
+        const filteredResponse = response.filter((item: any) => {
+          const remaining = item.quantity - (item.invoicedQty ?? 0);
+          return remaining > 0;
+        });
+        const itemsWithSelectedQty = filteredResponse.map((item: any) => {
+          const remainingQty = item.quantity - (item.invoicedQty ?? 0);
+
+          return {
             ...item,
+            quantity: remainingQty, // The new quantity is now the available balance
             lineNumber: item.lineNumber,
             hsc: item.hsc,
             weightDim: item.weightDim,
             selectedQuantity: 0,
             totalPrice: 0,
             poNumber: poNumber,
-          }),
-        );
-
+          };
+        });
         this.sortedData1.data = itemsWithSelectedQty;
         this.purchaseOrdersList.data = itemsWithSelectedQty;
       },

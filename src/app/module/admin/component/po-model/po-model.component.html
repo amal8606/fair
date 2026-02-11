@@ -58,6 +58,14 @@
                   Update Status
                 </button>
               </div>
+              <div *ngIf="this.po.poType === 'Dummy'">
+                <button
+                  (click)="updatePoModel = !updatePoModel"
+                  class="ml-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Update Po Name
+                </button>
+              </div>
             </div>
             <form [formGroup]="addPOItemForm">
               <div *ngIf="addItemModel">
@@ -349,6 +357,82 @@
                 </div>
               </div>
             </form>
+            <form [formGroup]="poForm">
+              <div *ngIf="updatePoModel" class="mb-4">
+                <div class="grid grid-cols-4 gap-4 mb-4">
+                  <div class="flex flex-col">
+                    <label
+                      for="customerName"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Update PO Name
+                    </label>
+                    <input
+                      formControlName="poNumber"
+                      type="text"
+                      class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      placeholder="Enter PO Name"
+                    />
+
+                    <div
+                      *ngIf="
+                        poForm.get('poNumber')?.invalid &&
+                        (poForm.get('poNumber')?.dirty ||
+                          poForm.get('poNumber')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
+                      Status is required.
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Select PO Type</label
+                    >
+                    <select
+                      id="poTypeId"
+                      name="poTypeId"
+                      formControlName="poTypeId"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option [value]="null" disabled selected>
+                        Select PO Type
+                      </option>
+                      <option [value]="1">Incoming PO</option>
+                      <option [value]="2">Outgoing PO</option>
+                      <option [value]="3">Dummy PO</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="w-[20%] flex gap-2 items-end">
+                  <button
+                    (click)="updatePo()"
+                    [disabled]="isUpdatingPo || poForm.invalid"
+                    class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  >
+                    <ng-container *ngIf="!isUpdatingPo">
+                      Update PO
+                    </ng-container>
+
+                    <ng-container *ngIf="isUpdatingPo">
+                      <span>Updating </span>
+                      <span class="loading-dots">
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                      </span>
+                    </ng-container>
+                  </button>
+                  <button
+                    (click)="updatePoModel = !updatePoModel"
+                    class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+
             <form [formGroup]="statusForm">
               <div *ngIf="updateStatusModel" class="mb-4">
                 <label
