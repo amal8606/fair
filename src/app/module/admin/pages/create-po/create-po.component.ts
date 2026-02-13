@@ -161,7 +161,9 @@ export class CreatePoComponent implements OnInit {
     this.poService.getActivePO().subscribe({
       next: (response: any[]) => {
         this.poList = response.filter(
-          (po: any) => po.poType === 'Incoming' && po.poStatusId === 4,
+          (po: any) =>
+            (po.poType === 'Incoming' || po.poType === 'DummyPO') &&
+            (po.poStatusId === 4 || po.poStatusId === 12),
         );
       },
       error: (error: any) => {
@@ -180,15 +182,23 @@ export class CreatePoComponent implements OnInit {
     this.poService.getPO(poId).subscribe({
       next: (response: PoItem[]) => {
         this.loading = false;
+        const filteredResponse = response.filter((item: any) => {
+          const remaining = item.quantity - (item.invoicedQty ?? 0);
+          return remaining > 0;
+        });
+        const itemsWithSelectedQty = filteredResponse.map((item: any) => {
+          const remainingQty = item.quantity - (item.invoicedQty ?? 0);
 
-        const filteredResponse = response.filter((item) => item.quantity > 0);
-
-        const itemsWithSelectedQty = filteredResponse.map((item, index) => ({
-          ...item,
-          lineNumber: item.lineNumber,
-          selectedQuantity: 0,
-          totalPrice: 0,
-        }));
+          return {
+            ...item,
+            quantity: remainingQty, // The new quantity is now the available balance
+            lineNumber: item.lineNumber,
+            hsc: item.hsc,
+            weightDim: item.weightDim,
+            selectedQuantity: 0,
+            totalPrice: 0,
+          };
+        });
 
         this.sortedData1.data = itemsWithSelectedQty;
         this.purchaseOrdersList.data = itemsWithSelectedQty;
@@ -284,8 +294,8 @@ export class CreatePoComponent implements OnInit {
           ...item,
           poId: this.newPoId,
           poNumber: this.poForm.get('poNumber')?.value || '',
-          itemId: undefined,
-          lineNumber: undefined,
+          itemId: item.itemId,
+          lineNumber: item.lineNumber,
         }),
       );
 
