@@ -165,7 +165,6 @@ export class PoModelComponent {
     this.loading = true;
     this.poService.getPO(this.po.id).subscribe({
       next: (response) => {
-        console;
         this.loading = false;
         this.productItems = response;
         this.subTotal = this.productItems.reduce(
