@@ -67,8 +67,8 @@
                 </button>
               </div>
             </div>
-            <form [formGroup]="addPOItemForm">
-              <div *ngIf="addItemModel">
+            <form [formGroup]="addPOItemForm" *ngIf="addItemModel">
+              <div>
                 <h3 class="text-lg font-medium text-gray-900 mb-4">
                   Add New Item
                 </h3>
@@ -357,8 +357,8 @@
                 </div>
               </div>
             </form>
-            <form [formGroup]="poForm">
-              <div *ngIf="updatePoModel" class="mb-4">
+            <form [formGroup]="poForm" *ngIf="updatePoModel">
+              <div class="mb-4">
                 <div class="grid grid-cols-4 gap-4 mb-4">
                   <div class="flex flex-col">
                     <label
@@ -433,8 +433,8 @@
               </div>
             </form>
 
-            <form [formGroup]="statusForm">
-              <div *ngIf="updateStatusModel" class="mb-4">
+            <form [formGroup]="statusForm" *ngIf="updateStatusModel">
+              <div class="mb-4">
                 <label
                   for="customerName"
                   class="block mb-2 text-sm font-medium text-gray-700"
@@ -490,7 +490,30 @@
                 </div>
               </div>
             </form>
-
+            <div class="overflow-x-auto" *ngIf="!loading">
+              <table class="min-w-full border text-xs mb-4">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">PO NUMBER</th>
+                    <th class="border px-2 py-1">CUSTOMER</th>
+                    <th class="border px-2 py-1">DESTINATION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-2 py-1">
+                      {{ po.poNumber }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.buyerOrgName }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.destination }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="overflow-x-auto" *ngIf="!loading">
               <table class="min-w-full border text-xs mb-4">
                 <thead class="bg-gray-100">
@@ -510,7 +533,7 @@
                       {{ po.modeOfShipment }}
                     </td>
                     <td class="border px-2 py-1">
-                      {{ po.deliverySchedule }}
+                      {{ po.deliverySchedule | date: "dd/MM/yyyy" }}
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.paymentTerms }}
