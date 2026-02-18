@@ -79,18 +79,29 @@
                 {{ element.supplier }}
               </td>
             </ng-container>
-
             <ng-container matColumnDef="destination">
               <th
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="destination"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Destination
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.destination }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="
+                    editingIndex === element._rowIndex;
+                    else showDestination
+                  "
+                >
+                  <input
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.destination"
+                  />
+                </ng-container>
+                <ng-template #showDestination>{{
+                  element.destination
+                }}</ng-template>
               </td>
             </ng-container>
 
@@ -127,12 +138,24 @@
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="paymentTerms"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Payment Terms
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.paymentTerms }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="
+                    editingIndex === element._rowIndex;
+                    else showPaymentTerms
+                  "
+                >
+                  <input
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.paymentTerms"
+                  />
+                </ng-container>
+                <ng-template #showPaymentTerms>{{
+                  element.paymentTerms
+                }}</ng-template>
               </td>
             </ng-container>
 
@@ -141,12 +164,24 @@
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="deliveryTerms"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Delivery Terms
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.deliveryTerms }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="
+                    editingIndex === element._rowIndex;
+                    else showDeliveryTerms
+                  "
+                >
+                  <input
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.deliveryTerms"
+                  />
+                </ng-container>
+                <ng-template #showDeliveryTerms>{{
+                  element.deliveryTerms
+                }}</ng-template>
               </td>
             </ng-container>
 
@@ -155,12 +190,24 @@
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="modeOfShipment"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Mode of Shipment
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.modeOfShipment }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="
+                    editingIndex === element._rowIndex;
+                    else showModeOfShipment
+                  "
+                >
+                  <input
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.modeOfShipment"
+                  />
+                </ng-container>
+                <ng-template #showModeOfShipment>{{
+                  element.modeOfShipment
+                }}</ng-template>
               </td>
             </ng-container>
 
@@ -169,54 +216,87 @@
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="shippingCharges"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Shipping Charges
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.shippingCharges | currency: "USD" }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="
+                    editingIndex === element._rowIndex;
+                    else showShippingCharges
+                  "
+                >
+                  <input
+                    type="number"
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.shippingCharges"
+                  />
+                </ng-container>
+                <ng-template #showShippingCharges>{{
+                  element.shippingCharges | currency
+                }}</ng-template>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="discount">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header="discount"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
-              >
-                Discount (%)
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="discount">
+                Discount
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.discount }}%
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="editingIndex === element._rowIndex; else showDisc"
+                >
+                  <input
+                    type="number"
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.discount"
+                  />
+                </ng-container>
+                <ng-template #showDisc>{{ element.discount }}</ng-template>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="totalCost">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header="totalCost"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
-              >
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="totalCost">
                 Total Cost
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.totalCost | currency: "USD" }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="editingIndex === element._rowIndex; else showCost"
+                >
+                  <input
+                    type="number"
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.totalCost"
+                  />
+                </ng-container>
+                <ng-template #showCost>{{
+                  element.totalCost | currency
+                }}</ng-template>
               </td>
             </ng-container>
-
+            <!-- totalAmount -->
             <ng-container matColumnDef="totalAmount">
               <th
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header="totalAmount"
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
               >
                 Total Amount
               </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                {{ element.totalAmount | currency: "USD" }}
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="editingIndex === element._rowIndex; else showAmt"
+                >
+                  <input
+                    type="number"
+                    class="w-full px-2 py-1 border rounded"
+                    [(ngModel)]="editingItem.totalAmount"
+                  />
+                </ng-container>
+                <ng-template #showAmt>{{
+                  element.totalAmount | currency
+                }}</ng-template>
               </td>
             </ng-container>
 
@@ -268,33 +348,37 @@
                 {{ element.createdBy }}
               </td>
             </ng-container>
-
             <ng-container matColumnDef="actions">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
-              >
-                Actions
-              </th>
-              <td mat-cell *matCellDef="let element" class="px-4 py-3">
-                <button
-                  (click)="$event.stopPropagation()"
-                  type="button"
-                  class="bg-transparent"
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container
+                  *ngIf="editingIndex === element._rowIndex; else editBtn"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    class="w-6 h-6 fill-red-400 hover:fill-red-600"
+                  <button
+                    (click)="$event.stopPropagation(); saveItem()"
+                    class="mr-2 bg-green-600 text-white px-3 py-1 rounded"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </button>
+                    Save
+                  </button>
+                  <button
+                    (click)="$event.stopPropagation(); cancelEdit()"
+                    class="bg-gray-200 px-3 py-1 rounded"
+                  >
+                    Cancel
+                  </button>
+                </ng-container>
+                <ng-template #editBtn>
+                  <button
+                    (click)="
+                      $event.stopPropagation();
+                      editItem(element._rowIndex, element)
+                    "
+                    type="button"
+                    class="bg-transparent"
+                  >
+                    Edit
+                  </button>
+                </ng-template>
               </td>
             </ng-container>
 
@@ -303,7 +387,7 @@
             <tr
               mat-row
               *matRowDef="let element; columns: activeDisplayedColumns"
-              (click)="openPOModel(element)"
+              (click)="editingIndex === null && openPOModel(element)"
               class="example-element-row cursor-pointer bg-white border-b hover:bg-gray-50"
             ></tr>
           </table>

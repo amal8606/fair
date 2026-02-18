@@ -54,6 +54,7 @@ export class HomeComponent implements AfterViewInit {
   public customers: any[] = [];
   public po: any;
   public editingIndex: number | null = null;
+  public editingItem: any = null;
   @ViewChild(MatSort) empTbSort!: MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
 
@@ -156,6 +157,9 @@ export class HomeComponent implements AfterViewInit {
           }
         });
 
+        incomingPOs.forEach((e, i) => (e._rowIndex = i));
+        outgoingPOs.forEach((e, i) => (e._rowIndex = i));
+        dummyPOs.forEach((e, i) => (e._rowIndex = i));
         this.purchaseOrdersIncoming.data = incomingPOs;
         this.purchaseOrdersOutgoing.data = outgoingPOs;
         this.purchaseOrdersDummy.data = dummyPOs;
@@ -184,6 +188,8 @@ export class HomeComponent implements AfterViewInit {
       this.activeDisplayedColumns = this.dummyColumns; // Set columns for DUMMY
     }
 
+    activeData.forEach((e: any, i: number) => (e._rowIndex = i));
+
     this.sortedData.data = activeData;
 
     if (this.paginator) {
@@ -198,6 +204,34 @@ export class HomeComponent implements AfterViewInit {
 
       this.empTbSort.sortChange.emit(sortState);
     }
+  }
+
+  editItem(index: number, element: any) {
+    this.editingIndex = index;
+    this.editingItem = { ...element };
+  }
+
+  saveItem() {
+    if (!this.editingItem) return;
+    this.isediting = true;
+    this.poService.updatePOItem(this.editingItem).subscribe({
+      next: () => {
+        this.isediting = false;
+        this.toaster.success('PO details updated successfully', 'Success');
+        this.editingIndex = null;
+        this.editingItem = null;
+        this.getActivePO();
+      },
+      error: () => {
+        this.isediting = false;
+        this.toaster.error('Failed to update PO details', 'Error');
+      },
+    });
+  }
+
+  cancelEdit() {
+    this.editingIndex = null;
+    this.editingItem = null;
   }
 
   public getCustomer() {
@@ -297,25 +331,4 @@ export class HomeComponent implements AfterViewInit {
     }
   }
   isediting: boolean = false;
-  saveItem(item: any) {
-    this.isediting = true;
-    this.poService.updatePOItem(item).subscribe({
-      next: () => {
-        this.isediting = false;
-        this.toaster.success('PO details updated successfully', 'Success');
-        this.getActivePO();
-      },
-      error: () => {
-        this.isediting = false;
-        this.toaster.error('Failed to update PO details', 'Error');
-        // Optionally show an error message
-      },
-    });
-  }
-  cancelEdit() {
-    this.editingIndex = null;
-  }
-  editItem(index: number) {
-    this.editingIndex = index;
-  }
 }

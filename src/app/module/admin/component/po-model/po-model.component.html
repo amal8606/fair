@@ -521,7 +521,6 @@
                     <th class="border px-2 py-1">ORDER DATE</th>
                     <th class="border px-2 py-1">MODE OF SHIPMENT</th>
                     <th class="border px-2 py-1">DELIVERY SCHEDULE</th>
-                    <th class="border px-2 py-1">TERMS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -534,9 +533,6 @@
                     </td>
                     <td class="border px-2 py-1">
                       {{ po.deliverySchedule | date: "dd/MM/yyyy" }}
-                    </td>
-                    <td class="border px-2 py-1">
-                      {{ po.paymentTerms }}
                     </td>
                   </tr>
                 </tbody>
@@ -554,6 +550,8 @@
                     <th class="border px-2 py-1">MFR/MODEL</th>
                     <th class="border px-2 py-1">PART #</th>
                     <th class="border px-2 py-1">TERMS</th>
+                    <th class="border px-2 py-1">SH</th>
+                    <th class="border px-2 py-1">BO</th>
                     <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
@@ -628,10 +626,27 @@
                       </ng-container>
                       <ng-template #readTerms>{{ item.terms }}</ng-template>
                     </td>
+
                     <td class="border px-2 py-1">
-                      <ng-template>
-                        {{ item.traceabilityRequired === 1 ? "Yes" : "No" }}
-                      </ng-template>
+                      <ng-container *ngIf="editingIndex === i; else readSH">
+                        <input
+                          [(ngModel)]="item.sh"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readSH>{{ item.sh }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readBO">
+                        <input
+                          [(ngModel)]="item.bo"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readBO>{{ item.bo }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ item.traceabilityRequired == 1 ? "Yes" : "No" }}
                     </td>
                     <td class="border px-2 py-1">
                       <ng-container
