@@ -552,6 +552,9 @@
                     <th class="border px-2 py-1">TERMS</th>
                     <th class="border px-2 py-1">SH</th>
                     <th class="border px-2 py-1">BO</th>
+                    <th class="border px-2 py-1">COC</th>
+                    <th class="border px-2 py-1">HSC</th>
+                    <th class="border px-2 py-1">Weight&Dim</th>
                     <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
@@ -644,6 +647,39 @@
                         />
                       </ng-container>
                       <ng-template #readBO>{{ item.bo }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readCOC">
+                        <input
+                          [(ngModel)]="item.countryOfOrigin"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readCOC>{{
+                        item.countryOfOrigin
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readHSC">
+                        <input
+                          [(ngModel)]="item.hsc"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readHSC>{{ item.hsc }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container
+                        *ngIf="editingIndex === i; else readWeightDim"
+                      >
+                        <input
+                          [(ngModel)]="item.weightDim"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readWeightDim>{{
+                        item.weightDim
+                      }}</ng-template>
                     </td>
                     <td class="border px-2 py-1">
                       {{ item.traceabilityRequired == 1 ? "Yes" : "No" }}

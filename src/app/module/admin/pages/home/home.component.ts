@@ -71,18 +71,17 @@ export class HomeComponent implements AfterViewInit {
     'poNumber',
     'poStatus',
     'customerName',
-    'supplier',
-    'destination',
     'orderDate',
     'deliverySchedule',
+    'destination',
     'paymentTerms',
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
     'discount',
-    'totalCost',
-    'totalAmount',
-    'createdBy',
+    //   'totalCost',
+    // 'totalAmount',
+    // 'supplier',
     'actions',
   ];
 
@@ -90,18 +89,17 @@ export class HomeComponent implements AfterViewInit {
     'poNumber',
     'poStatus',
     'customerName',
-    'supplier',
-    'destination',
     'orderDate',
     'deliverySchedule',
+    'destination',
     'paymentTerms',
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
     'discount',
-    'totalCost',
-    'totalAmount',
-    'createdBy',
+    //   'totalCost',
+    // 'totalAmount',
+    // 'supplier',
     'actions',
   ];
 
@@ -109,18 +107,17 @@ export class HomeComponent implements AfterViewInit {
     'poNumber',
     'poStatus',
     'customerName',
-    'supplier',
-    'destination',
     'orderDate',
     'deliverySchedule',
+    'destination',
     'paymentTerms',
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
     'discount',
-    'totalCost',
-    'totalAmount',
-    'createdBy',
+    //   'totalCost',
+    // 'totalAmount',
+    // 'supplier',
     'actions',
   ];
 
@@ -205,16 +202,31 @@ export class HomeComponent implements AfterViewInit {
       this.empTbSort.sortChange.emit(sortState);
     }
   }
-
+  public editingTab: number | null = null;
   editItem(index: number, element: any) {
     this.editingIndex = index;
+    this.editingTab = this.activeTabIndex;
     this.editingItem = { ...element };
   }
-
+  activeTabIndex: number = 0;
   saveItem() {
     if (!this.editingItem) return;
     this.isediting = true;
-    this.poService.updatePOItem(this.editingItem).subscribe({
+    const poId = this.editingItem.id;
+    const payload = {
+      poNumber: this.editingItem.poNumber,
+      deliverySchedule: this.editingItem.deliverySchedule,
+      orderDate: this.editingItem.orderDate,
+      destination: this.editingItem.destination,
+      paymentTerms: this.editingItem.paymentTerms,
+      deliveryTerms: this.editingItem.deliveryTerms,
+      modeOfShipment: this.editingItem.modeOfShipment,
+      shippingCharges: this.editingItem.shippingCharges,
+      discount: this.editingItem.discount,
+      totalAmount: this.editingItem.totalAmount,
+      toatalCost: this.editingItem.totalCost,
+    };
+    this.poService.updatePo(poId, payload).subscribe({
       next: () => {
         this.isediting = false;
         this.toaster.success('PO details updated successfully', 'Success');
@@ -286,8 +298,7 @@ export class HomeComponent implements AfterViewInit {
           return this.compare(a.totalAmount, b.totalAmount, isAsc);
         case 'poStatus':
           return this.compare(a.poStatus, b.poStatus, isAsc);
-        case 'createdBy':
-          return this.compare(a.createdBy, b.createdBy, isAsc);
+
         default:
           return 0;
       }
@@ -325,6 +336,7 @@ export class HomeComponent implements AfterViewInit {
   public closePoModel(event: boolean) {
     if (event == true) {
       this.getActivePO();
+      this.activeTabIndex = 0;
       this.showModel = false;
     } else {
       this.showModel = false;

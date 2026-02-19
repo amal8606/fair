@@ -253,7 +253,7 @@ export class PoModelComponent {
       next: () => {
         this.isUpdatingPo = false;
         this.toaster.success('PO updated successfully', 'Success');
-        this.onClick.emit(false);
+        this.onClick.emit(true);
       },
       error: () => {
         this.toaster.error('Failed to update PO Status', 'Error');
