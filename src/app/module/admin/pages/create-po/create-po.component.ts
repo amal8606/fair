@@ -58,12 +58,11 @@ export class CreatePoComponent implements OnInit {
   public sortedData1 = new MatTableDataSource<PoItem>();
   public sortedData2 = new MatTableDataSource<PoItem>();
 
-  // 2. Added 'selectedQuantity' to the first table's displayed columns
   displayedColumnsFirst: string[] = [
     'select',
-    'selectedQuantity', // << NEW COLUMN: 'Select Qty'
-    'lineNumber', // Ensure it is displayed
-    'quantity', // Now shows 'Available Qty'
+    'selectedQuantity',
+    'lineNumber',
+    'quantity',
     'itemId',
     'poId',
     'manufacturerModel',
@@ -75,14 +74,13 @@ export class CreatePoComponent implements OnInit {
     'unit',
   ];
 
-  // For the second table (Selected items for new PO)
   displayedColumnsSecond: string[] = [
-    'lineNumber', // Ensure it is displayed
+    'lineNumber',
     'itemId',
     'poId',
     'manufacturerModel',
     'partNumber',
-    'quantity', // Now shows the SELECTED quantity
+    'quantity',
     'actualCostPerUnit',
     'unitPrice',
     'totalPrice',
@@ -163,7 +161,9 @@ export class CreatePoComponent implements OnInit {
     this.poService.getActivePO().subscribe({
       next: (response: any[]) => {
         this.poList = response.filter(
-          (po: any) => po.poType === 'Incoming' && po.poStatusId === 4,
+          (po: any) =>
+            (po.poType === 'Incoming' || po.poType === 'DummyPO') &&
+            (po.poStatusId === 4 || po.poStatusId === 12),
         );
       },
       error: (error: any) => {
@@ -182,15 +182,23 @@ export class CreatePoComponent implements OnInit {
     this.poService.getPO(poId).subscribe({
       next: (response: PoItem[]) => {
         this.loading = false;
+        const filteredResponse = response.filter((item: any) => {
+          const remaining = item.quantity - (item.invoicedQty ?? 0);
+          return remaining > 0;
+        });
+        const itemsWithSelectedQty = filteredResponse.map((item: any) => {
+          const remainingQty = item.quantity - (item.invoicedQty ?? 0);
 
-        const filteredResponse = response.filter((item) => item.quantity > 0);
-
-        const itemsWithSelectedQty = filteredResponse.map((item, index) => ({
-          ...item,
-          lineNumber: item.lineNumber || index + 1,
-          selectedQuantity: 0,
-          totalPrice: 0, // Note: You might want to use the 'totalPrice' from the API data instead of setting it to 0
-        }));
+          return {
+            ...item,
+            quantity: remainingQty, // The new quantity is now the available balance
+            lineNumber: item.lineNumber,
+            hsc: item.hsc,
+            weightDim: item.weightDim,
+            selectedQuantity: 0,
+            totalPrice: 0,
+          };
+        });
 
         this.sortedData1.data = itemsWithSelectedQty;
         this.purchaseOrdersList.data = itemsWithSelectedQty;
@@ -206,7 +214,6 @@ export class CreatePoComponent implements OnInit {
     });
   }
 
-  // 4. New method to handle quantity input change
   public updateSelectionQuantity(row: PoItem, event: any) {
     let newQty = parseInt(event.target.value, 10);
     const originalQty = row.quantity;
@@ -223,12 +230,10 @@ export class CreatePoComponent implements OnInit {
     row.selectedQuantity = newQty;
 
     if (newQty > 0) {
-      // Add to selection if not already selected
       if (!this.selection.isSelected(row)) {
         this.selection.select(row);
       }
     } else {
-      // Remove from selection if quantity is 0
       if (this.selection.isSelected(row)) {
         this.selection.deselect(row);
       }
@@ -288,8 +293,9 @@ export class CreatePoComponent implements OnInit {
         (item: PoItem) => ({
           ...item,
           poId: this.newPoId,
-          itemId: undefined,
-          lineNumber: undefined,
+          poNumber: this.poForm.get('poNumber')?.value || '',
+          itemId: item.itemId,
+          lineNumber: item.lineNumber,
         }),
       );
 
@@ -321,7 +327,6 @@ export class CreatePoComponent implements OnInit {
     }
   }
 
-  // 5. Updated closeModel() to process selected quantity
   public closeModel() {
     this.showAddItem = false;
 
@@ -333,29 +338,23 @@ export class CreatePoComponent implements OnInit {
         selectedQuantity: undefined, // Clear this as it's not needed in the main table
       }));
 
-    // 2. Get the current list of items
     const currentItems = [...this.sortedData2.data];
 
-    // 3. Merge without duplicates based on itemId
     itemsToTransfer.forEach((newItem) => {
       const exists = currentItems.find(
         (existing) => existing.itemId === newItem.itemId,
       );
 
       if (exists) {
-        // Option A: Update quantity if it already exists
         exists.quantity += newItem.quantity;
         exists.totalPrice = exists.quantity * exists.unitPrice;
       } else {
-        // Option B: Add as a new row
         currentItems.push(newItem);
       }
     });
 
-    // 4. Re-assign to trigger Angular change detection
     this.sortedData2.data = currentItems;
 
-    // Reset UI states
     this.sortedData1.data = [];
     this.purchaseOrdersList.data = [];
     this.poId.reset({ poId: null });
@@ -372,7 +371,7 @@ export class CreatePoComponent implements OnInit {
       const newItem: PoItem = {
         ...formValue,
         poId: 'NEW',
-        lineNumber: newLineNumber, // Assign a temporary line number
+        lineNumber: newLineNumber,
         totalPrice: total,
       };
       this.selection.select(newItem);

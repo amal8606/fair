@@ -58,9 +58,17 @@
                   Update Status
                 </button>
               </div>
+              <div *ngIf="this.po.poType === 'Dummy'">
+                <button
+                  (click)="updatePoModel = !updatePoModel"
+                  class="ml-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Update Po Name
+                </button>
+              </div>
             </div>
-            <form [formGroup]="addPOItemForm">
-              <div *ngIf="addItemModel">
+            <form [formGroup]="addPOItemForm" *ngIf="addItemModel">
+              <div>
                 <h3 class="text-lg font-medium text-gray-900 mb-4">
                   Add New Item
                 </h3>
@@ -349,8 +357,84 @@
                 </div>
               </div>
             </form>
-            <form [formGroup]="statusForm">
-              <div *ngIf="updateStatusModel" class="mb-4">
+            <form [formGroup]="poForm" *ngIf="updatePoModel">
+              <div class="mb-4">
+                <div class="grid grid-cols-4 gap-4 mb-4">
+                  <div class="flex flex-col">
+                    <label
+                      for="customerName"
+                      class="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Update PO Name
+                    </label>
+                    <input
+                      formControlName="poNumber"
+                      type="text"
+                      class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      placeholder="Enter PO Name"
+                    />
+
+                    <div
+                      *ngIf="
+                        poForm.get('poNumber')?.invalid &&
+                        (poForm.get('poNumber')?.dirty ||
+                          poForm.get('poNumber')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
+                      Status is required.
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Select PO Type</label
+                    >
+                    <select
+                      id="poTypeId"
+                      name="poTypeId"
+                      formControlName="poTypeId"
+                      class="block w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option [value]="null" disabled selected>
+                        Select PO Type
+                      </option>
+                      <option [value]="1">Incoming PO</option>
+                      <option [value]="2">Outgoing PO</option>
+                      <option [value]="3">Dummy PO</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="w-[20%] flex gap-2 items-end">
+                  <button
+                    (click)="updatePo()"
+                    [disabled]="isUpdatingPo || poForm.invalid"
+                    class="bg-green-500 disabled:bg-green-200 disabled:cursor-not-allowed text-white px-4 py-2 rounded mt-6"
+                  >
+                    <ng-container *ngIf="!isUpdatingPo">
+                      Update PO
+                    </ng-container>
+
+                    <ng-container *ngIf="isUpdatingPo">
+                      <span>Updating </span>
+                      <span class="loading-dots">
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                      </span>
+                    </ng-container>
+                  </button>
+                  <button
+                    (click)="updatePoModel = !updatePoModel"
+                    class="bg-gray-500 text-white px-4 py-2 rounded mt-6"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <form [formGroup]="statusForm" *ngIf="updateStatusModel">
+              <div class="mb-4">
                 <label
                   for="customerName"
                   class="block mb-2 text-sm font-medium text-gray-700"
@@ -406,7 +490,30 @@
                 </div>
               </div>
             </form>
-
+            <div class="overflow-x-auto" *ngIf="!loading">
+              <table class="min-w-full border text-xs mb-4">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">PO NUMBER</th>
+                    <th class="border px-2 py-1">CUSTOMER</th>
+                    <th class="border px-2 py-1">DESTINATION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-2 py-1">
+                      {{ po.poNumber }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.buyerOrgName }}
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ po.destination }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="overflow-x-auto" *ngIf="!loading">
               <table class="min-w-full border text-xs mb-4">
                 <thead class="bg-gray-100">
@@ -414,7 +521,6 @@
                     <th class="border px-2 py-1">ORDER DATE</th>
                     <th class="border px-2 py-1">MODE OF SHIPMENT</th>
                     <th class="border px-2 py-1">DELIVERY SCHEDULE</th>
-                    <th class="border px-2 py-1">TERMS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -426,10 +532,7 @@
                       {{ po.modeOfShipment }}
                     </td>
                     <td class="border px-2 py-1">
-                      {{ po.deliverySchedule }}
-                    </td>
-                    <td class="border px-2 py-1">
-                      {{ po.paymentTerms }}
+                      {{ po.deliverySchedule | date: "dd/MM/yyyy" }}
                     </td>
                   </tr>
                 </tbody>
@@ -447,6 +550,11 @@
                     <th class="border px-2 py-1">MFR/MODEL</th>
                     <th class="border px-2 py-1">PART #</th>
                     <th class="border px-2 py-1">TERMS</th>
+                    <th class="border px-2 py-1">SH</th>
+                    <th class="border px-2 py-1">BO</th>
+                    <th class="border px-2 py-1">COC</th>
+                    <th class="border px-2 py-1">HSC</th>
+                    <th class="border px-2 py-1">Weight&Dim</th>
                     <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
@@ -521,10 +629,60 @@
                       </ng-container>
                       <ng-template #readTerms>{{ item.terms }}</ng-template>
                     </td>
+
                     <td class="border px-2 py-1">
-                      <ng-template>
-                        {{ item.traceabilityRequired === 1 ? "Yes" : "No" }}
-                      </ng-template>
+                      <ng-container *ngIf="editingIndex === i; else readSH">
+                        <input
+                          [(ngModel)]="item.sh"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readSH>{{ item.sh }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readBO">
+                        <input
+                          [(ngModel)]="item.bo"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readBO>{{ item.bo }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readCOC">
+                        <input
+                          [(ngModel)]="item.countryOfOrigin"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readCOC>{{
+                        item.countryOfOrigin
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else readHSC">
+                        <input
+                          [(ngModel)]="item.hsc"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readHSC>{{ item.hsc }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      <ng-container
+                        *ngIf="editingIndex === i; else readWeightDim"
+                      >
+                        <input
+                          [(ngModel)]="item.weightDim"
+                          class="border rounded px-2 py-1 w-24"
+                        />
+                      </ng-container>
+                      <ng-template #readWeightDim>{{
+                        item.weightDim
+                      }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
+                      {{ item.traceabilityRequired == 1 ? "Yes" : "No" }}
                     </td>
                     <td class="border px-2 py-1">
                       <ng-container

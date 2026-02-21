@@ -39,7 +39,7 @@ export class ProFormaInvoiceComponent implements OnInit {
     notes: new FormControl(''),
     estimatedShipDate: new FormControl(''),
     status: new FormControl('Pending'),
-    createdBy: new FormControl(0),
+    createdBy: new FormControl(1),
     createdAt: new FormControl(
       new Date().toISOString().substring(0, 10),
       Validators.required,
@@ -88,7 +88,7 @@ export class ProFormaInvoiceComponent implements OnInit {
   public createProformaItemFormGroup(item?: any): FormGroup {
     const itemData: any = {
       itemId: item?.itemId || 0,
-      lineNumber: item?.lineNumber || 0,
+      lineNumber: item?.lineNumber,
       poId: item?.poId || 0,
       quantity: item?.quantity || 1,
       unit: item?.unit || 'EA',
@@ -379,6 +379,7 @@ export class ProFormaInvoiceComponent implements OnInit {
       poNumber: formValue.selectedPoNumber,
       proformaItems: items.map((item: any) => ({
         itemId: item.itemId,
+        lineNumber: item.lineNumber,
         quantity: item.quantity,
         unit: item.unit,
         description: item.description,
