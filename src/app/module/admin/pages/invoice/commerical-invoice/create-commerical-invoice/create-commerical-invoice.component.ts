@@ -164,6 +164,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       lineNumber: item?.lineNumber,
       poNumber: item?.poNumber || '',
       quantity: item?.quantity || 1,
+      availqty: item?.availqty || 0,
       unitPrice: item?.unitPrice || 0,
       description: item?.description || '',
       partNumber: item?.partNumber || '',
@@ -184,8 +185,9 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       quantity: new FormControl(itemData.quantity, [
         Validators.required,
         Validators.min(1),
-        ...(item?.maxQuantity ? [Validators.max(item.maxQuantity)] : []),
+        Validators.max(itemData.availqty),
       ]),
+      availqty: new FormControl(itemData.availqty),
       unit: new FormControl(itemData.unit),
       poId: new FormControl(itemData.poId),
       poNumber: new FormControl(itemData.poNumber),
@@ -353,7 +355,8 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
           return {
             ...item,
-            quantity: remainingQty, // The new quantity is now the available balance
+            quantity: remainingQty, 
+            availqty: remainingQty,
             lineNumber: item.lineNumber,
             hsc: item.hsc,
             weightDim: item.weightDim,
@@ -375,6 +378,16 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     });
   }
   public imageUrl = 'assets/images/companyLogo.png';
+  get hasInvalidSelectedItems(): boolean {
+    return this.selection.selected.some((item: any) => 
+      item.quantity > item.availqty || item.quantity <= 0 || item.quantity === null
+    );
+  }
+  get hasInvalidItemsInInvoice(): boolean {
+    return this.sortedData2.data.some((item: any) => 
+      item.quantity > item.maxQuantity || item.quantity <= 0 || item.quantity === null
+    );
+  }
   addItem() {
     const selectedItems = this.selection.selected || [];
     const existingIds = new Set(

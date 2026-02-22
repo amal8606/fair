@@ -152,6 +152,13 @@ export class CreatePoComponent implements OnInit {
   public newPoId: any;
   public poTypeId: any;
 
+  get hasInvalidSelectedItems(): boolean {
+    return this.selection.selected.some((item) => {
+      const qty = item.selectedQuantity || 0;
+      return qty > item.quantity || qty <= 0;
+    });
+  }
+
   ngOnInit() {
     this.getActivePO();
     this.getCustomer();
@@ -163,7 +170,7 @@ export class CreatePoComponent implements OnInit {
         this.poList = response.filter(
           (po: any) =>
             (po.poType === 'Incoming' || po.poType === 'DummyPO') &&
-            (po.poStatusId === 4 || po.poStatusId === 12),
+            (po.poStatusId === 4 || po.poStatusId === 12 || po.poStatusId === 3),
         );
       },
       error: (error: any) => {
@@ -216,15 +223,9 @@ export class CreatePoComponent implements OnInit {
 
   public updateSelectionQuantity(row: PoItem, event: any) {
     let newQty = parseInt(event.target.value, 10);
-    const originalQty = row.quantity;
 
     if (isNaN(newQty) || newQty < 0) {
       newQty = 0;
-    }
-
-    if (newQty > originalQty) {
-      newQty = originalQty;
-      event.target.value = newQty;
     }
 
     row.selectedQuantity = newQty;
