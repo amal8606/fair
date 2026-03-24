@@ -29,6 +29,7 @@ export interface PoItem {
   actualCostPerUnit: number;
   terms?: string;
   lineNumber?: number;
+  poNumber?: string;
   selectedQuantity?: number; // << NEW: Quantity the user wants to select
 }
 
@@ -69,6 +70,7 @@ export class CreatePoComponent implements OnInit {
     'partNumber',
     'actualCostPerUnit',
     'unitPrice',
+    'discount',
     'totalPrice',
     'description',
     'unit',
@@ -83,6 +85,7 @@ export class CreatePoComponent implements OnInit {
     'quantity',
     'actualCostPerUnit',
     'unitPrice',
+    'discount',
     'totalPrice',
     'description',
     'unit',
@@ -104,19 +107,19 @@ export class CreatePoComponent implements OnInit {
     poTypeId: new FormControl(1),
     customerId: new FormControl(null, Validators.required),
     buyerOrgId: new FormControl(null),
-    supplier: new FormControl('', Validators.required),
-    destination: new FormControl('', Validators.required),
-    paymentTerms: new FormControl('', Validators.required),
-    deliveryTerms: new FormControl('', Validators.required),
-    shippingCharges: new FormControl(0, [
-      Validators.required,
+    supplier: new FormControl(''),
+    destination: new FormControl(''),
+    paymentTerms: new FormControl(''),
+    deliveryTerms: new FormControl(''),
+    shippingCharges: new FormControl(
+      0,
+
       Validators.min(0),
-    ]),
-    discount: new FormControl(0, [Validators.min(0)]),
+    ),
     orderDate: new FormControl(this.formatDate(this.date), Validators.required),
-    modeOfShipment: new FormControl('', Validators.required),
-    totalAmount: new FormControl(null, Validators.required),
-    totalCost: new FormControl(null, Validators.required),
+    modeOfShipment: new FormControl(''),
+    totalAmount: new FormControl(0),
+    totalCost: new FormControl(0),
     createdBy: new FormControl('1', Validators.required),
     active: new FormControl(1, Validators.required),
   });
@@ -127,15 +130,15 @@ export class CreatePoComponent implements OnInit {
 
   public newPoItem: FormGroup = new FormGroup({
     poId: new FormControl(null),
-    quantity: new FormControl(null, Validators.required),
-    unit: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    manufacturerModel: new FormControl('', Validators.required),
-    partNumber: new FormControl('', Validators.required),
+    quantity: new FormControl(null),
+    unit: new FormControl(''),
+    description: new FormControl(''),
+    manufacturerModel: new FormControl(''),
+    partNumber: new FormControl(''),
     traceabilityRequired: new FormControl(0),
-    unitPrice: new FormControl(null, Validators.required),
+    unitPrice: new FormControl(null),
     totalPrice: new FormControl(null),
-    actualCostPerUnit: new FormControl(null, Validators.required),
+    actualCostPerUnit: new FormControl(null),
     terms: new FormControl(''),
     countryOfOrigin: new FormControl(''),
     hsc: new FormControl(''),
@@ -170,7 +173,9 @@ export class CreatePoComponent implements OnInit {
         this.poList = response.filter(
           (po: any) =>
             (po.poType === 'Incoming' || po.poType === 'DummyPO') &&
-            (po.poStatusId === 4 || po.poStatusId === 12 || po.poStatusId === 3),
+            (po.poStatusId === 4 ||
+              po.poStatusId === 12 ||
+              po.poStatusId === 3),
         );
       },
       error: (error: any) => {
@@ -294,9 +299,10 @@ export class CreatePoComponent implements OnInit {
         (item: PoItem) => ({
           ...item,
           poId: this.newPoId,
-          poNumber: this.poForm.get('poNumber')?.value || '',
+          poNumber: item.poNumber || this.poForm.get('poNumber')?.value || '',
           itemId: item.itemId,
           lineNumber: item.lineNumber,
+          discount: 0,
         }),
       );
 
@@ -313,6 +319,8 @@ export class CreatePoComponent implements OnInit {
               active: 1,
               shippingCharges: 0,
               discount: 0,
+              totalAmount: 0,
+              totalCost: 0,
             });
             this.toaster.success('Purchase Order Created Successfully');
           },

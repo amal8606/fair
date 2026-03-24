@@ -53,10 +53,10 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       new Date().toISOString().substring(0, 19),
       Validators.required,
     ),
-
+    netCost: new FormControl(0),
     currency: new FormControl('USD'),
     totalAmount: new FormControl(0, Validators.min(0)),
-    taxableAmount: new FormControl(0, Validators.min(0)),
+    TaxAmount: new FormControl(0, Validators.min(0)),
     shippingCharge: new FormControl(0, Validators.min(0)),
     grandTotal: new FormControl(0, Validators.min(0)),
     note: new FormControl(''),
@@ -170,6 +170,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       partNumber: item?.partNumber || '',
       countryOfOrigin: item?.countryOfOrigin || '',
       unit: item?.unit || '',
+      actualCostPerUnit: item?.actualCostPerUnit || 0,
       totalPrice: item?.totalPrice || 0,
       hsc: item?.hsc,
       weightDim: item?.weightDim,
@@ -200,6 +201,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       ]),
       totalPrice: new FormControl(totalPrice.toFixed(2)),
       hsc: new FormControl(itemData.hsc),
+      actualCostPerUnit: new FormControl(itemData.actualCostPerUnit),
       weightDim: new FormControl(itemData.weightDim),
     });
   }
@@ -355,14 +357,13 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
           return {
             ...item,
-            quantity: remainingQty, 
+            quantity: remainingQty,
             availqty: remainingQty,
             lineNumber: item.lineNumber,
             hsc: item.hsc,
             weightDim: item.weightDim,
             selectedQuantity: 0,
             totalPrice: 0,
-            poNumber: poNumber,
           };
         });
         this.sortedData1.data = itemsWithSelectedQty;
@@ -379,13 +380,19 @@ export class CreateCommericalInvoiceComponent implements OnInit {
   }
   public imageUrl = 'assets/images/companyLogo.png';
   get hasInvalidSelectedItems(): boolean {
-    return this.selection.selected.some((item: any) => 
-      item.quantity > item.availqty || item.quantity <= 0 || item.quantity === null
+    return this.selection.selected.some(
+      (item: any) =>
+        item.quantity > item.availqty ||
+        item.quantity <= 0 ||
+        item.quantity === null,
     );
   }
   get hasInvalidItemsInInvoice(): boolean {
-    return this.sortedData2.data.some((item: any) => 
-      item.quantity > item.maxQuantity || item.quantity <= 0 || item.quantity === null
+    return this.sortedData2.data.some(
+      (item: any) =>
+        item.quantity > item.maxQuantity ||
+        item.quantity <= 0 ||
+        item.quantity === null,
     );
   }
   addItem() {
@@ -595,21 +602,27 @@ export class CreateCommericalInvoiceComponent implements OnInit {
 
   public calculateGrandTotal(): void {
     const items = this.commercialInvoiceItemsArray.getRawValue();
-
     const subTotal = items.reduce(
       (sum: number, item: any) =>
         sum + (item.quantity || 0) * (item.unitPrice || 0),
       0,
     );
 
-    const taxable = this.commercialInvoiceForm.get('taxableAmount')?.value || 0;
+    const ncTotal = items.reduce(
+      (sum: number, item: any) =>
+        sum + (item.quantity || 0) * (item.actualCostPerUnit || 0),
+      0,
+    );
+    const taxable = this.commercialInvoiceForm.get('TaxAmount')?.value || 0;
     const shipping =
       this.commercialInvoiceForm.get('shippingCharge')?.value || 0;
 
     const grandTotal = subTotal + taxable + shipping;
+    const ncGrandTotal = ncTotal;
 
     this.commercialInvoiceForm.get('totalAmount')?.setValue(subTotal);
     this.commercialInvoiceForm.get('grandTotal')?.setValue(grandTotal);
+    this.commercialInvoiceForm.get('netCost')?.setValue(ncGrandTotal);
   }
 
   calculateTotalPrice(itemGroup: AbstractControl): number {
@@ -633,7 +646,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
     const items = formValue.commercialInvoiceItems;
     this.calculateGrandTotal();
     const subTotal = this.commercialInvoiceForm.get('totalAmount')?.value;
-    const taxableAmount = formValue.taxableAmount;
+    const TaxAmount = formValue.TaxAmount;
     const shippingCharge = formValue.shippingCharge;
     const grandTotal = this.commercialInvoiceForm.get('grandTotal')?.value;
     const selectedCustomer = this.customers.find(
@@ -650,7 +663,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       createdBy: formValue.createdBy,
       currency: formValue.currency,
       totalAmount: subTotal,
-      taxableAmount: taxableAmount,
+      TaxAmount: TaxAmount,
       shippingCharge: shippingCharge,
       grandTotal: grandTotal,
       termsOfSale: formValue.termsOfSale,
@@ -664,6 +677,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       taxId: formValue.taxId,
       ein: formValue.ein,
       email: formValue.email,
+      ncCost: formValue.ncCost,
       commercialInvoiceItems: items.map((item: any) => ({
         commercialInvoiceNumber: formValue.commercialInvoiceNumber,
         itemId: item.itemId,
@@ -774,7 +788,7 @@ export class CreateCommericalInvoiceComponent implements OnInit {
       items: this.finalPostData.commercialInvoiceItems,
       totals: {
         subTotal: subTotal,
-        taxableAmount: taxableAmount,
+        TaxAmount: TaxAmount,
         shippingCharge: shippingCharge,
         grandTotal: grandTotal,
         currency: formValue.currency,

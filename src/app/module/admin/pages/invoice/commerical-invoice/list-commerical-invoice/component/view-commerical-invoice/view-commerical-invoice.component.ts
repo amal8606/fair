@@ -65,8 +65,14 @@ export class ViewCommericalInvoiceComponent implements OnInit {
   public packetListing: any;
   public sli: any;
   public customerDetails: any;
+  public grandTotal: number = 0;
   ngOnInit() {
+    console.log(this.ciNumber);
     if (this.ciNumber) {
+      this.grandTotal =
+        this.ciNumber.totalAmount +
+        this.ciNumber.taxAmount +
+        this.ciNumber.shippingCharge;
       this.getall();
     }
   }
@@ -99,6 +105,7 @@ export class ViewCommericalInvoiceComponent implements OnInit {
       .getCommercialInvoiceDetails(this.ciNumber.commercialInvoiceId)
       .subscribe({
         next: (result: any) => {
+          console.log(result);
           this.commercialInvoiceItems = result;
           this.finalCommercialInvoiceData = { ...result };
         },

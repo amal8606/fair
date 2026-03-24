@@ -38,4 +38,10 @@ export class CommercialInvoiceService {
       {},
     );
   }
+
+  public getInvoiceTax(startDate: any, endDate: any): Observable<any> {
+    return this.http.get<any>(
+      `${environment.api}/CommercialInvoice/invoiceTax?startDate=${startDate}&endDate=${endDate}`,
+    );
+  }
 }

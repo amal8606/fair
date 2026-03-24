@@ -54,7 +54,11 @@ export class ImportPosComponent {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
+      const workbook = XLSX.read(data, {
+        type: 'array',
+        cellDates: true, // This converts the serial numbers to JS Date objects
+        dateNF: 'yyyy-mm-dd',
+      });
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
       const records = XLSX.utils.sheet_to_json(firstSheet, { defval: '' });
 
@@ -74,34 +78,34 @@ export class ImportPosComponent {
             acc[po] = {
               poNumber: row['PoNumber'],
               customerName: row['CustomerName'],
-              destination: row['Destination'],
-              deliveryTerms: row['DeliveryTerms'],
-              paymentTerms: row['PaymentTerms'],
-              shippingCharges: row['ShippingCharges'],
-              discount: row['Discount'],
-              modeOfShipment: row['ModeOfShipment'],
-              deliverySchedule: row['DeliverySchedule'],
-              supplier: row['Supplier'],
               orderDate: row['OrderDate'],
-              totalAmount: +row['TotalAmount'],
-              totalCost: +row['TotalCost'],
-              description: row['Description'],
+              deliverySchedule: row['DeliverySchedule'] || 0,
+              destination: row['Destination'],
+              paymentTerms: row['PaymentTerms'] || 'N/A',
+              shippingCharges: row['ShippingCharges'] || 0,
+              deliveryTerms: row['DeliveryTerms'] || 'N/A',
+              modeOfShipment: row['ModeOfShipment'] || 'N/A',
               items: [],
             };
           }
           acc[po].items.push({
-            quantity: row['Quantity'],
-            unit: row['Unit'],
-            description: row['ItemDescription'],
-            partNumber: row['PartNumber'],
-            manufacturerModel: row['ManufacturerModel'],
-            unitPrice: row['UnitPrice'],
-            countryOfOrigin: row['CountryOfOrigin'],
-            hsc: row['HSC'],
-            weightDim: row['WeightDim'],
-            poNumber: row['PoNumber'],
             lineNumber: row['LineNumber'],
-            totalPrice: +row['TotalPrice'],
+            unit: row['Unit'],
+            quantity: row['Quantity'],
+            unitPrice: row['UnitPrice'],
+            actualCostPerUnit: row['ActualCostPerUnit'],
+            discount: row['Discount'] || 0,
+            manufacturerModel: row['ManufacturerModel'],
+            partNumber: row['PartNumber'],
+            description: row['ItemDescription'],
+            countryOfOrigin: row['CountryOfOrigin'],
+            traceabilityRequired:
+              row['TraceabilityRequired']?.toString().toLowerCase() === 'yes'
+                ? 1
+                : 0,
+            hsc: row['HSC'] || 'N/A',
+            weightDim: row['WeightDim'] || 'N/A',
+            poNumber: row['PoNumber'],
           });
           return acc;
         }, {}),
@@ -139,12 +143,12 @@ export class ImportPosComponent {
       'DeliveryTerms',
       'ModeOfShipment',
       // -------------------------
-      'Supplier',
-      'TotalPrice',
-      'TotalAmount',
-      'TotalCost',
-      'Description',
-      'CreatedBy',
+      // 'Supplier',
+      // 'TotalPrice',
+      // 'TotalAmount',
+      // 'TotalCost',
+      // 'Description',
+      // 'CreatedBy',
     ];
     // if(!firstRow) return false;
     const fileHeaders = Object.keys(firstRow);

@@ -178,6 +178,27 @@
                       Actual Cost is required.
                     </div>
                   </div>
+                  <div class="flex flex-col">
+                    <label for="" class="text-sm font-medium text-gray-700 mb-1"
+                      >Discount</label
+                    >
+                    <input
+                      formControlName="discount"
+                      type="number"
+                      class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      placeholder="Enter discount"
+                    />
+                    <div
+                      *ngIf="
+                        addPOItemForm.get('discount')?.invalid &&
+                        (addPOItemForm.get('discount')?.dirty ||
+                          addPOItemForm.get('discount')?.touched)
+                      "
+                      class="text-red-500 text-xs mt-1"
+                    >
+                      Discount is required.
+                    </div>
+                  </div>
 
                   <div class="flex flex-col">
                     <label for="" class="text-sm font-medium text-gray-700 mb-1"
@@ -558,6 +579,7 @@
                     <th class="border px-2 py-1">TRACEABILITY REQUIREMENT</th>
                     <th class="border px-2 py-1">UNIT PRICE ($)</th>
                     <th class="border px-2 py-1">ACTUAL COST PER UNIT ($)</th>
+                    <th class="border px-2 py-1">DISCOUNT ($)</th>
                     <th class="border px-2 py-1">TOTAL ($)</th>
                     <th class="border px-3 py-2">ACTIONS</th>
                   </tr>
@@ -713,6 +735,16 @@
                       }}</ng-template>
                     </td>
                     <td class="border px-2 py-1">
+                      <ng-container *ngIf="editingIndex === i; else discount">
+                        <input
+                          type="number"
+                          [(ngModel)]="item.discount"
+                          class="border rounded px-2 py-1 w-20"
+                        />
+                      </ng-container>
+                      <ng-template #discount>{{ item.discount }}</ng-template>
+                    </td>
+                    <td class="border px-2 py-1">
                       {{ item.totalPrice }}
                     </td>
 
@@ -761,7 +793,7 @@
                   </tr>
                   <tr *ngIf="productItems?.length === 0">
                     <td
-                      colspan="12"
+                      colspan="17"
                       class="border px-2 py-1 text-center text-gray-500"
                     >
                       No items found
@@ -770,7 +802,7 @@
                 </tbody>
                 <tr>
                   <td
-                    colspan="11"
+                    colspan="17"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     SUB TOTAL
@@ -781,18 +813,18 @@
                 </tr>
                 <tr>
                   <td
-                    colspan="11"
+                    colspan="17"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     DISCOUNT
                   </td>
                   <td class="border px-2 py-1">
-                    {{ po.discount | currency: "USD" }}
+                    {{ discount | currency: "USD" }}
                   </td>
                 </tr>
                 <tr>
                   <td
-                    colspan="11"
+                    colspan="17"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     FREIGHT /SHIPPING
@@ -812,7 +844,7 @@
                 </tr> -->
                 <tr>
                   <td
-                    colspan="11"
+                    colspan="17"
                     class="border px-2 py-1 text-right font-semibold"
                   >
                     TOTAL AMOUNT

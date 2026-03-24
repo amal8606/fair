@@ -25,6 +25,9 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "xlsx-js-style"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -48,8 +51,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "512kb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",

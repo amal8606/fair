@@ -78,7 +78,6 @@ export class HomeComponent implements AfterViewInit {
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
-    'discount',
     //   'totalCost',
     // 'totalAmount',
     // 'supplier',
@@ -96,7 +95,6 @@ export class HomeComponent implements AfterViewInit {
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
-    'discount',
     //   'totalCost',
     // 'totalAmount',
     // 'supplier',
@@ -114,7 +112,6 @@ export class HomeComponent implements AfterViewInit {
     'deliveryTerms',
     'modeOfShipment',
     'shippingCharges',
-    'discount',
     //   'totalCost',
     // 'totalAmount',
     // 'supplier',
@@ -222,9 +219,6 @@ export class HomeComponent implements AfterViewInit {
       deliveryTerms: this.editingItem.deliveryTerms,
       modeOfShipment: this.editingItem.modeOfShipment,
       shippingCharges: this.editingItem.shippingCharges,
-      discount: this.editingItem.discount,
-      totalAmount: this.editingItem.totalAmount,
-      toatalCost: this.editingItem.totalCost,
     };
     this.poService.updatePo(poId, payload).subscribe({
       next: () => {
@@ -234,7 +228,7 @@ export class HomeComponent implements AfterViewInit {
         this.editingItem = null;
         this.getActivePO();
       },
-      error: () => {
+      error: (er) => {
         this.isediting = false;
         this.toaster.error('Failed to update PO details', 'Error');
       },
@@ -290,8 +284,7 @@ export class HomeComponent implements AfterViewInit {
           return this.compare(a.modeOfShipment, b.modeOfShipment, isAsc);
         case 'shippingCharges':
           return this.compare(a.shippingCharges, b.shippingCharges, isAsc);
-        case 'discount':
-          return this.compare(a.discount, b.discount, isAsc);
+
         case 'totalCost':
           return this.compare(a.totalCost, b.totalCost, isAsc);
         case 'totalAmount':

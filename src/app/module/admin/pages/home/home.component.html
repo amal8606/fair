@@ -128,7 +128,10 @@
                     type="date"
                     (click)="dateInput.showPicker()"
                     class="w-full px-2 py-1 border rounded"
-                    [(ngModel)]="editingItem.deliverySchedule"
+                    [ngModel]="
+                      editingItem.deliverySchedule | date: 'yyyy-MM-dd'
+                    "
+                    (ngModelChange)="editingItem.deliverySchedule = $event"
                     name="deliverySchedule"
                   />
                 </ng-container>
@@ -584,7 +587,10 @@
                     type="date"
                     (click)="dateInput.showPicker()"
                     class="w-full px-2 py-1 border rounded"
-                    [(ngModel)]="editingItem.deliverySchedule"
+                    [ngModel]="
+                      editingItem.deliverySchedule | date: 'yyyy-MM-dd'
+                    "
+                    (ngModelChange)="editingItem.deliverySchedule = $event"
                     name="deliverySchedule"
                   />
                 </ng-container>
@@ -1004,7 +1010,7 @@
               <td mat-cell *matCellDef="let element">
                 <ng-container
                   *ngIf="
-                    editingIndex === element._rowIndex && editingTab === 2;
+                    editingIndex === element._rowIndex && editingTab === 1;
                     else showDeliverySchedule
                   "
                 >
@@ -1013,7 +1019,10 @@
                     type="date"
                     (click)="dateInput.showPicker()"
                     class="w-full px-2 py-1 border rounded"
-                    [(ngModel)]="editingItem.deliverySchedule"
+                    [ngModel]="
+                      editingItem.deliverySchedule | date: 'yyyy-MM-dd'
+                    "
+                    (ngModelChange)="editingItem.deliverySchedule = $event"
                     name="deliverySchedule"
                   />
                 </ng-container>

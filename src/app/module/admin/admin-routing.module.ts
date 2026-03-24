@@ -10,6 +10,7 @@ import { ProFormaInvoiceComponent } from './pages/invoice/pro-forma/pro-forma-in
 import { InvoicedProFormaComponent } from './pages/invoice/pro-forma/invoiced-pro-forma/invoiced-pro-forma.component';
 import { CreateCommericalInvoiceComponent } from './pages/invoice/commerical-invoice/create-commerical-invoice/create-commerical-invoice.component';
 import { ListCommericalInvoiceComponent } from './pages/invoice/commerical-invoice/list-commerical-invoice/list-commerical-invoice.component';
+import { InvoiceTaxComponent } from './pages/invoice/commerical-invoice/invoice-tax/invoice-tax.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,10 @@ const routes: Routes = [
       {
         path: 'list-commerical-invoice',
         component: ListCommericalInvoiceComponent,
+      },
+      {
+        path: 'tax-report',
+        component: InvoiceTaxComponent,
       },
     ],
   },
