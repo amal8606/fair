@@ -16,6 +16,31 @@ import { ToastrService } from 'ngx-toastr';
   imports: [CommonModule, MatProgressBarModule],
 })
 export class ImportPosComponent {
+  private readonly requiredHeaders = [
+    'PoNumber',
+    'OrderDate',
+    'LineNumber',
+    'Quantity',
+    'Unit',
+    'ItemDescription',
+    'ManufacturerModel',
+    'PartNumber',
+    'UnitPrice',
+    'CustomerName',
+    'ActualCostPerUnit',
+    'Discount',
+    'DeliverySchedule',
+    'Destination',
+    'CountryOfOrigin',
+    'TraceabilityRequired',
+    'HSC',
+    'WeightDim',
+    'PaymentTerms',
+    'ShippingCharges',
+    'DeliveryTerms',
+    'ModeOfShipment',
+  ];
+
   groupedData: any[] = [];
   responseData: any[] = [];
   uploadStatus: string | null = null;
@@ -69,39 +94,45 @@ export class ImportPosComponent {
       // Group by PoNumber
       this.groupedData = Object.values(
         (records as any[]).reduce((acc: any, row: any) => {
-          const po = row['PoNumber'];
+          const po = this.toText(row['PoNumber']);
+          if (!po) return acc;
+
           if (!acc[po]) {
             acc[po] = {
-              poNumber: row['PoNumber'],
-              customerName: row['CustomerName'],
-              destination: row['Destination'],
-              deliveryTerms: row['DeliveryTerms'],
-              paymentTerms: row['PaymentTerms'],
-              shippingCharges: row['ShippingCharges'],
-              discount: row['Discount'],
-              modeOfShipment: row['ModeOfShipment'],
-              deliverySchedule: row['DeliverySchedule'],
-              supplier: row['Supplier'],
-              orderDate: row['OrderDate'],
-              totalAmount: +row['TotalAmount'],
-              totalCost: +row['TotalCost'],
-              description: row['Description'],
+              poNumber: po,
+              customerName: this.toText(row['CustomerName']),
+              destination: this.toText(row['Destination']),
+              deliveryTerms: this.toText(row['DeliveryTerms']),
+              paymentTerms: this.toText(row['PaymentTerms']),
+              shippingCharges: this.toNumber(row['ShippingCharges']),
+              discount: this.toNumber(row['Discount']),
+              modeOfShipment: this.toText(row['ModeOfShipment']),
+              deliverySchedule: this.toText(row['DeliverySchedule']),
+              supplier: this.toText(row['Supplier']),
+              orderDate: this.toDateText(row['OrderDate']),
+              totalAmount: this.toNumber(row['TotalAmount']),
+              totalCost: this.toNumber(row['TotalCost']),
+              description: this.toText(row['Description']),
               items: [],
             };
           }
+          const quantity = this.toNumber(row['Quantity']);
+          const unitPrice = this.toNumber(row['UnitPrice']);
           acc[po].items.push({
-            quantity: row['Quantity'],
-            unit: row['Unit'],
-            description: row['ItemDescription'],
-            partNumber: row['PartNumber'],
-            manufacturerModel: row['ManufacturerModel'],
-            unitPrice: row['UnitPrice'],
-            countryOfOrigin: row['CountryOfOrigin'],
-            hsc: row['HSC'],
-            weightDim: row['WeightDim'],
-            poNumber: row['PoNumber'],
-            lineNumber: row['LineNumber'],
-            totalPrice: +row['TotalPrice'],
+            quantity,
+            unit: this.toText(row['Unit']),
+            description: this.toText(row['ItemDescription']),
+            partNumber: this.toText(row['PartNumber']),
+            manufacturerModel: this.toText(row['ManufacturerModel']),
+            unitPrice,
+            actualCostPerUnit: this.toNumber(row['ActualCostPerUnit']),
+            traceabilityRequired: this.toNumber(row['TraceabilityRequired']),
+            countryOfOrigin: this.toText(row['CountryOfOrigin']),
+            hsc: this.toText(row['HSC']),
+            weightDim: this.toText(row['WeightDim']),
+            poNumber: po,
+            lineNumber: this.toNumber(row['LineNumber']),
+            totalPrice: this.toNumber(row['TotalPrice'], quantity * unitPrice),
           });
           return acc;
         }, {}),
@@ -115,41 +146,43 @@ export class ImportPosComponent {
   }
   // validate that the uploaded file has all expected headers
   validateHeaders(firstRow: any): boolean {
-    const exectedHeaders = [
-      'PoNumber',
-      'CustomerName',
-      'OrderDate',
-      'LineNumber',
-      'Unit',
-      'Quantity',
-      'UnitPrice',
-      'ActualCostPerUnit',
-      'Discount',
-      'ManufacturerModel',
-      'PartNumber',
-      'ItemDescription',
-      'DeliverySchedule',
-      'Destination',
-      'CountryOfOrigin',
-      'TraceabilityRequired',
-      'HSC',
-      'WeightDim',
-      'PaymentTerms',
-      'ShippingCharges',
-      'DeliveryTerms',
-      'ModeOfShipment',
-      // -------------------------
-      'Supplier',
-      'TotalPrice',
-      'TotalAmount',
-      'TotalCost',
-      'Description',
-      'CreatedBy',
-    ];
-    // if(!firstRow) return false;
-    const fileHeaders = Object.keys(firstRow);
-    return exectedHeaders.every((h) => fileHeaders.includes(h));
+    if (!firstRow) return false;
+
+    const fileHeaders = Object.keys(firstRow)
+      .map((header) => header.trim())
+      .filter((header) => header && !header.startsWith('__EMPTY'));
+
+    console.log('Validating headers:', fileHeaders);
+
+    return this.requiredHeaders.every((header) => fileHeaders.includes(header));
   }
+
+  private toNumber(value: any, fallback = 0): number {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  private toText(value: any): string {
+    return value === null || value === undefined ? '' : String(value).trim();
+  }
+
+  private toDateText(value: any): string {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    if (typeof value === 'number') {
+      const parsedDate = XLSX.SSF.parse_date_code(value);
+      if (parsedDate) {
+        const month = String(parsedDate.m).padStart(2, '0');
+        const day = String(parsedDate.d).padStart(2, '0');
+        return `${parsedDate.y}-${month}-${day}`;
+      }
+    }
+
+    return this.toText(value);
+  }
+
   importData() {
     this.buttonActive = true;
     this.enableUpload = false;
